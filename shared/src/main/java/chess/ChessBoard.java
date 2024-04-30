@@ -3,6 +3,7 @@ package chess;
 import java.util.HashMap;
 import java.util.Map;
 import static chess.ChessGame.TeamColor;
+import static chess.ChessPiece.PieceType;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -45,14 +46,34 @@ public class ChessBoard {
      */
     public void resetBoard() {
         board.clear();
-
+        //Pawns
         for (int i = 1; i < 8; i++) {
-            ChessPosition white_pawn = new ChessPosition(2, i);
-            ChessPosition black_pawn = new ChessPosition(7, i);
-            addPiece(white_pawn, new ChessPiece(WHITE, white_pawn));
-            addPiece(black_pawn, new ChessPiece(BLACK, black_pawn));
+            addPiece(new ChessPosition(2, i), new ChessPiece(WHITE, PAWN));
+            addPiece(new ChessPosition(7, i), new ChessPiece(BLACK, PAWN));
         }
 
+        // Rooks
+        addPiece(new ChessPosition(1,1), new ChessPiece(WHITE, ROOK));
+        addPiece(new ChessPosition(1,8), new ChessPiece(WHITE, ROOK));
+        addPiece(new ChessPosition(8,1), new ChessPiece(BLACK, ROOK));
+        addPiece(new ChessPosition(8,8), new ChessPiece(BLACK, ROOK));
 
+        // Knights
+        addPiece(new ChessPosition(1,2), new ChessPiece(WHITE, KNIGHT));
+        addPiece(new ChessPosition(1,7), new ChessPiece(WHITE, KNIGHT));
+        addPiece(new ChessPosition(8,2), new ChessPiece(BLACK, KNIGHT));
+        addPiece(new ChessPosition(8,7), new ChessPiece(BLACK, KNIGHT));
+
+        // Bishops
+        addPiece(new ChessPosition(1,3), new ChessPiece(WHITE, BISHOP));
+        addPiece(new ChessPosition(1,6), new ChessPiece(WHITE, BISHOP));
+        addPiece(new ChessPosition(8,3), new ChessPiece(BLACK, BISHOP));
+        addPiece(new ChessPosition(8,6), new ChessPiece(BLACK, BISHOP));
+
+        // Royals
+        addPiece(new ChessPosition(1,4), new ChessPiece(WHITE, QUEEN));
+        addPiece(new ChessPosition(1,5), new ChessPiece(WHITE, KING));
+        addPiece(new ChessPosition(8,4), new ChessPiece(BLACK, QUEEN));
+        addPiece(new ChessPosition(8,5), new ChessPiece(BLACK, KING));
     }
 }
