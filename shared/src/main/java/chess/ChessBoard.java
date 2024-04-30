@@ -1,5 +1,9 @@
 package chess;
 
+import java.util.HashMap;
+import java.util.Map;
+import static chess.ChessGame.TeamColor;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -7,9 +11,11 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessBoard {
+    private final Map<ChessPosition, ChessPiece> board = new HashMap<>();
+
 
     public ChessBoard() {
-        
+        resetBoard();
     }
 
     /**
@@ -19,7 +25,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        board.put(position, piece);
     }
 
     /**
@@ -30,7 +36,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+        board.get(position);
     }
 
     /**
@@ -38,6 +44,15 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        board.clear();
+
+        for (int i = 1; i < 8; i++) {
+            ChessPosition white_pawn = new ChessPosition(2, i);
+            ChessPosition black_pawn = new ChessPosition(7, i);
+            addPiece(white_pawn, new ChessPiece(WHITE, white_pawn));
+            addPiece(black_pawn, new ChessPiece(BLACK, black_pawn));
+        }
+
+
     }
 }
