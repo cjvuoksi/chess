@@ -53,4 +53,30 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
     }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        switch (type) {
+            case KING:
+                return pieceColor == WHITE ? "♔" : "♚";
+                break;
+            case PAWN:
+                return pieceColor == WHITE ? "♔" : "♚";
+                break;
+            case ROOK:
+                return pieceColor == WHITE ? "♖" : "♜";
+                break;
+            case QUEEN:
+                return pieceColor == WHITE ? "♕" : "♛";
+                break;
+            case BISHOP:
+                return pieceColor == WHITE ? "♔" : "♚";
+                break;
+            case KNIGHT:
+                return pieceColor == WHITE ? "♔" : "♚";
+                break;
+            default:
+                throw new RuntimeError();
+        }
+    }
 }

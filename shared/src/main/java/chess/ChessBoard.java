@@ -37,7 +37,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        board.get(position);
+        return board.get(position);
     }
 
     /**
@@ -75,5 +75,20 @@ public class ChessBoard {
         addPiece(new ChessPosition(1,5), new ChessPiece(WHITE, KING));
         addPiece(new ChessPosition(8,4), new ChessPiece(BLACK, QUEEN));
         addPiece(new ChessPosition(8,5), new ChessPiece(BLACK, KING));
+    }
+
+    public void print() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 8; j > 0; j--) {
+                ChessPiece curr;
+                if ((curr = getPiece(new Position(i, j))) != null) {
+                    sb.append(curr.toString());
+                }
+                else {
+
+                }
+            }
+        }
     }
 }
