@@ -2,6 +2,8 @@ package chess;
 
 import java.util.Collection;
 import static chess.ChessGame.*;
+import static chess.ChessGame.TeamColor.*;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -59,24 +61,18 @@ public class ChessPiece {
         switch (type) {
             case KING:
                 return pieceColor == WHITE ? "♔" : "♚";
-                break;
             case PAWN:
-                return pieceColor == WHITE ? "♔" : "♚";
-                break;
+                return pieceColor == WHITE ? "♙" : "♟";
             case ROOK:
                 return pieceColor == WHITE ? "♖" : "♜";
-                break;
             case QUEEN:
                 return pieceColor == WHITE ? "♕" : "♛";
-                break;
             case BISHOP:
-                return pieceColor == WHITE ? "♔" : "♚";
-                break;
+                return pieceColor == WHITE ? "♗" : "♝";
             case KNIGHT:
-                return pieceColor == WHITE ? "♔" : "♚";
-                break;
+                return pieceColor == WHITE ? "♘" : "♞";
             default:
-                throw new RuntimeError();
+                throw new RuntimeException();
         }
     }
 }
