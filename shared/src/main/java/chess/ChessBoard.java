@@ -2,8 +2,8 @@ package chess;
 
 import java.util.HashMap;
 import java.util.Map;
-import static chess.ChessGame.TeamColor;
-import static chess.ChessPiece.PieceType;
+import static chess.ChessGame.TeamColor.*;
+import static chess.ChessPiece.PieceType.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -77,18 +77,23 @@ public class ChessBoard {
         addPiece(new ChessPosition(8,5), new ChessPiece(BLACK, KING));
     }
 
-    public void print() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 8; j > 0; j--) {
-                ChessPiece curr;
-                if ((curr = getPiece(new Position(i, j))) != null) {
-                    sb.append(curr.toString());
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(" a b c d e f g h \n|");
+        for (int rank = 8; rank >= 1; rank--) {
+            for (int file = 1; file < 8; file++) {
+                ChessPosition curr = new ChessPosition(rank, file);
+                if ((this.getPiece(curr) != null)) {
+                    sb.append(this.getPiece(curr));
+                } else {
+                    sb.append(" ");
                 }
-                else {
+                sb.append("|");
 
-                }
             }
+            sb.append(rank + 1);
+            if (rank > 1) sb.append("\n|");
         }
+        return sb.toString();
     }
 }

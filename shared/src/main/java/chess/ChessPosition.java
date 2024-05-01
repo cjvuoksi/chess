@@ -7,10 +7,12 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessPosition {
-    private int row;
-    private int col;
+    private final int row;
+    private final int col;
 
     public ChessPosition(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
     /**
@@ -27,5 +29,20 @@ public class ChessPosition {
      */
     public int getColumn() {
         return this.col;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ChessPosition)) {
+            return false;
+        }
+        ChessPosition other = (ChessPosition) obj;
+        return other.row == this.row && other.col == this.col;
     }
 }
