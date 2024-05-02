@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 import static chess.ChessGame.*;
 import static chess.ChessGame.TeamColor.*;
@@ -76,8 +77,8 @@ public class ChessPiece {
         int curFile = myPosition.getColumn();
         switch (type) {
             case KING:
-                for (curRank = curRank + 1; curRank >= myPosition.getRow() - 1; curRank--) {
-                    for (curFile = curFile + 1; curFile >= myPosition.getColumn() - 1; curFile--) {
+                for (curRank = myPosition.getRow() + 1; curRank >= myPosition.getRow() - 1; curRank--) {
+                    for (curFile = myPosition.getColumn() + 1; curFile >= myPosition.getColumn() - 1; curFile--) {
                         if (!(curFile == myPosition.getColumn() && curRank == myPosition.getRow())) {
                             ChessPosition square = new ChessPosition(curRank, curFile);
                             if (square.isValid()) { //If the square is on the board
@@ -115,7 +116,7 @@ public class ChessPiece {
                 break;
             case PAWN:
                 int increment = currColor == ChessGame.TeamColor.WHITE ? 1 : -1;
-                int promo = currColor == ChessGame.TeamColor.WHITE ? 7 : 0;
+                int promo = currColor == ChessGame.TeamColor.WHITE ? 8 : 1;
                 setForwardMoves(board, myPosition, increment, promo, moves);
 
                 ChessPosition attackLeft = new ChessPosition(curRank + increment, curFile - 1);
@@ -151,8 +152,8 @@ public class ChessPiece {
             pawnMoves.add(new ChessMove(myPosition, forward, null));
         }
 
-        if ((myPosition.getRow() == 1 && this.color == ChessGame.TeamColor.WHITE) ||
-                (myPosition.getRow() == 6 && this.color == ChessGame.TeamColor.BLACK)) {
+        if ((myPosition.getRow() == 2 && this.color == ChessGame.TeamColor.WHITE) ||
+                (myPosition.getRow() == 7 && this.color == ChessGame.TeamColor.BLACK)) {
             ChessPosition twoForward = new ChessPosition(myPosition.getRow() + 2 * increment, myPosition.getColumn());
             if (twoForward.isValid() && board.getPiece(twoForward) == null) {
                 pawnMoves.add(new ChessMove(myPosition, twoForward, null));
@@ -196,7 +197,7 @@ public class ChessPiece {
         int curRank = myPosition.getRow() + multiplierVertical;
         int curFile = myPosition.getColumn() + multiplierHorizontal;
 
-        while (curRank >= 0 && curRank <= 7 && curFile >= 0 && curFile <= 7) {
+        while (curRank >= 1 && curRank <= 8 && curFile >= 1 && curFile <= 8) {
             ChessPosition square = new ChessPosition(curRank, curFile);
             if (board.getPiece(square) == null) {
                 linear.add(new ChessMove(myPosition, square, null));
@@ -232,5 +233,16 @@ public class ChessPiece {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return type == that.type && color == that.color;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, color);
+    }
 }

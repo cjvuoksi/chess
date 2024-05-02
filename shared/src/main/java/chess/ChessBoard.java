@@ -91,7 +91,7 @@ public class ChessBoard {
                 sb.append("|");
 
             }
-            sb.append(rank + 1);
+            sb.append(rank);
             if (rank > 1) sb.append("\n|");
         }
         return sb.toString();

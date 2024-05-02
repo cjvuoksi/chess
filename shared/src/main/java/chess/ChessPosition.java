@@ -52,6 +52,11 @@ public class ChessPosition {
 
     @Override
     public int hashCode() {
-        return (col * 16 / row) + 2048;
+        return (31 * row) + col;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%c%d",(char) (col + 'a' - 1), row);
     }
 }
