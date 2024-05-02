@@ -95,4 +95,8 @@ public class ChessBoard {
         }
         return sb.toString();
     }
+
+    public Map<ChessPosition, ChessPiece> getBoard() {
+        return board;
+    }
 }
