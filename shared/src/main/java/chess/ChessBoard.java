@@ -82,9 +82,9 @@ public class ChessBoard {
         StringBuilder sb = new StringBuilder(" a b c d e f g h \n|");
         for (int rank = 8; rank >= 1; rank--) {
             for (int file = 1; file < 8; file++) {
-                ChessPosition curr = new ChessPosition(rank, file);
-                if ((this.getPiece(curr) != null)) {
-                    sb.append(this.getPiece(curr));
+                ChessPiece curr = getPiece(new ChessPosition(rank, file));
+                if (curr != null) {
+                    sb.append(curr);
                 } else {
                     sb.append(" ");
                 }
