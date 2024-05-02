@@ -21,7 +21,9 @@ public class ChessBoard {
     }
 
     public ChessBoard(ChessBoard board) {
-        this.board = new HashMap<>(board.getBoard());
+        for (var entry : board.getBoard().entrySet()) {
+            addPiece(new ChessPosition(), new ChessPiece()); //FIXME
+        }
     }
 
     /**
