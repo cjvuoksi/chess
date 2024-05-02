@@ -2,6 +2,8 @@ package chess;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
 import static chess.ChessGame.TeamColor.*;
 import static chess.ChessPiece.PieceType.*;
 
@@ -29,6 +31,10 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
+        if (piece == null) {
+            board.remove((position));
+            return;
+        }
         board.put(position, piece);
     }
 
@@ -50,7 +56,7 @@ public class ChessBoard {
     public void resetBoard() {
         board.clear();
         //Pawns
-        for (int i = 1; i < 8; i++) {
+        for (int i = 1; i <= 8; i++) {
             addPiece(new ChessPosition(2, i), new ChessPiece(WHITE, PAWN));
             addPiece(new ChessPosition(7, i), new ChessPiece(BLACK, PAWN));
         }
@@ -84,7 +90,7 @@ public class ChessBoard {
     public String toString() {
         StringBuilder sb = new StringBuilder(" a b c d e f g h \n|");
         for (int rank = 8; rank >= 1; rank--) {
-            for (int file = 1; file < 8; file++) {
+            for (int file = 1; file <= 8; file++) {
                 ChessPiece curr = getPiece(new ChessPosition(rank, file));
                 if (curr != null) {
                     sb.append(curr);
@@ -104,5 +110,16 @@ public class ChessBoard {
         return board;
     }
 
-    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Objects.equals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(board);
+    }
 }

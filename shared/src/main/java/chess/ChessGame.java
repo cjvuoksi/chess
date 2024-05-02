@@ -329,7 +329,7 @@ public class ChessGame {
         HashSet<ChessMove> opposingMoves = new HashSet<>();
 
         for (var entry : board.getBoard().entrySet()) {
-            if (entry.getValue().getTeamColor() != teamColor) {
+            if (entry != null && entry.getValue().getTeamColor() != teamColor) {
                 opposingMoves.addAll(entry.getValue().pieceMoves(board, entry.getKey()));
             }
         }
