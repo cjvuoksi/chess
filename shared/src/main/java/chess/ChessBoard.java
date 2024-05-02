@@ -12,10 +12,14 @@ import static chess.ChessPiece.PieceType.*;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private final Map<ChessPosition, ChessPiece> board = new HashMap<>();
+    private Map<ChessPosition, ChessPiece> board = new HashMap<>();
 
 
     public ChessBoard() {
+    }
+
+    public ChessBoard(ChessBoard board) {
+        this.board = new HashMap<>(board.getBoard());
     }
 
     /**
@@ -99,4 +103,6 @@ public class ChessBoard {
     public Map<ChessPosition, ChessPiece> getBoard() {
         return board;
     }
+
+    
 }
