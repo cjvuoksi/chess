@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -91,23 +92,48 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(" a b c d e f g h \n|");
+        StringBuilder sb = new StringBuilder("  a   b   c   d   e   f   g   h   \n|");
         for (int rank = 8; rank >= 1; rank--) {
+            for (int file = 1; file <= 8; file++) {
+                ChessPosition curr = new ChessPosition(rank, file);
+                if ((this.getPiece(curr) != null)) {
+                    sb.append(this.getPiece(curr));
+                } else {
+                    sb.append(EMPTY);
+                }
+                sb.append("|");
+
+            }
+            sb.append(rank + 1);
+            if (rank > 1) sb.append("\n|");
+        }
+        return sb.toString();
+    }
+
+    public void print() {
+        StringBuilder sb = new StringBuilder(" a  b  c  d  e  f  g  h  \n");
+        String bg;
+        String tmp = DEFAULT;
+        for (int rank = 8; rank >= 1; rank--) {
+            bg = tmp;
+            sb.append(bg);
             for (int file = 1; file <= 8; file++) {
                 ChessPiece curr = getPiece(new ChessPosition(rank, file));
                 if (curr != null) {
                     sb.append(curr);
                 } else {
-                    sb.append(" ");
+                    sb.append(EMPTY);
                 }
-                sb.append("|");
-
+                bg = bg.equals(DEFAULT) ? SET_BG_COLOR_DARKER_BLUE : DEFAULT;
+                sb.append(bg);
             }
-            sb.append(rank);
-            if (rank > 1) sb.append("\n|");
+            sb.append(DEFAULT);
+            tmp = tmp.equals(DEFAULT) ? SET_BG_COLOR_DARKER_BLUE : DEFAULT;
+            sb.append(" ").append(rank).append(" ").append("\n");
         }
-        return sb.toString();
+        System.out.println(sb);
     }
+
 
     public Map<ChessPosition, ChessPiece> getBoard() {
         return board;
@@ -125,4 +151,11 @@ public class ChessBoard {
     public int hashCode() {
         return Objects.hashCode(board);
     }
+
+    private static final String UNICODE_ESCAPE = "\u001b";
+    public static final String DEFAULT = UNICODE_ESCAPE + "[0m";
+    private static final String SET_BG_COLOR = UNICODE_ESCAPE + "[48;5;";
+    public static final String SET_BG_COLOR_LIGHT_BLUE = SET_BG_COLOR + "81m";
+    public static final String SET_BG_COLOR_DARKER_BLUE = SET_BG_COLOR + "33m";
+    public static final String EMPTY = " \u2003 ";
 }

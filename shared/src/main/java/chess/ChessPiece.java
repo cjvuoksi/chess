@@ -217,21 +217,34 @@ public class ChessPiece {
     public java.lang.String toString() {
          switch (type) {
             case KING:
-                return color == WHITE ? "♔" : "♚";
+                return color == WHITE ? WHITE_KING : BLACK_KING;
             case PAWN:
-                return color == WHITE ? "♙" : "♟";
+                return color == WHITE ? WHITE_PAWN : BLACK_PAWN;
             case ROOK:
-                return color == WHITE ? "♖" : "♜";
+                return color == WHITE ? WHITE_ROOK : BLACK_ROOK;
             case QUEEN:
-                return color == WHITE ? "♕" : "♛";
+                return color == WHITE ? WHITE_QUEEN : BLACK_QUEEN;
             case BISHOP:
-                return color == WHITE ? "♗" : "♝";
+                return color == WHITE ? WHITE_BISHOP : BLACK_BISHOP;
             case KNIGHT:
-                return color == WHITE ? "♘" : "♞";
+                return color == WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
             default:
                 throw new RuntimeException();
         }
     }
+
+    public static final String WHITE_KING = " ♔ ";
+    public static final String WHITE_QUEEN = " ♕ ";
+    public static final String WHITE_BISHOP = " ♗ ";
+    public static final String WHITE_KNIGHT = " ♘ ";
+    public static final String WHITE_ROOK = " ♖ ";
+    public static final String WHITE_PAWN = " ♙ ";
+    public static final String BLACK_KING = " ♚ ";
+    public static final String BLACK_QUEEN = " ♛ ";
+    public static final String BLACK_BISHOP = " ♝ ";
+    public static final String BLACK_KNIGHT = " ♞ ";
+    public static final String BLACK_ROOK = " ♜ ";
+    public static final String BLACK_PAWN = " ♟ ";
 
     @Override
     public boolean equals(Object o) {

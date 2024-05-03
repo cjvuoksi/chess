@@ -10,5 +10,6 @@ public class Main {
         board.resetBoard();
 
         System.out.println(board);
+        board.print();
     }
 }
