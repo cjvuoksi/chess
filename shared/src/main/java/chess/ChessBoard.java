@@ -22,7 +22,8 @@ public class ChessBoard {
 
     public ChessBoard(ChessBoard board) {
         for (var entry : board.getBoard().entrySet()) {
-            addPiece(new ChessPosition(), new ChessPiece()); //FIXME
+            addPiece(new ChessPosition(entry.getKey().getRow(), entry.getKey().getColumn()),
+                    new ChessPiece(entry.getValue().getTeamColor(), entry.getValue().getPieceType())); //FIXME
         }
     }
 

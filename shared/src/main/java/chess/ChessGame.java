@@ -23,7 +23,7 @@ public class ChessGame {
     private TeamColor currColor = TeamColor.WHITE;
 
     public ChessGame() {
-
+        board.resetBoard();
     }
 
     /**
@@ -92,7 +92,7 @@ public class ChessGame {
         }
 
         if (color == TeamColor.WHITE) {
-            if (!whiteKingMoved && startPosition.equals(new ChessPosition(0, 4))) {
+            if (!whiteKingMoved && startPosition.equals(new ChessPosition(1, 5))) {
                 if (!whiteKingRookMoved) {
                     shortCastle(startPosition, moves, currColor);
                 }
@@ -102,7 +102,7 @@ public class ChessGame {
             }
         }
         else {
-            if (!blackKingMoved && startPosition.equals(new ChessPosition(7, 4))) {
+            if (!blackKingMoved && startPosition.equals(new ChessPosition(8, 5))) {
                 if (!blackKingRookMoved) {
                     shortCastle(startPosition, moves, color);
                 }
@@ -245,15 +245,15 @@ public class ChessGame {
 
     private void setRookFlags(ChessMove move, TeamColor color) {
         if (color == TeamColor.WHITE) {
-            if (move.getStartPosition().getColumn() == 0) {
+            if (move.getStartPosition().getColumn() == 1) {
                 whiteQueenRookMoved = true;
-            } else if (move.getStartPosition().getColumn() == 7) {
+            } else if (move.getStartPosition().getColumn() == 8) {
                 whiteKingRookMoved = true;
             }
         } else {
-            if (move.getStartPosition().getRow() == 0) {
+            if (move.getStartPosition().getRow() == 1) {
                 blackQueenRookMoved = true;
-            } else if (move.getStartPosition().getColumn() == 7) {
+            } else if (move.getStartPosition().getColumn() == 8) {
                 blackKingRookMoved = true;
             }
         }
@@ -264,9 +264,9 @@ public class ChessGame {
             return;
         }
         if (isLongCastle(move)) {
-            moveRookCastle(move, 0, 3);
+            moveRookCastle(move, 1, 4);
         } else {
-            moveRookCastle(move, 7, 5);
+            moveRookCastle(move, 8, 6);
         }
     }
 
@@ -275,7 +275,7 @@ public class ChessGame {
     }
 
     private boolean isLongCastle(ChessMove move) {
-        return move.getEndPosition().getColumn() == 2;
+        return move.getEndPosition().getColumn() == 3;
     }
 
     private void moveRookCastle(ChessMove move, int startFile, int endFile) {
@@ -329,7 +329,7 @@ public class ChessGame {
         HashSet<ChessMove> opposingMoves = new HashSet<>();
 
         for (var entry : board.getBoard().entrySet()) {
-            if (entry != null && entry.getValue().getTeamColor() != teamColor) {
+            if (entry.getValue().getTeamColor() != teamColor) {
                 opposingMoves.addAll(entry.getValue().pieceMoves(board, entry.getKey()));
             }
         }
@@ -362,7 +362,9 @@ public class ChessGame {
 
     private Collection<ChessMove> allValid(TeamColor teamColor) {
         HashSet<ChessMove> moves = new HashSet<>();
-        for (var entry : board.getBoard().entrySet()) {
+        ChessBoard copy = new ChessBoard(board);
+
+        for (var entry : copy.getBoard().entrySet()) {
             if (teamColor == entry.getValue().getTeamColor()) {
                 moves.addAll(validMoves(entry.getKey()));
             }
