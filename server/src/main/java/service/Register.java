@@ -3,6 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import request.RegisterRequest;
 import request.Request;
 import response.LoginResponse;
@@ -15,7 +16,16 @@ public class Register extends Service {
     public Response run(Request req) throws DataAccessException {
         RegisterRequest r = (RegisterRequest) req;
 
-        userDAO.create(new UserData(r.getUsername(), r.getPassword(), r.getEmail()), r.getUsername());
+        if (userDAO.find(r.getUsername()) != null) {
+            throw new DataAccessException("Error: already taken", 403);
+        }
+
+        String hash = BCrypt.hashpw(r.getPassword(), BCrypt.gensalt());
+
+        System.out.println(hash);
+
+
+        userDAO.create(new UserData(r.getUsername(), hash, r.getEmail()), r.getUsername());
         String authToken = UUID.randomUUID().toString();
         authDAO.create(new AuthData(authToken, r.getUsername()), authToken);
 

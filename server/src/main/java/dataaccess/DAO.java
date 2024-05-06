@@ -3,19 +3,19 @@ package dataaccess;
 import java.util.Collection;
 import java.util.HashMap;
 
-public abstract class DAO<T, K> {
+public abstract class DAO<V, K> {
 
-    protected HashMap<K, T> db = new HashMap<>();
+    protected HashMap<K, V> db = new HashMap<>();
 
-    public void create(T toAdd, K key) throws DataAccessException {
-        db.put(key, toAdd);
+    public void create(V toAdd, K key) throws DataAccessException {
+        V added = db.put(key, toAdd);
     }
 
-    public T find(K query) throws DataAccessException {
+    public V find(K query) throws DataAccessException {
         return db.get(query);
     }
 
-    public Collection<T> findAll() throws DataAccessException {
+    public Collection<V> findAll() throws DataAccessException {
         return null;
     }
 
