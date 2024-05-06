@@ -1,6 +1,8 @@
 package server;
 
+import handler.LoginH;
 import handler.RegisterH;
+import service.Login;
 import service.Register;
 import spark.Request;
 import spark.Response;
@@ -52,7 +54,7 @@ public class Server {
     }
 
     private Object login(Request request, Response response) {
-        return "{}";
+        return new LoginH(request, response, new Login()).run();
     }
 
     private Object register(Request request, Response response) {
