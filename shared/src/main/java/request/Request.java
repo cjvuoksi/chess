@@ -1,4 +1,4 @@
 package request;
 
-public abstract class Request {
+public class Request {
 }
