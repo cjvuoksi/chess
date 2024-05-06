@@ -7,4 +7,8 @@ public class RegisterRequest extends UserRequest {
         super(username, password);
         this.email = email;
     }
+
+    public String getEmail() {
+        return email;
+    }
 }

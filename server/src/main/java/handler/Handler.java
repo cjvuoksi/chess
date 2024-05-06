@@ -17,12 +17,9 @@ public abstract class Handler {
     }
 
     public Response run() {
-        return this.run(getRequest());
-    }
-
-    protected Response run(Request req) {
         try {
-            return service.run(req);
+            response.status(200);
+            return service.run(getRequest());
         } catch (DataAccessException e) {
             response.status(e.getStatusCode());
             return new Response(e.getMessage());

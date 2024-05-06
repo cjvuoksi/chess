@@ -7,23 +7,27 @@ public abstract class DAO<T, K> {
 
     protected HashMap<K, T> db = new HashMap<>();
 
-    void create() throws DataAccessException {
-
+    public void create(T toAdd, K key) throws DataAccessException {
+        db.put(key, toAdd);
     }
 
-    T find(K query) throws DataAccessException {
+    public T find(K query) throws DataAccessException {
         return db.get(query);
     }
 
-    Collection<T> findAll() throws DataAccessException {
+    public Collection<T> findAll() throws DataAccessException {
         return null;
     }
 
-    void update() throws DataAccessException {
+    public void update() throws DataAccessException {
 
     }
 
-    void delete() throws DataAccessException {
+    public void delete() throws DataAccessException {
 
+    }
+
+    public void clear() throws DataAccessException {
+        db.clear();
     }
 }
