@@ -1,0 +1,72 @@
+package server;
+
+import handler.RegisterH;
+import service.Register;
+import spark.Request;
+import spark.Response;
+import spark.Spark;
+
+public class Server {
+
+    public static void main(String[] args) {
+        new Server().run(8080);
+    }
+
+    public int run(int desiredPort) {
+        Spark.port(desiredPort);
+
+        Spark.staticFiles.location("web");
+
+        Spark.delete("/db", this::clearApp);
+        // Register
+        Spark.post("/user", this::register);
+        // Login
+        Spark.post("/session", this::login);
+        // Logout
+        Spark.delete("/session", this::logout);
+        // List Games
+        Spark.get("/game", this::listGames);
+        // Create Game
+        Spark.post("/game", this::createGame);
+        // Join Game
+        Spark.put("/game", this::joinGame);
+
+        Spark.awaitInitialization();
+        return Spark.port();
+    }
+
+    private Object joinGame(Request request, Response response) {
+        return "{}";
+    }
+
+    private Object createGame(Request request, Response response) {
+        return "{}";
+    }
+
+    private Object listGames(Request request, Response response) {
+        return "{}";
+    }
+
+    private Object logout(Request request, Response response) {
+        return "{}";
+    }
+
+    private Object login(Request request, Response response) {
+        return "{}";
+    }
+
+    private Object register(Request request, Response response) {
+        return new RegisterH(request, response, new Register()).run();
+    }
+
+    private Object clearApp(Request request, Response response) {
+        response.type("application/json");
+        response.status(200);
+        return "{}";
+    }
+
+    public void stop() {
+        Spark.stop();
+        Spark.awaitStop();
+    }
+}
