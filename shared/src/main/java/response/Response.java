@@ -1,6 +1,6 @@
 package response;
 
-public abstract class Response {
+public class Response {
     protected transient int statusCode = 200;
     protected String message = null;
 
