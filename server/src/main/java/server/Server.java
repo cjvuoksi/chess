@@ -1,7 +1,9 @@
 package server;
 
+import handler.ClearH;
 import handler.LoginH;
 import handler.RegisterH;
+import service.Clear;
 import service.Login;
 import service.Register;
 import spark.Request;
@@ -62,9 +64,8 @@ public class Server {
     }
 
     private Object clearApp(Request request, Response response) {
-        response.type("application/json");
         response.status(200);
-        return "{}";
+        return new ClearH(request, response, new Clear()).run();
     }
 
     public void stop() {
