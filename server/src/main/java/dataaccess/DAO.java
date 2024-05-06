@@ -2,11 +2,10 @@ package dataaccess;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
-public abstract class DAO<T,K> {
+public abstract class DAO<T, K> {
 
-    protected HashMap<K,T> db = new HashMap<>();
+    protected HashMap<K, T> db = new HashMap<>();
 
     void create() throws DataAccessException {
 
