@@ -39,10 +39,29 @@ public abstract class DAO<V, K> {
         }
     }
 
-    public void create(V toAdd, K key) throws DataAccessException {
+    protected String createStatement;
 
-        V added = db.put(key, toAdd);
+    public V create(V toAdd, K key) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var statement = conn.prepareStatement(createStatement)) {
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+        return null;
     }
+
+    protected V access(String statement, String... arguments) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
 
     protected abstract V create(V toAdd, K key, String statement);
 
