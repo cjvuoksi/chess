@@ -1,13 +1,7 @@
 package server;
 
-import handler.ClearH;
-import handler.LoginH;
-import handler.LogoutH;
-import handler.RegisterH;
-import service.Clear;
-import service.Login;
-import service.Logout;
-import service.Register;
+import handler.*;
+import service.*;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -46,7 +40,7 @@ public class Server {
     }
 
     private Object createGame(Request request, Response response) {
-        return "{}";
+        return new CreateH(request, response, new Create()).run();
     }
 
     private Object listGames(Request request, Response response) {
