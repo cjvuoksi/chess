@@ -16,6 +16,10 @@ public class Register extends HTTPService {
     public Response run(Request req) throws DataAccessException {
         RegisterRequest r = (RegisterRequest) req;
 
+        if (r.getUsername() == null || r.getPassword() == null || r.getEmail() == null) {
+            throw new DataAccessException("Error: bad request", 400);
+        }
+
         if (userDAO.find(r.getUsername()) != null) {
             throw new DataAccessException("Error: already taken", 403);
         }

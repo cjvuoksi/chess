@@ -1,5 +1,6 @@
 package unittest;
 
+import dataaccess.DAO;
 import dataaccess.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.*;
@@ -59,11 +60,19 @@ public class UnitTest {
         }
     }
 
-    void assertAuthChange(int changeAmount, Runnable function) {
+    private void assertAuthChange(int changeAmount, Runnable function) {
+        assertDAOChange(changeAmount, accessor.getAuthDAO(), function);
+    }
+
+    private void assertUserChange(int changeAmount, Runnable function) {
+        assertDAOChange(changeAmount, accessor.getUserDAO(), function);
+    }
+
+    private void assertDAOChange(int changeAmount, DAO dao, Runnable function) {
         try {
-            int startCount = accessor.getAuthDAO().findAll().size();
+            int startCount = dao.findAll().size();
             function.run();
-            assertEquals(accessor.getAuthDAO().findAll().size(), startCount + changeAmount);
+            assertEquals(dao.findAll().size(), startCount + changeAmount);
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
@@ -113,6 +122,30 @@ public class UnitTest {
         assertAuthChange(0, () -> {
             assertFail(new Logout(), new AuthRequest(badAuth));
             assertFail(new Logout(), new AuthRequest(null));
+        });
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Valid Register")
+    void register() {
+        assertUserChange(1, () -> {
+            assertDoesNotThrow(() -> new Register().run(new RegisterRequest("temp", "temp", "temp")));
+        });
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Invalid Register")
+    void invalidRegister() {
+        assertUserChange(0, () -> {
+            assertFail(new Register(), new RegisterRequest(test.username(), test.password(), test.email()));
+            assertFail(new Register(), new RegisterRequest(test.username(), null, null));
+            assertFail(new Register(), new RegisterRequest(null, test.password(), null));
+            assertFail(new Register(), new RegisterRequest(null, null, test.email()));
+            assertFail(new Register(), new RegisterRequest(test.username(), test.password(), null));
+            assertFail(new Register(), new RegisterRequest(null, test.password(), test.email()));
+            assertFail(new Register(), new RegisterRequest(test.username(), null, test.email()));
         });
     }
 }
