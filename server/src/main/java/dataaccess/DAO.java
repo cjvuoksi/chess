@@ -1,15 +1,50 @@
 package dataaccess;
 
+import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashMap;
 
 public abstract class DAO<V, K> {
 
-    protected HashMap<K, V> db = new HashMap<>();
+    static {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "CREATE TABLE IF NOT EXISTS users (\n" +
+                    "\tid INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,\n" +
+                    "\tusername VARCHAR(255) NOT NULL,\n" +
+                    "\tpwd VARCHAR(255) NOT NULL,\n" +
+                    "\temail VARCHAR(255) NOT NULL);\n" +
+                    "\t\n" +
+                    "CREATE TABLE IF NOT EXISTS auth (\n" +
+                    "\tid INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,\n" +
+                    "\ttoken VARCHAR(255) NOT NULL,\n" +
+                    "\tusername VARCHAR(255) NOT NULL);\n" +
+                    "\n" +
+                    "CREATE TABLE IF NOT EXISTS game (\n" +
+                    "\tid INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,\n" +
+                    "\tgame JSON NOT NULL,\n" +
+                    "\tgame_name VARCHAR(255) NOT NULL,\n" +
+                    "\twhite_user VARCHAR(255), \n" +
+                    "\tblack_user VARCHAR(255));";
+
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void create(V toAdd, K key) throws DataAccessException {
+
         V added = db.put(key, toAdd);
     }
+
+    protected abstract V create(V toAdd, K key, String statement);
 
     public V find(K key) throws DataAccessException {
         return db.get(key);
