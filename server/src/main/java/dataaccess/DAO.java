@@ -11,8 +11,8 @@ public abstract class DAO<V, K> {
         V added = db.put(key, toAdd);
     }
 
-    public V find(K query) throws DataAccessException {
-        return db.get(query);
+    public V find(K key) throws DataAccessException {
+        return db.get(key);
     }
 
     public Collection<V> findAll() throws DataAccessException {
@@ -23,8 +23,8 @@ public abstract class DAO<V, K> {
 
     }
 
-    public void delete() throws DataAccessException {
-
+    public V delete(K key) throws DataAccessException {
+        return db.remove(key);
     }
 
     public void clear() throws DataAccessException {

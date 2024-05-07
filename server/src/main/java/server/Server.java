@@ -2,9 +2,11 @@ package server;
 
 import handler.ClearH;
 import handler.LoginH;
+import handler.LogoutH;
 import handler.RegisterH;
 import service.Clear;
 import service.Login;
+import service.Logout;
 import service.Register;
 import spark.Request;
 import spark.Response;
@@ -52,7 +54,7 @@ public class Server {
     }
 
     private Object logout(Request request, Response response) {
-        return "{}";
+        return new LogoutH(request, response, new Logout()).run();
     }
 
     private Object login(Request request, Response response) {

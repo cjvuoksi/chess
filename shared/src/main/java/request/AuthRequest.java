@@ -1,10 +1,16 @@
 package request;
 
 public class AuthRequest extends Request {
-    protected final String authorization;
+    protected String authorization;
 
+    public AuthRequest() {
+    }
 
-    protected AuthRequest(String authorization) {
+    public AuthRequest(String authorization) {
         this.authorization = authorization;
+    }
+
+    public String getAuthorization() {
+        return authorization;
     }
 }
