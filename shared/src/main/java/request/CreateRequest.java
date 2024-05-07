@@ -11,8 +11,4 @@ public class CreateRequest extends AuthRequest {
     public String getGameName() {
         return gameName;
     }
-
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
-    }
 }

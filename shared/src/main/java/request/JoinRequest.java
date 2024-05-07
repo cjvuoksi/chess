@@ -12,4 +12,12 @@ public class JoinRequest extends AuthRequest {
         this.playerColor = playerColor;
         this.gameID = gameID;
     }
+
+    public ChessGame.TeamColor getPlayerColor() {
+        return playerColor;
+    }
+
+    public int getGameID() {
+        return gameID;
+    }
 }

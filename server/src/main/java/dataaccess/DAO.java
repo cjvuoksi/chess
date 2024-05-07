@@ -19,8 +19,8 @@ public abstract class DAO<V, K> {
         return null;
     }
 
-    public void update() throws DataAccessException {
-
+    public void update(K key, V newValue) throws DataAccessException {
+        db.replace(key, newValue);
     }
 
     public V delete(K key) throws DataAccessException {
