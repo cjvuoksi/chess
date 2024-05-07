@@ -36,7 +36,7 @@ public class Server {
     }
 
     private Object joinGame(Request request, Response response) {
-        return "{}";
+        return new JoinH(request, response, new Join()).run();
     }
 
     private Object createGame(Request request, Response response) {

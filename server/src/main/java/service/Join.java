@@ -24,11 +24,21 @@ public class Join extends Service {
         }
 
         if (r.getPlayerColor() == ChessGame.TeamColor.WHITE) {
+            System.out.printf("%s = %s%n", auth.username(), game.whiteUsername());
+            if (game.whiteUsername() != null && !game.whiteUsername().equals(auth.username())) {
+                throw new DataAccessException("Error: already taken", 403);
+            }
 
+            GameData updated = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
+            gameDAO.update(game.gameID(), updated);
         } else if (r.getPlayerColor() == ChessGame.TeamColor.BLACK) {
+            if (game.blackUsername() != null && !game.blackUsername().equals(auth.username())) {
+                throw new DataAccessException("Error: already taken", 403);
+            }
 
-        } else {
-            return new Response(); //Observer
+            GameData updated = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
+            gameDAO.update(game.gameID(), updated);
         }
+        return new Response();
     }
 }
