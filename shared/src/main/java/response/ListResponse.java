@@ -2,12 +2,12 @@ package response;
 
 import model.GameData;
 
-import java.util.Vector;
+import java.util.Collection;
 
 public class ListResponse extends Response {
-    private final Vector<GameData> games;
+    private final Collection<GameData> games;
 
-    public ListResponse(Vector<GameData> games) {
+    public ListResponse(Collection<GameData> games) {
         this.games = games;
     }
 }

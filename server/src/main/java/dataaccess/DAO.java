@@ -16,7 +16,7 @@ public abstract class DAO<V, K> {
     }
 
     public Collection<V> findAll() throws DataAccessException {
-        return null;
+        return db.values();
     }
 
     public void update(K key, V newValue) throws DataAccessException {

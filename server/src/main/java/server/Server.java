@@ -44,7 +44,7 @@ public class Server {
     }
 
     private Object listGames(Request request, Response response) {
-        return "{}";
+        return new ListH(request, response, new List()).run();
     }
 
     private Object logout(Request request, Response response) {

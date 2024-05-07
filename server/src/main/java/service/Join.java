@@ -24,7 +24,6 @@ public class Join extends Service {
         }
 
         if (r.getPlayerColor() == ChessGame.TeamColor.WHITE) {
-            System.out.printf("%s = %s%n", auth.username(), game.whiteUsername());
             if (game.whiteUsername() != null && !game.whiteUsername().equals(auth.username())) {
                 throw new DataAccessException("Error: already taken", 403);
             }
@@ -38,6 +37,8 @@ public class Join extends Service {
 
             GameData updated = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
             gameDAO.update(game.gameID(), updated);
+        } else {
+            throw new DataAccessException("Error: bad request", 400);
         }
         return new Response();
     }
