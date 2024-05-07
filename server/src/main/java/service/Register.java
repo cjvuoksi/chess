@@ -22,9 +22,6 @@ public class Register extends Service {
 
         String hash = BCrypt.hashpw(r.getPassword(), BCrypt.gensalt());
 
-        System.out.println(hash);
-
-
         userDAO.create(new UserData(r.getUsername(), hash, r.getEmail()), r.getUsername());
         String authToken = UUID.randomUUID().toString();
         authDAO.create(new AuthData(authToken, r.getUsername()), authToken);
