@@ -114,7 +114,7 @@ public abstract class DAO<V extends Record, K> {
     }
 
     public void clear() throws DataAccessException {
-        return update(false, clearStatement)
+        update(false, clearStatement);
     }
 
     private static void setPreparedStatement(String[] arguments, PreparedStatement preparedStatement) throws SQLException {
