@@ -1,7 +1,6 @@
 package service;
 
 import dataaccess.DataAccessException;
-import model.AuthData;
 import request.AuthRequest;
 import request.Request;
 import response.Response;
@@ -11,8 +10,8 @@ public class Logout extends Service {
     public Response run(Request req) throws DataAccessException {
         AuthRequest r = (AuthRequest) req;
 
-        AuthData data = authDAO.delete(r.getAuthorization());
-        if (data == null) {
+        int data = authDAO.delete(r.getAuthorization());
+        if (data == 0) {
             throw new DataAccessException("Error: unauthorized", 401);
         }
 
