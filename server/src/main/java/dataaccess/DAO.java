@@ -16,7 +16,7 @@ public abstract class DAO<V extends Record, K> {
             throw new RuntimeException(e);
         }
 
-//        try (var conn = DatabaseManager.getConnection()) {
+//        try (var conn = DatabaseManager.getConnection()) { //Test with USE chess;
 //            var statement = """
 //                    CREATE TABLE IF NOT EXISTS users (
 //                    	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -62,7 +62,7 @@ public abstract class DAO<V extends Record, K> {
 
     protected int update(Boolean returnKey, String statement, String... arguments) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement(statement)) {
+            try (var preparedStatement = conn.prepareStatement(statement, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 setPreparedStatement(arguments, preparedStatement);
                 int updatedRows = preparedStatement.executeUpdate();
                 if (!returnKey) {
