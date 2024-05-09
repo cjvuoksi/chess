@@ -8,8 +8,6 @@ import model.GameData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static java.lang.Integer.valueOf;
-
 public class GameDao extends DAO<GameData, Integer> {
 
     private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
@@ -30,7 +28,7 @@ public class GameDao extends DAO<GameData, Integer> {
 
     @Override
     protected GameData getResult(ResultSet res) throws SQLException {
-        return new GameData(valueOf(res.getString("id")),
+        return new GameData(Integer.parseInt(res.getString("id")),
                 res.getString("white_user"),
                 res.getString("black_user"),
                 res.getString("game_name"),

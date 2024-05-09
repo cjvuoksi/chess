@@ -11,7 +11,6 @@ import java.util.Objects;
 public class ChessPosition {
     private int row;
     private int col;
-    private String type = "position";
 
     public ChessPosition(int row, int col) {
         this.row = row;

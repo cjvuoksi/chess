@@ -17,6 +17,11 @@ import static chess.ChessPiece.PieceType.*;
 public class ChessBoard {
     private Map<ChessPosition, ChessPiece> chessBoard = new HashMap<>();
 
+    private static final String UNICODE_ESCAPE = "\u001b";
+    public static final String DEFAULT = UNICODE_ESCAPE + "[0m";
+    private static final String SET_BG_COLOR = UNICODE_ESCAPE + "[48;5;";
+    public static final String SET_BG_COLOR_DARKER_BLUE = SET_BG_COLOR + "33m";
+    public static final String EMPTY = " \u2003 ";
 
     public ChessBoard() {
     }
@@ -28,12 +33,6 @@ public class ChessBoard {
         }
     }
 
-    /**
-     * Adds a chess piece to the chessboard
-     *
-     * @param position where to add the piece to
-     * @param piece    the piece to add
-     */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         if (piece == null) {
             chessBoard.remove((position));
@@ -42,21 +41,10 @@ public class ChessBoard {
         chessBoard.put(position, piece);
     }
 
-    /**
-     * Gets a chess piece on the chessboard
-     *
-     * @param position The position to get the piece from
-     * @return Either the piece at the position, or null if no piece is at that
-     * position
-     */
     public ChessPiece getPiece(ChessPosition position) {
         return chessBoard.get(position);
     }
 
-    /**
-     * Sets the board to the default starting board
-     * (How the game of chess normally starts)
-     */
     public void resetBoard() {
         chessBoard.clear();
         //Pawns
@@ -134,7 +122,6 @@ public class ChessBoard {
         System.out.println(sb);
     }
 
-
     public Map<ChessPosition, ChessPiece> getBoard() {
         return chessBoard;
     }
@@ -151,11 +138,4 @@ public class ChessBoard {
     public int hashCode() {
         return Objects.hashCode(chessBoard);
     }
-
-    private static final String UNICODE_ESCAPE = "\u001b";
-    public static final String DEFAULT = UNICODE_ESCAPE + "[0m";
-    private static final String SET_BG_COLOR = UNICODE_ESCAPE + "[48;5;";
-    public static final String SET_BG_COLOR_LIGHT_BLUE = SET_BG_COLOR + "81m";
-    public static final String SET_BG_COLOR_DARKER_BLUE = SET_BG_COLOR + "33m";
-    public static final String EMPTY = " \u2003 ";
 }
