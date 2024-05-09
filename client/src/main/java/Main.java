@@ -1,13 +1,20 @@
-import chess.*;
+import chess.ChessGame;
+import chess.ChessPosition;
+import com.google.gson.GsonBuilder;
+
 
 public class Main {
     public static void main(String[] args) {
-        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-        System.out.println("♕ 240 Chess Client: " + piece);
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
+        var serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
 
-        System.out.println(board);
-        board.print();
+        String json = serializer.toJson(new ChessPosition(1, 1));
+
+        System.out.println(json);
+
+        json = serializer.toJson(new ChessGame());
+
+        System.out.println(json);
+
+        ChessGame game = serializer.fromJson(json, ChessGame.class);
     }
 }

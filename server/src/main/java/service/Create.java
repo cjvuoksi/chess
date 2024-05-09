@@ -17,7 +17,7 @@ public class Create extends Service {
         if (authDAO.find(r.getAuthorization()) == null) {
             throw new DataAccessException("Error: unauthorized", 401);
         }
-
+        gameDAO.setMake(true);
         int gameID = gameDAO.create(new GameData(0, null, null, r.getGameName(), new ChessGame()));
 
         return new CreateResponse(gameID);

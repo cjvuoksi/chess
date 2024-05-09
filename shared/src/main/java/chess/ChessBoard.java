@@ -1,11 +1,11 @@
 package chess;
 
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static chess.ChessGame.TeamColor.*;
+import static chess.ChessGame.TeamColor.BLACK;
+import static chess.ChessGame.TeamColor.WHITE;
 import static chess.ChessPiece.PieceType.*;
 
 /**
@@ -15,7 +15,7 @@ import static chess.ChessPiece.PieceType.*;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private Map<ChessPosition, ChessPiece> board = new HashMap<>();
+    private Map<ChessPosition, ChessPiece> chessBoard = new HashMap<>();
 
 
     public ChessBoard() {
@@ -36,10 +36,10 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         if (piece == null) {
-            board.remove((position));
+            chessBoard.remove((position));
             return;
         }
-        board.put(position, piece);
+        chessBoard.put(position, piece);
     }
 
     /**
@@ -50,7 +50,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return board.get(position);
+        return chessBoard.get(position);
     }
 
     /**
@@ -58,7 +58,7 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        board.clear();
+        chessBoard.clear();
         //Pawns
         for (int i = 1; i <= 8; i++) {
             addPiece(new ChessPosition(2, i), new ChessPiece(WHITE, PAWN));
@@ -136,7 +136,7 @@ public class ChessBoard {
 
 
     public Map<ChessPosition, ChessPiece> getBoard() {
-        return board;
+        return chessBoard;
     }
 
     @Override
@@ -144,12 +144,12 @@ public class ChessBoard {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessBoard that = (ChessBoard) o;
-        return Objects.equals(board, that.board);
+        return Objects.equals(chessBoard, that.chessBoard);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(board);
+        return Objects.hashCode(chessBoard);
     }
 
     private static final String UNICODE_ESCAPE = "\u001b";
