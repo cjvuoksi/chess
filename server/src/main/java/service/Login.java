@@ -22,7 +22,7 @@ public class Login extends Service {
         }
 
         String authToken = UUID.randomUUID().toString();
-        authDAO.create(new AuthData(authToken, r.getUsername()), authToken);
+        authDAO.create(new AuthData(authToken, r.getUsername()));
         return new LoginResponse(authToken, r.getUsername());
     }
 }

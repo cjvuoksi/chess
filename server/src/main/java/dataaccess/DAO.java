@@ -90,7 +90,7 @@ public abstract class DAO<V extends Record, K> {
     protected String findallStatement;
     protected String clearStatement;
 
-    public int create(V toAdd, K key) throws DataAccessException {
+    public int create(V toAdd) throws DataAccessException {
         return update(true, createStatement, getArgs(toAdd));
     }
 

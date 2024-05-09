@@ -11,7 +11,7 @@ public class GameDao extends DAO<GameData, Integer> {
     private final Gson serializer = new Gson();
 
     {
-        createStatement = "INSERT INTO game (id, white_user, black_user, game_name, game)) VALUES (?, ?, ?, ?, ?)";
+        createStatement = "INSERT INTO game (white_user, black_user, game_name, game) VALUES (?, ?, ?, ?)";
         findStatement = "SELECT * FROM game WHERE id = ?";
         updateStatement = "UPDATE game SET white_user = ?, black_user = ?, game_name = ?, game = ? WHERE id = ?";
         deleteStatement = "DELETE FROM game WHERE id = ?";
