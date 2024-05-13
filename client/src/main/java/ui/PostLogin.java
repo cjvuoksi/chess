@@ -86,7 +86,7 @@ public class PostLogin extends UI {
         }
     }
 
-    private void play() throws SwitchException {
+    private void join(Boolean asPlayer) throws SwitchException {
         list();
         String num = promptInput("Enter number to play or (q) to escape: ");
         if (num == null || num.equalsIgnoreCase("q")) {
@@ -97,10 +97,12 @@ public class PostLogin extends UI {
             print("Invalid number entered");
             return;
         }
-
-        ChessGame.TeamColor teamColor = getTeamColor();
-        if (teamColor == null) {
-            return;
+        ChessGame.TeamColor teamColor = null;
+        if (asPlayer) {
+            teamColor = getTeamColor();
+            if (teamColor == null) {
+                return;
+            }
         }
 
         Response res = server.join(new JoinRequest(authToken, teamColor, games.get(gameNum - 1)));
@@ -110,6 +112,14 @@ public class PostLogin extends UI {
         } else {
             throw new SwitchException(SwitchException.exceptionType.PLAY);
         }
+    }
+
+    private void play() throws SwitchException {
+        join(true);
+    }
+
+    private void watch() throws SwitchException {
+        join(false);
     }
 
     private ChessGame.TeamColor getTeamColor() {
@@ -127,8 +137,5 @@ public class PostLogin extends UI {
 
         print("Invalid team color entered");
         return null;
-    }
-
-    private void watch() {
     }
 }

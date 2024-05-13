@@ -1,10 +1,13 @@
 package ui;
 
+import model.GameData;
+
 public class ContextSwitcher {
     private UI current = new PreLogin();
     private final UI pre = current;
     private UI post;
     private UI game;
+    private GameData data;
 
     private String username;
     private String authToken;
@@ -46,7 +49,7 @@ public class ContextSwitcher {
             if (e.getType() == SwitchException.exceptionType.EXIT) {
                 exit = true;
             } else if (e.getType() == SwitchException.exceptionType.LOGIN) {
-                authToken = e.getPayload()[0];
+                authToken = e.getPayload()[0]; // Change payload to object?
                 username = e.getPayload()[1];
                 post = new PostLogin(username, authToken);
                 current = post;

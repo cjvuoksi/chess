@@ -8,12 +8,12 @@ public class GameUI extends UI {
 
     @Override
     protected void exit() throws SwitchException {
-
+        throw new SwitchException(SwitchException.exceptionType.LEAVE);
     }
 
     @Override
     protected void menu() {
-
+        print("GAME"); // ADD to context switcher
     }
 
     @Override
