@@ -162,8 +162,6 @@ public class ChessGame {
         }
     }
 
-
-
     private void movePiece(ChessMove move) {
         ChessPiece movePiece = board.getPiece(move.getStartPosition());
         if (movePiece == null) {
@@ -291,7 +289,7 @@ public class ChessGame {
     }
 
     private boolean isMoveInCheck(ChessMove move, TeamColor color) {
-        ChessBoard copy = new ChessBoard((ChessBoard) board); // Might need FIXME
+        ChessBoard copy = new ChessBoard((ChessBoard) board);
         movePiece(move);
         boolean check = isInCheck(color);
         reset(copy);

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 
-import static chess.ChessGame.*;
-import static chess.ChessGame.TeamColor.*;
+import static chess.ChessGame.TeamColor;
+import static chess.ChessGame.TeamColor.WHITE;
 
 /**
  * Represents a single chess piece
@@ -23,17 +23,8 @@ public class ChessPiece {
     }
 
     private enum Multiplier {
-        /**
-         * Indicates that movement increments in the positive direction
-         */
         UP,
-        /**
-         * Indicates that movement increments in the negative direction
-         */
         DOWN,
-        /**
-         * Indicates no movement
-         */
         NONE
     }
 

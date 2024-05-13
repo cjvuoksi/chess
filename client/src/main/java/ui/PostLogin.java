@@ -35,6 +35,11 @@ public class PostLogin extends UI {
 
     @Override
     protected void exit() throws SwitchException {
+        Response res = server.logout(new AuthRequest(authToken));
+        if (res.getMessage() != null) {
+            print(res.getMessage());
+        }
+
         throw new SwitchException(SwitchException.exceptionType.LOGOUT);
     }
 
