@@ -17,7 +17,8 @@ public class SwitchException extends Exception {
         LOGIN,
         LOGOUT,
         LEAVE,
-        JOIN
+        PLAY,
+        WATCH
     }
 
     public SwitchException(exceptionType type) {

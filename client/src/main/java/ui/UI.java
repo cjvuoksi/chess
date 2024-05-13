@@ -54,7 +54,7 @@ public abstract class UI {
         if (command == null) {
             return true;
         }
-        if (command.equalsIgnoreCase("help")) {
+        if (command.equalsIgnoreCase("help") || command.equalsIgnoreCase("h")) {
             help();
             return true;
         }

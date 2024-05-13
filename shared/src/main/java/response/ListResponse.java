@@ -10,4 +10,8 @@ public class ListResponse extends Response {
     public ListResponse(Collection<GameData> games) {
         this.games = games;
     }
+
+    public Collection<GameData> getGames() {
+        return games;
+    }
 }

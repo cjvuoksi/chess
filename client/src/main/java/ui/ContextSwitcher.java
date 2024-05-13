@@ -55,7 +55,7 @@ public class ContextSwitcher {
                 post = null;
                 authToken = null;
                 username = null;
-            } else if (e.getType() == SwitchException.exceptionType.JOIN) {
+            } else if (e.getType() == SwitchException.exceptionType.PLAY || e.getType() == SwitchException.exceptionType.WATCH) {
                 game = new GameUI();
                 current = game;
             } else if (e.getType() == SwitchException.exceptionType.LEAVE) {

@@ -90,8 +90,6 @@ public abstract class DAO<V extends Record, K> {
         return update(true, createStatement, getArgs(toAdd));
     }
 
-    ;
-
     public V find(K key) throws DataAccessException {
         Collection<V> results = access(findStatement, key.toString());
         if (results.isEmpty()) {

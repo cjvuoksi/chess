@@ -1,6 +1,7 @@
 package handler;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dataaccess.DataAccessException;
 import request.Request;
 import response.Response;
@@ -11,7 +12,7 @@ public abstract class Handler {
     protected final spark.Response response;
     protected final Service service;
 
-    protected final Gson serializer = new Gson();
+    protected final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
 
     public Handler(spark.Request request, spark.Response response, Service service) {
         this.request = request;

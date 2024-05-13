@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class GameDao extends DAO<GameData, Integer> {
 
     private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
-    private Boolean make;
+    protected Boolean make = false;
 
     public void setMake(Boolean make) {
         this.make = make;
