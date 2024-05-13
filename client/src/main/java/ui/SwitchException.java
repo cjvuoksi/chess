@@ -2,13 +2,13 @@ package ui;
 
 public class SwitchException extends Exception {
     private final exceptionType type;
-    private final String[] payload;
+    private final Object[] payload;
 
     public exceptionType getType() {
         return type;
     }
 
-    public String[] getPayload() {
+    public Object[] getPayload() {
         return payload;
     }
 

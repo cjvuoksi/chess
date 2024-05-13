@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import model.GameData;
 
 public class ContextSwitcher {
@@ -49,8 +50,8 @@ public class ContextSwitcher {
             if (e.getType() == SwitchException.exceptionType.EXIT) {
                 exit = true;
             } else if (e.getType() == SwitchException.exceptionType.LOGIN) {
-                authToken = e.getPayload()[0]; // Change payload to object?
-                username = e.getPayload()[1];
+                authToken = (String) e.getPayload()[0]; // Change payload to object?
+                username = (String) e.getPayload()[1];
                 post = new PostLogin(username, authToken);
                 current = post;
             } else if (e.getType() == SwitchException.exceptionType.LOGOUT) {
@@ -59,7 +60,7 @@ public class ContextSwitcher {
                 authToken = null;
                 username = null;
             } else if (e.getType() == SwitchException.exceptionType.PLAY || e.getType() == SwitchException.exceptionType.WATCH) {
-                game = new GameUI();
+                game = new GameUI(authToken, (ChessGame.TeamColor) e.getPayload()[0]);
                 current = game;
             } else if (e.getType() == SwitchException.exceptionType.LEAVE) {
                 game = null;
