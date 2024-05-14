@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
@@ -74,7 +75,17 @@ public class GameUI extends UI {
 
         highlight(chessPosition);
 
-        promptInput("End position");
+        ChessPosition end = parsePosition(promptInput("End position"));
+
+        if (end == null) {
+            print("Invalid end position");
+        }
+
+        ChessMove move = new ChessMove(chessPosition, end, null);
+        if (!game.validMoves(chessPosition).contains(move)) {
+            print("Invalid move");
+            return;
+        }
     }
 
     private void highlight() {
@@ -83,7 +94,6 @@ public class GameUI extends UI {
             print("Invalid position");
             return;
         }
-        ;
 
         highlight(position);
     }
@@ -121,6 +131,10 @@ public class GameUI extends UI {
 
     private void move() {
         redraw();
+        if (game.getTeamTurn() != teamColor) {
+            print("It's not your turn");
+        }
+
         move(parsePosition(promptInput("Start position: ")));
     }
 
