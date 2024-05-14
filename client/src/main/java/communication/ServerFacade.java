@@ -14,6 +14,8 @@ public class ServerFacade {
 
     private final HttpCommunicator http = new HttpCommunicator();
 
+    private WebSocketCommunicator websocket = new WebSocketCommunicator();
+
     public static final String url = "http://localhost:8080/";
 
     //Prelogin
@@ -41,4 +43,6 @@ public class ServerFacade {
     public ListResponse listGames(AuthRequest request) {
         return http.listGames(request);
     }
+
+
 }

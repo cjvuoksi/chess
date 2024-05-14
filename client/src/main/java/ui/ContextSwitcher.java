@@ -1,14 +1,13 @@
 package ui;
 
 import chess.ChessGame;
-import model.GameData;
+import webSocketMessages.serverMessages.ServerMessage;
 
-public class ContextSwitcher {
+public class ContextSwitcher implements Observer {
     private UI current = new PreLogin();
-    private final UI pre = current;
-    private UI post;
-    private UI game;
-    private GameData data;
+    private final PreLogin pre = (PreLogin) current;
+    private PostLogin post;
+    private GameUI game;
 
     private String username;
     private String authToken;
@@ -60,12 +59,22 @@ public class ContextSwitcher {
                 authToken = null;
                 username = null;
             } else if (e.getType() == SwitchException.exceptionType.PLAY || e.getType() == SwitchException.exceptionType.WATCH) {
-                game = new GameUI(authToken, (ChessGame.TeamColor) e.getPayload()[0]);
+                game = new GameUI((ChessGame.TeamColor) e.getPayload()[0]);
                 current = game;
             } else if (e.getType() == SwitchException.exceptionType.LEAVE) {
                 game = null;
                 current = post;
             }
         }
+    }
+
+    @Override
+    public void notify(ServerMessage message) {
+
+    }
+
+    @Override
+    public void notifyClosed() {
+
     }
 }

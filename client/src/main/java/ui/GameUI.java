@@ -4,14 +4,19 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
+import webSocketMessages.serverMessages.Notification;
+import webSocketMessages.serverMessages.ServerMessage;
 
-public class GameUI extends UI {
+public class GameUI extends UI implements Observer {
     ChessGame game = new ChessGame();
-    private final String authToken;
-    private final ChessGame.TeamColor teamColor;
+    int gameID;
 
-    public GameUI(String authToken, ChessGame.TeamColor teamColor) {
-        this.authToken = authToken;
+    private final ChessGame.TeamColor teamColor;
+    private boolean exit = false;
+
+    public GameUI(ChessGame.TeamColor teamColor) {
         this.teamColor = teamColor;
     }
 
@@ -61,7 +66,7 @@ public class GameUI extends UI {
         }
     }
 
-    private void move(ChessPosition chessPosition) {
+    private void move(ChessPosition chessPosition) throws SwitchException {
         if (chessPosition == null) {
             print("Invalid position");
             return;
@@ -86,6 +91,12 @@ public class GameUI extends UI {
             print("Invalid move");
             return;
         }
+
+        if (exit) {
+            exit();
+        }
+
+
     }
 
     private void highlight() {
@@ -122,6 +133,10 @@ public class GameUI extends UI {
     }
 
     private void resign() {
+
+        if (exit) {
+            return;
+        }
     }
 
     private void redraw() {
@@ -129,7 +144,7 @@ public class GameUI extends UI {
         draw();
     }
 
-    private void move() {
+    private void move() throws SwitchException {
         redraw();
         if (game.getTeamTurn() != teamColor) {
             print("It's not your turn");
@@ -147,5 +162,26 @@ public class GameUI extends UI {
     public void clearScreen() {
         super.clearScreen();
         draw();
+    }
+
+    @Override
+    public void notify(ServerMessage message) {
+        switch (message.getServerMessageType()) {
+            case LOAD_GAME -> {
+                game = ((LoadGame) message).getGameData().game();
+                clearScreen();
+            }
+            case ERROR -> print(((Error) message).getMessage());
+            case NOTIFICATION -> {
+                clearScreen();
+                print(((Notification) message).getMessage());
+            }
+            default -> print(message.toString());
+        }
+    }
+
+    @Override
+    public void notifyClosed() {
+        exit = true;
     }
 }
