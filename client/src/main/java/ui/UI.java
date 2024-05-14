@@ -1,5 +1,7 @@
 package ui;
 
+import communication.ServerFacade;
+
 import java.util.Scanner;
 
 public abstract class UI {
