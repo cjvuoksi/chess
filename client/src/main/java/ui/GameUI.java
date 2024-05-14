@@ -33,7 +33,7 @@ public class GameUI extends UI {
 
     @Override
     protected void menu() {
-        print("GAME"); // ADD to context switcher
+        redraw();
     }
 
     @Override
@@ -55,9 +55,15 @@ public class GameUI extends UI {
     }
 
     private void move(ChessPosition chessPosition) {
+        if (chessPosition == null) {
+            print("Invalid position");
+            return;
+        }
+
         ChessPiece piece = game.getBoard().getPiece(chessPosition);
         if (piece == null || piece.getTeamColor() != teamColor || piece.getTeamColor() != game.getTeamTurn()) {
             print("Bad start position");
+            return;
         }
 
         highlight(chessPosition);
@@ -67,6 +73,11 @@ public class GameUI extends UI {
 
     private void highlight() {
         ChessPosition position = parsePosition(promptInput("Enter position: "));
+        if (position == null || !position.isValid()) {
+            print("Invalid position");
+            return;
+        }
+        ;
 
         highlight(position);
     }
@@ -86,16 +97,25 @@ public class GameUI extends UI {
         if (!(s.charAt(1) >= '1' || s.charAt(1) <= '8')) {
             return null;
         }
-        return new ChessPosition(s.charAt(1) - '0', s.charAt(0) - 'b');
+        ChessPosition pos = new ChessPosition(s.charAt(1) - '0', s.charAt(0) - ('a' - 1));
+
+        if (pos.isValid()) {
+            return pos;
+        }
+        return null;
     }
 
     private void resign() {
     }
 
     private void redraw() {
+        clearScreen();
+        draw();
     }
 
     private void move() {
+        redraw();
+        move(parsePosition(promptInput("Start position: ")));
     }
 
     private void draw() {

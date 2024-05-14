@@ -115,7 +115,7 @@ public class PostLogin extends UI {
         if (res.getMessage() != null) {
             print(res.getMessage());
         } else {
-            throw new SwitchException(SwitchException.exceptionType.PLAY);
+            throw new SwitchException(SwitchException.exceptionType.PLAY, teamColor);
         }
     }
 

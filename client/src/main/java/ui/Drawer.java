@@ -154,24 +154,33 @@ public class Drawer {
 
     private void highlightValidMoves(ChessPosition position, Collection<ChessMove> movesToHighlight, ChessGame.TeamColor playerColor) {
         String[][] chessBoard = getChessBoardArray();
+        if (movesToHighlight != null) {
+            for (ChessMove move : movesToHighlight) {
+                ChessPosition end = move.getEndPosition();
 
-        for (ChessMove move : movesToHighlight) {
-            ChessPosition end = move.getEndPosition();
+                String highlight = getHighlightColor(end);
 
-            String highlight = getHighlightColor(end);
-
-            chessBoard[end.getRow()][end.getColumn()] = highlight + chessBoard[end.getRow()][end.getColumn()];
+                chessBoard[getRow(end)][getCol(end)] = highlight + chessBoard[getRow(end)][getCol(end)];
+            }
         }
 
-        chessBoard[position.getRow()][position.getColumn()] = EscapeSequences.SET_TEXT_BLINKING + chessBoard[position.getRow()][position.getColumn()] + EscapeSequences.RESET_TEXT_BLINKING;
+        chessBoard[getRow(position)][getCol(position)] = EscapeSequences.SET_TEXT_BLINKING + chessBoard[getRow(position)][getCol(position)] + EscapeSequences.RESET_TEXT_BLINKING;
 
         ui.print(EscapeSequences.ERASE_SCREEN);
         printBoard(playerColor, chessBoard);
     }
 
+    private int getCol(ChessPosition pos) {
+        return pos.getColumn() - 1;
+    }
+
+    private int getRow(ChessPosition pos) {
+        return pos.getRow() - 1;
+    }
+
     private String getHighlightColor(ChessPosition position) {
         String highlight = EscapeSequences.SET_BG_COLOR_DARKER_BLUE;
-        if (isEven(position.getColumn()) ^ isEven(position.getRow())) {
+        if (isEven(getCol(position)) ^ isEven(getRow(position))) {
             highlight = EscapeSequences.SET_BG_COLOR_LIGHT_BLUE;
         }
         return highlight;

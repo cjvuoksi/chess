@@ -26,7 +26,7 @@ public class SwitchException extends Exception {
         payload = null;
     }
 
-    public SwitchException(exceptionType type, String ...payload) {
+    public SwitchException(exceptionType type, Object... payload) {
         this.type = type;
         this.payload = payload;
     }
