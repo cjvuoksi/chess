@@ -38,8 +38,9 @@ public abstract class UI {
     }
 
     public void run() throws SwitchException {
+        clearScreen();
+        menu();
         while (true) {
-            menu();
             String input = getCommandLineInput();
             if (evaluateCommonCommand(input)) {
                 continue;

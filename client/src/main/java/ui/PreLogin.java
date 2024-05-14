@@ -36,7 +36,8 @@ public class PreLogin extends UI {
 
     @Override
     protected void menu() {
-        print("Welcome to the Pre-Login UI");
+        print("Chess");
+        help();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class PreLogin extends UI {
         } else if (s.equalsIgnoreCase("register") || s.equals("r")) {
             register();
         } else {
-            print(String.format("Command %s not recognized", s));
+            print(String.format("Invalid command: %s", s));
             help();
         }
     }

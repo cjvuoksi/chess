@@ -55,6 +55,10 @@ public class PostLogin extends UI {
         else if (s.equalsIgnoreCase("g") || s.equalsIgnoreCase("list")) list();
         else if (s.equalsIgnoreCase("p") || s.equalsIgnoreCase("play")) play();
         else if (s.equalsIgnoreCase("w") || s.equalsIgnoreCase("watch")) watch();
+        else {
+            print(String.format("Invalid command: %s", s));
+            help();
+        }
     }
 
     private void create() {

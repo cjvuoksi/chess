@@ -43,6 +43,7 @@ public class GameUI extends UI {
         }
         if (s.equals("m") || s.equalsIgnoreCase("move")) {
             move();
+            redraw();
         } else if (s.equals("d") || s.equalsIgnoreCase("redraw")) {
             redraw();
         } else if (s.equals("r") || s.equalsIgnoreCase("resign")) {
@@ -51,6 +52,11 @@ public class GameUI extends UI {
             highlight();
         } else if (parsePosition(s) != null) {
             move(parsePosition(s));
+            redraw();
+        } else {
+            redraw();
+            print(String.format("Invalid command: %s", s));
+            help();
         }
     }
 
@@ -121,5 +127,11 @@ public class GameUI extends UI {
     private void draw() {
         Drawer bd = new Drawer(this);
         bd.printBoard(teamColor);
+    }
+
+    @Override
+    public void clearScreen() {
+        super.clearScreen();
+        draw();
     }
 }
