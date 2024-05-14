@@ -22,4 +22,9 @@ public class WebSocketCommunicator {
             observer.notify(new Error("Failed to connect to websocket: " + e.getMessage()));
         }
     }
+
+    public void deinit() {
+        connected = false;
+        client.close();
+    }
 }

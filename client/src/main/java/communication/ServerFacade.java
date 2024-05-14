@@ -44,5 +44,9 @@ public class ServerFacade {
         return http.listGames(request);
     }
 
+    public void close() {
+        websocket.deinit();
+    }
+
 
 }

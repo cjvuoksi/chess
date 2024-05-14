@@ -34,6 +34,7 @@ public class GameUI extends UI implements Observer {
 
     @Override
     protected void exit() throws SwitchException {
+        close();
         throw new SwitchException(SwitchException.exceptionType.LEAVE);
     }
 
@@ -95,8 +96,6 @@ public class GameUI extends UI implements Observer {
         if (exit) {
             exit();
         }
-
-
     }
 
     private void highlight() {
@@ -132,10 +131,10 @@ public class GameUI extends UI implements Observer {
         return null;
     }
 
-    private void resign() {
+    private void resign() throws SwitchException {
 
         if (exit) {
-            return;
+            exit();
         }
     }
 
@@ -183,5 +182,9 @@ public class GameUI extends UI implements Observer {
     @Override
     public void notifyClosed() {
         exit = true;
+    }
+
+    private void close() {
+        server.close();
     }
 }

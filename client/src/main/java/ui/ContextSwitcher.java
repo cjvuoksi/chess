@@ -62,6 +62,7 @@ public class ContextSwitcher implements Observer {
                 game = new GameUI((ChessGame.TeamColor) e.getPayload()[0]);
                 current = game;
             } else if (e.getType() == SwitchException.exceptionType.LEAVE) {
+
                 game = null;
                 current = post;
             }
@@ -70,11 +71,11 @@ public class ContextSwitcher implements Observer {
 
     @Override
     public void notify(ServerMessage message) {
-
+        game.notify(message);
     }
 
     @Override
     public void notifyClosed() {
-
+        game.notifyClosed();
     }
 }

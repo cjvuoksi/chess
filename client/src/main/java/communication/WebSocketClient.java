@@ -27,12 +27,6 @@ public class WebSocketClient extends Endpoint {
         });
     }
 
-    /**
-     * Sends a message to the server as a string
-     *
-     * @param message the message as a JSON string
-     * @throws Exception if there was an error in server communication
-     */
     private void send(String message) throws Exception {
         if (this.session.isOpen()) {
             this.session.getBasicRemote().sendText(message);
@@ -41,12 +35,6 @@ public class WebSocketClient extends Endpoint {
         }
     }
 
-    /**
-     * Sends a user command to the server
-     *
-     * @param command the user command
-     * @throws Exception if there was an error in server communication
-     */
     public void send(UserCommand command) throws Exception {
         String message = gson.toJson(command);
         send(message);
