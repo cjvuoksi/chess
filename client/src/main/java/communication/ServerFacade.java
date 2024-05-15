@@ -7,6 +7,7 @@ import response.CreateResponse;
 import response.ListResponse;
 import response.LoginResponse;
 import response.Response;
+import ui.Observer;
 
 public class ServerFacade {
 
@@ -48,5 +49,7 @@ public class ServerFacade {
         websocket.deinit();
     }
 
-
+    public void upgradeConnection(Observer observer, JoinRequest request) {
+        websocket.initialize(observer, request);
+    }
 }

@@ -1,6 +1,6 @@
 package ui;
 
-import chess.ChessGame;
+import request.JoinRequest;
 import webSocketMessages.serverMessages.ServerMessage;
 
 public class ContextSwitcher implements Observer {
@@ -59,10 +59,10 @@ public class ContextSwitcher implements Observer {
                 authToken = null;
                 username = null;
             } else if (e.getType() == SwitchException.exceptionType.PLAY || e.getType() == SwitchException.exceptionType.WATCH) {
-                game = new GameUI((ChessGame.TeamColor) e.getPayload()[0]);
+                game = new GameUI(((JoinRequest) e.getPayload()[0]).getPlayerColor());
+                game.server.upgradeConnection(this, (JoinRequest) e.getPayload()[0]);
                 current = game;
             } else if (e.getType() == SwitchException.exceptionType.LEAVE) {
-
                 game = null;
                 current = post;
             }

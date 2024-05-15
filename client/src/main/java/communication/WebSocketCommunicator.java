@@ -15,7 +15,7 @@ public class WebSocketCommunicator {
 
         try {
             this.client = new WebSocketClient(observer);
-            client.send(new Connect(request.getPlayerColor(), request.getGameID(), request.getAuthorization()));
+            client.send(new Connect(request.getGameID(), request.getAuthorization(), request.getPlayerColor()));
             connected = true;
         } catch (Exception e) {
             connected = false;
@@ -25,6 +25,8 @@ public class WebSocketCommunicator {
 
     public void deinit() {
         connected = false;
-        client.close();
+        if (client != null) {
+            client.close();
+        }
     }
 }
