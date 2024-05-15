@@ -8,6 +8,7 @@ public class Connect extends UserCommand {
     private final String auth;
 
     public Connect(ChessGame.TeamColor teamColor, int gameID, String auth) {
+        super();
         this.teamColor = teamColor;
         this.gameID = gameID;
         this.auth = auth;

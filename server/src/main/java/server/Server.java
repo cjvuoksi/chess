@@ -1,12 +1,28 @@
 package server;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mysql.cj.log.Slf4JLogger;
 import handler.*;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.*;
 import service.*;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
+import webSocketMessages.userCommands.UserCommand;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+@WebSocket
 public class Server {
+
+    private final Slf4JLogger log = new Slf4JLogger("Server");
+
+    private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
+
+    private final SessionManager sessionManager = new SessionManager();
 
     public static void main(String[] args) {
         new Server().run(8080);
@@ -16,6 +32,8 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/connect", Server.class);
 
         Spark.delete("/db", this::clearApp);
         // Register
@@ -68,4 +86,63 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
+    @OnWebSocketConnect
+    public void open(Session session) {
+        log.logInfo(session.getUpgradeRequest());
+    }
+
+    @OnWebSocketMessage
+    public void onMessage(Session session, String message) {
+        log.logInfo(message);
+
+        UserCommand userCommand = serializer.fromJson(message, UserCommand.class);
+        Integer gameID = userCommand.getId();
+
+    }
+
+    @OnWebSocketError
+    public void onError(Throwable error) {
+        if (TimeoutException.class == error.getClass()) {
+            log.logInfo("Session timed out");
+            return;
+        }
+
+        log.logError(error.getMessage());
+    }
+
+    @OnWebSocketClose
+    public synchronized void onClose(Session session, int code, String reason) {
+        log.logInfo("On close: " + code + " " + reason);
+
+        Integer info = sessionManager.get(session);
+        if (info != null) {
+            sessionManager.remove(session, info);
+        }
+    }
+
+    private void websocketEndpoint(UserCommand command, Session root,) {
+        switch (command.getCommandType()) {
+            case CONNECT -> joinPlayer(command, root, sessions);
+            case MAKE_MOVE -> makeMove(command, root, sessions, sessionManager.get(root));
+            case LEAVE -> leave(command, root, sessions, sessionManager.get(root));
+            case RESIGN -> resign(command, root, sessions, sessionManager.get(root));
+            default -> {
+                try {
+                    root.getRemote().sendString(serializer.toJson(new Error("Unexpected value: " + command.getCommandType())));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
 }
