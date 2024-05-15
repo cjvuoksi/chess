@@ -16,4 +16,6 @@ public class ServerMessage {
     }
 
     protected ServerMessageType serverMessageType;
+
+    protected String message;
 }

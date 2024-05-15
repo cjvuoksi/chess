@@ -170,12 +170,18 @@ public class GameUI extends UI implements Observer {
                 game = ((LoadGame) message).getGameData().game();
                 clearScreen();
             }
-            case ERROR -> print(((Error) message).getMessage());
+            case ERROR -> {
+                clearScreen();
+                print(((Error) message).getMessage());
+            }
             case NOTIFICATION -> {
                 clearScreen();
                 print(((Notification) message).getMessage());
             }
-            default -> print(message.toString());
+            default -> {
+                clearScreen();
+                print(message.toString());
+            }
         }
     }
 
