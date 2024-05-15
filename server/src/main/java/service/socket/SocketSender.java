@@ -1,4 +1,4 @@
-package socketservice;
+package service.socket;
 
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
@@ -26,7 +26,10 @@ public class SocketSender {
     }
 
     public void send(ServerMessage message, Session exclude, Collection<Session> recipients) {
-        recipients.remove(exclude);
-        send(message, recipients);
+        recipients.forEach(session -> {
+            if (!session.equals(exclude)) {
+                send(message, session);
+            }
+        });
     }
 }
