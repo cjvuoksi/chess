@@ -1,7 +1,10 @@
 package webSocketMessages.userCommands;
 
+import chess.ChessGame;
+
 public class Leave extends UserCommand {
-    public Leave() {
-        super();
+
+    public Leave(Integer id, String authToken, ChessGame.TeamColor teamColor) {
+        super(id, authToken, teamColor);
     }
 }

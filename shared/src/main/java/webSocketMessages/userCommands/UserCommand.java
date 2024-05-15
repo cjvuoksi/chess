@@ -1,10 +1,15 @@
 package webSocketMessages.userCommands;
 
+import chess.ChessGame;
+
 public class UserCommand {
-    public UserCommand(Integer id, String authToken) {
-        this.id = id;
-        this.authToken = authToken;
-    }
+    protected CommandType commandType;
+
+    private final String authToken;
+
+    private final Integer id;
+
+    private final ChessGame.TeamColor teamColor;
 
     public enum CommandType {
         CONNECT,
@@ -13,11 +18,15 @@ public class UserCommand {
         RESIGN
     }
 
-    protected CommandType commandType;
+    public UserCommand(Integer id, String authToken, ChessGame.TeamColor teamColor) {
+        this.id = id;
+        this.authToken = authToken;
+        this.teamColor = teamColor;
+    }
 
-    private final String authToken;
-
-    private final Integer id;
+    public ChessGame.TeamColor getTeamColor() {
+        return teamColor;
+    }
 
     public CommandType getCommandType() {
         return commandType;

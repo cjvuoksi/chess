@@ -1,7 +1,10 @@
 package webSocketMessages.userCommands;
 
+import chess.ChessGame;
+
 public class MakeMove extends UserCommand {
-    public MakeMove() {
-        super();
+
+    public MakeMove(Integer id, String authToken, ChessGame.TeamColor teamColor) {
+        super(id, authToken, teamColor);
     }
 }
