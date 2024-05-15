@@ -98,8 +98,7 @@ public class Server {
         log.logInfo(message);
 
         UserCommand userCommand = serializer.fromJson(message, UserCommand.class);
-        Integer gameID = userCommand.getId();
-
+        websocketEndpoint(userCommand, session);
     }
 
     @OnWebSocketError
