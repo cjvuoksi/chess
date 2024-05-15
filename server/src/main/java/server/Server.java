@@ -124,10 +124,10 @@ public class Server {
 
     private void websocketEndpoint(UserCommand command, Session root) {
         switch (command.getCommandType()) {
-            case CONNECT -> new Connect().run(command, root, sessionManager.get(command.getId()));
-            case MAKE_MOVE -> makeMove(command, root, sessions, sessionManager.get(root));
-            case LEAVE -> leave(command, root, sessions, sessionManager.get(root));
-            case RESIGN -> resign(command, root, sessions, sessionManager.get(root));
+            case CONNECT -> new Connect(command, root, sessionManager.get(command.getId())).run();
+            case MAKE_MOVE -> log.logInfo("make move");
+            case LEAVE -> log.logInfo("leave");
+            case RESIGN -> log.logInfo("resign");
             default -> {
                 try {
                     root.getRemote().sendString(serializer.toJson(new Error("Unexpected value: " + command.getCommandType())));
@@ -137,8 +137,4 @@ public class Server {
             }
         }
     }
-
-
-
-
 }
