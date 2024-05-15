@@ -1,11 +1,11 @@
-package service;
+package service.HTTP;
 
 import dataaccess.DataAccessException;
 import request.AuthRequest;
 import request.Request;
 import response.Response;
 
-public class Logout extends Service {
+public class Logout extends HTTPService {
     @Override
     public Response run(Request req) throws DataAccessException {
         AuthRequest r = (AuthRequest) req;

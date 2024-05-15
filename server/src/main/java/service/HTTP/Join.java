@@ -1,4 +1,4 @@
-package service;
+package service.HTTP;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
@@ -8,7 +8,7 @@ import request.JoinRequest;
 import request.Request;
 import response.Response;
 
-public class Join extends Service {
+public class Join extends HTTPService {
     @Override
     public Response run(Request req) throws DataAccessException {
         JoinRequest r = (JoinRequest) req;

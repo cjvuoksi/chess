@@ -3,11 +3,11 @@ package handler;
 import dataaccess.DataAccessException;
 import request.RegisterRequest;
 import request.Request;
-import service.Service;
+import service.HTTP.HTTPService;
 import spark.Response;
 
 public class RegisterH extends Handler {
-    public RegisterH(spark.Request request, Response response, Service service) {
+    public RegisterH(spark.Request request, Response response, HTTPService service) {
         super(request, response, service);
     }
 

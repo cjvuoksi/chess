@@ -6,7 +6,8 @@ import com.mysql.cj.log.Slf4JLogger;
 import handler.*;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
-import service.*;
+import service.HTTP.*;
+import service.socket.Connect;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -121,9 +122,9 @@ public class Server {
         }
     }
 
-    private void websocketEndpoint(UserCommand command, Session root,) {
+    private void websocketEndpoint(UserCommand command, Session root) {
         switch (command.getCommandType()) {
-            case CONNECT -> joinPlayer(command, root, sessions);
+            case CONNECT -> new Connect().run(command, root, sessionManager.get(command.getId()));
             case MAKE_MOVE -> makeMove(command, root, sessions, sessionManager.get(root));
             case LEAVE -> leave(command, root, sessions, sessionManager.get(root));
             case RESIGN -> resign(command, root, sessions, sessionManager.get(root));
@@ -136,11 +137,6 @@ public class Server {
             }
         }
     }
-
-
-
-
-
 
 
 

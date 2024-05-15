@@ -3,11 +3,11 @@ package handler;
 import dataaccess.DataAccessException;
 import request.JoinRequest;
 import request.Request;
-import service.Service;
+import service.HTTP.HTTPService;
 import spark.Response;
 
 public class JoinH extends Handler {
-    public JoinH(spark.Request request, Response response, Service service) {
+    public JoinH(spark.Request request, Response response, HTTPService service) {
         super(request, response, service);
     }
 

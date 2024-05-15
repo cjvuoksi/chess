@@ -1,4 +1,4 @@
-package service;
+package service.HTTP;
 
 import dataaccess.DataAccessException;
 import model.GameData;
@@ -9,7 +9,7 @@ import response.Response;
 
 import java.util.Collection;
 
-public class List extends Service {
+public class List extends HTTPService {
     @Override
     public Response run(Request req) throws DataAccessException {
         AuthRequest r = (AuthRequest) req;

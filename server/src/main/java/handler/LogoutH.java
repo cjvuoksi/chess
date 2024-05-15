@@ -3,11 +3,11 @@ package handler;
 import dataaccess.DataAccessException;
 import request.AuthRequest;
 import request.Request;
-import service.Service;
+import service.HTTP.HTTPService;
 import spark.Response;
 
 public class LogoutH extends Handler {
-    public LogoutH(spark.Request request, Response response, Service service) {
+    public LogoutH(spark.Request request, Response response, HTTPService service) {
         super(request, response, service);
     }
 

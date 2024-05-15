@@ -2,11 +2,11 @@ package handler;
 
 import dataaccess.DataAccessException;
 import request.Request;
-import service.Service;
+import service.HTTP.HTTPService;
 import spark.Response;
 
 public class ClearH extends Handler {
-    public ClearH(spark.Request request, Response response, Service service) {
+    public ClearH(spark.Request request, Response response, HTTPService service) {
         super(request, response, service);
     }
 

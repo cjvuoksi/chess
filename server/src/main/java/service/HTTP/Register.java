@@ -1,28 +1,31 @@
-package service;
+package service.HTTP;
 
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
+import request.RegisterRequest;
 import request.Request;
-import request.UserRequest;
 import response.LoginResponse;
 import response.Response;
 
 import java.util.UUID;
 
-public class Login extends Service {
+public class Register extends HTTPService {
     @Override
     public Response run(Request req) throws DataAccessException {
-        UserRequest r = (UserRequest) req;
+        RegisterRequest r = (RegisterRequest) req;
 
-        UserData user = userDAO.find(r.getUsername());
-        if (user == null || !BCrypt.checkpw(r.getPassword(), user.password())) {
-            throw new DataAccessException("Error: unauthorized", 401);
+        if (userDAO.find(r.getUsername()) != null) {
+            throw new DataAccessException("Error: already taken", 403);
         }
 
+        String hash = BCrypt.hashpw(r.getPassword(), BCrypt.gensalt());
+
+        userDAO.create(new UserData(r.getUsername(), hash, r.getEmail()));
         String authToken = UUID.randomUUID().toString();
         authDAO.create(new AuthData(authToken, r.getUsername()));
+
         return new LoginResponse(authToken, r.getUsername());
     }
 }
