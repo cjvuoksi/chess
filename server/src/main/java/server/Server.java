@@ -98,6 +98,10 @@ public class Server {
         log.logInfo(message);
 
         UserCommand userCommand = serializer.fromJson(message, UserCommand.class);
+        if (userCommand.getCommandType() == UserCommand.CommandType.CONNECT) {
+            sessionManager.add(session, userCommand.getId());
+        }
+
         websocketEndpoint(userCommand, session);
     }
 

@@ -26,6 +26,10 @@ public class SocketSender {
     }
 
     public void send(ServerMessage message, Session exclude, Collection<Session> recipients) {
+        if (null == recipients) {
+            return;
+        }
+
         recipients.forEach(session -> {
             if (!session.equals(exclude)) {
                 send(message, session);
