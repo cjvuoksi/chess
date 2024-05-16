@@ -2,7 +2,6 @@ package service.socket;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
-import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import webSocketMessages.serverMessages.Error;
@@ -19,39 +18,31 @@ public class Leave extends SocketService {
     @Override
     public void run() {
         try {
-            AuthData authData = authDAO.find(command.getAuthToken());
-            if (authData == null) {
-                sendRoot(new Error("Unauthorized"));
-                return;
-            }
-            GameData gameData = gameDAO.find(command.getId());
-            if (gameData == null) {
-                sendRoot(new Error("Game not found"));
-                return;
-            }
+            Result result = getResult();
+            if (result == null) return;
 
             if (command.getTeamColor() == ChessGame.TeamColor.WHITE) {
-                if (!gameData.whiteUsername().equals(authData.username())) {
+                if (!result.game().whiteUsername().equals(result.auth().username())) {
                     sendRoot(new Error("You are not the white player"));
                     return;
                 }
 
-                GameData updated = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.game());
+                GameData updated = new GameData(result.game().gameID(), null, result.game().blackUsername(), result.game().gameName(), result.game().game());
                 gameDAO.update(updated);
 
-                sendOthers(new Notification(String.format("%s stopped playing white", authData.username())));
+                sendOthers(new Notification(String.format("%s stopped playing white", result.auth().username())));
             } else if (command.getTeamColor() == ChessGame.TeamColor.BLACK) {
-                if (!gameData.blackUsername().equals(authData.username())) {
+                if (!result.game().blackUsername().equals(result.auth().username())) {
                     sendRoot(new Error("You are not the black player"));
                     return;
                 }
 
-                GameData updated = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
+                GameData updated = new GameData(result.game().gameID(), result.game().whiteUsername(), null, result.game().gameName(), result.game().game());
                 gameDAO.update(updated);
 
-                sendOthers(new Notification(String.format("%s stopped playing black", authData.username())));
+                sendOthers(new Notification(String.format("%s stopped playing black", result.auth().username())));
             } else {
-                sendOthers(new Notification(String.format("%s stopped watching", authData.username())));
+                sendOthers(new Notification(String.format("%s stopped watching", result.auth().username())));
             }
         } catch (DataAccessException e) {
             sendRoot(new Error(e.getMessage()));

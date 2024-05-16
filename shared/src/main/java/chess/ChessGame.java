@@ -22,6 +22,25 @@ public class ChessGame {
 
     private TeamColor currColor = TeamColor.WHITE;
 
+    private TeamColor winner = null;
+    private boolean gameOver = false;
+
+    public TeamColor getWinner() {
+        return winner;
+    }
+
+    public void setWinner(TeamColor winner) {
+        this.winner = winner;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
     public ChessGame() {
         board.resetBoard();
     }
@@ -185,6 +204,17 @@ public class ChessGame {
     }
 
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (gameOver) {
+            switch (winner) {
+                case WHITE:
+                    throw new InvalidMoveException("Game over : White won");
+                case BLACK:
+                    throw new InvalidMoveException("Game over : Black won");
+                default:
+                    throw new InvalidMoveException("Game over : Stalemate");
+            }
+        }
+
         ChessPiece movePiece = board.getPiece(move.getStartPosition());
         if (movePiece == null) {
             throw new InvalidMoveException(String.format("The initial square %s has no piece to move",

@@ -1,6 +1,7 @@
 package communication;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import ui.Observer;
 import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.Notification;
@@ -13,7 +14,7 @@ import java.net.URI;
 public class WebSocketClient extends Endpoint {
     private final Observer observer;
     Session session;
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
 
     public WebSocketClient(Observer observer) throws Exception {
         URI uri = URI.create("ws://localhost:8080/connect");

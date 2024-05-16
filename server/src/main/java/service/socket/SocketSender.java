@@ -1,6 +1,7 @@
 package service.socket;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mysql.cj.log.Slf4JLogger;
 import org.eclipse.jetty.websocket.api.Session;
 import webSocketMessages.serverMessages.Error;
@@ -12,7 +13,7 @@ import java.util.Collection;
 
 public class SocketSender {
 
-    private final Gson serializer = new Gson();
+    private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
 
     private final Slf4JLogger logger = new Slf4JLogger("Sender");
 

@@ -1,6 +1,7 @@
 package webSocketMessages.userCommands;
 
 import chess.ChessGame;
+import chess.ChessMove;
 
 public class UserCommand {
     protected CommandType commandType;
@@ -10,6 +11,8 @@ public class UserCommand {
     private final Integer id;
 
     private final ChessGame.TeamColor teamColor;
+
+    protected ChessMove move;
 
     public enum CommandType {
         CONNECT,
@@ -38,5 +41,9 @@ public class UserCommand {
 
     public Integer getId() {
         return id;
+    }
+
+    public ChessMove getMove() {
+        return move;
     }
 }

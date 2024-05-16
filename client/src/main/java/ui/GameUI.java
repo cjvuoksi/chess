@@ -4,7 +4,6 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.ServerMessage;
 import webSocketMessages.userCommands.Leave;
 import webSocketMessages.userCommands.MakeMove;
@@ -53,7 +52,6 @@ public class GameUI extends UI implements Observer {
         }
         if (s.equals("m") || s.equalsIgnoreCase("move")) {
             move();
-            redraw();
         } else if (s.equals("d") || s.equalsIgnoreCase("redraw")) {
             redraw();
         } else if (s.equals("r") || s.equalsIgnoreCase("resign")) {
@@ -62,7 +60,6 @@ public class GameUI extends UI implements Observer {
             highlight();
         } else if (parsePosition(s) != null) {
             move(parsePosition(s));
-            redraw();
         } else {
             redraw();
             print(String.format("Invalid command: %s", s));
@@ -192,7 +189,7 @@ public class GameUI extends UI implements Observer {
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
             case LOAD_GAME -> {
-                game = ((LoadGame) message).getGameData().game();
+                game = message.getGameData().game();
                 clearScreen();
             }
             case ERROR, NOTIFICATION -> {

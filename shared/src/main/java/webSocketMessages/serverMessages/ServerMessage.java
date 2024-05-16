@@ -1,5 +1,7 @@
 package webSocketMessages.serverMessages;
 
+import model.GameData;
+
 public class ServerMessage {
     public ServerMessage(ServerMessageType serverMessageType) {
         this.serverMessageType = serverMessageType;
@@ -19,7 +21,13 @@ public class ServerMessage {
 
     protected String message;
 
+    protected GameData gameData;
+
     public String getMessage() {
         return message;
+    }
+
+    public GameData getGameData() {
+        return gameData;
     }
 }
