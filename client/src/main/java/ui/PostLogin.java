@@ -97,6 +97,10 @@ public class PostLogin extends UI {
 
     private void join(Boolean asPlayer) throws SwitchException {
         list();
+        if (games.isEmpty()) {
+            print("No games in the data base");
+            return;
+        }
         String num = promptInput("Enter number to play or (q) to escape: ");
         if (num == null || num.equalsIgnoreCase("q")) {
             return;
@@ -116,7 +120,7 @@ public class PostLogin extends UI {
 
         Response res = server.join(new JoinRequest(authToken, teamColor, games.get(gameNum - 1)));
 
-        if (res.getMessage() != null) {
+        if (res.getMessage() != null && teamColor != null && !res.getMessage().contains("Bad")) {
             print(res.getMessage());
         } else {
             throw new SwitchException(SwitchException.exceptionType.PLAY, new JoinRequest(authToken, teamColor, games.get(gameNum - 1)));

@@ -18,4 +18,8 @@ public class ServerMessage {
     protected ServerMessageType serverMessageType;
 
     protected String message;
+
+    public String getMessage() {
+        return message;
+    }
 }

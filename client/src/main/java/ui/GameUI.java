@@ -4,9 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import webSocketMessages.serverMessages.Error;
 import webSocketMessages.serverMessages.LoadGame;
-import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.serverMessages.ServerMessage;
 
 public class GameUI extends UI implements Observer {
@@ -170,13 +168,9 @@ public class GameUI extends UI implements Observer {
                 game = ((LoadGame) message).getGameData().game();
                 clearScreen();
             }
-            case ERROR -> {
+            case ERROR, NOTIFICATION -> {
                 clearScreen();
-                print(((Error) message).getMessage());
-            }
-            case NOTIFICATION -> {
-                clearScreen();
-                print(((Notification) message).getMessage());
+                print(message.getMessage());
             }
             default -> {
                 clearScreen();
