@@ -12,7 +12,7 @@ import webSocketMessages.userCommands.Resign;
 import java.util.Collection;
 
 public class GameUI extends UI implements Observer {
-    ChessGame game = new ChessGame();
+    ChessGame game;
     int gameID;
     String authToken;
 
@@ -63,7 +63,7 @@ public class GameUI extends UI implements Observer {
             move(parsePosition(s));
         } else {
             redraw();
-            print(String.format("Invalid command: %s", s));
+            printError(String.format("Invalid command: %s", s));
             help();
         }
     }
@@ -81,13 +81,13 @@ public class GameUI extends UI implements Observer {
 
     private void move(ChessPosition chessPosition) throws SwitchException {
         if (chessPosition == null) {
-            print("Invalid position");
+            printError("Invalid position");
             return;
         }
 
         ChessPiece piece = game.getBoard().getPiece(chessPosition);
         if (piece == null || piece.getTeamColor() != teamColor || piece.getTeamColor() != game.getTeamTurn()) {
-            print("Bad start position");
+            printError("Bad start position");
             return;
         }
 
@@ -97,7 +97,7 @@ public class GameUI extends UI implements Observer {
 
         if (end == null) {
             redraw();
-            print("Invalid end position");
+            printError("Invalid end position");
             return;
         }
 
@@ -105,7 +105,7 @@ public class GameUI extends UI implements Observer {
 
         if (!game.validMoves(chessPosition).contains(move)) {
             redraw();
-            print("Invalid move");
+            printError("Invalid move");
             return;
         }
 
@@ -116,7 +116,7 @@ public class GameUI extends UI implements Observer {
         try {
             server.move(new MakeMove(gameID, authToken, teamColor, move));
         } catch (Exception e) {
-            print("Error occurred: " + e.getMessage());
+            printError("Error occurred: " + e.getMessage());
         }
     }
 
@@ -162,7 +162,7 @@ public class GameUI extends UI implements Observer {
     private void highlight() {
         ChessPosition position = parsePosition(promptInput("Enter position: "));
         if (position == null || !position.isValid()) {
-            print("Invalid position");
+            printError("Invalid position");
             return;
         }
 
@@ -175,6 +175,10 @@ public class GameUI extends UI implements Observer {
     }
 
     private ChessPosition parsePosition(String s) {
+        if ("q".equals(s)) {
+            return null;
+        }
+
         if (s.length() != 2) {
             return null;
         }
@@ -200,7 +204,7 @@ public class GameUI extends UI implements Observer {
         try {
             server.resign(new Resign(gameID, authToken, teamColor));
         } catch (Exception e) {
-            print("Error occurred: " + e.getMessage());
+            printError("Error occurred: " + e.getMessage());
         }
     }
 
@@ -212,7 +216,7 @@ public class GameUI extends UI implements Observer {
     private void move() throws SwitchException {
         redraw();
         if (game.getTeamTurn() != teamColor) {
-            print("It's not your turn");
+            printError("It's not your turn");
         }
 
         move(parsePosition(promptInput("Start position: ")));
@@ -225,7 +229,7 @@ public class GameUI extends UI implements Observer {
         } else if (game.getTeamTurn() == teamColor) {
             print("Your turn");
         } else {
-            print("Waiting for opponent");
+            print("Waiting for opponent...");
         }
         bd.printBoard(teamColor);
     }
@@ -243,7 +247,11 @@ public class GameUI extends UI implements Observer {
                 game = message.getGameData().game();
                 clearScreen();
             }
-            case ERROR, NOTIFICATION -> {
+            case ERROR -> {
+                clearScreen();
+                printError(message.getMessage());
+            }
+            case NOTIFICATION -> {
                 clearScreen();
                 print(message.getMessage());
             }

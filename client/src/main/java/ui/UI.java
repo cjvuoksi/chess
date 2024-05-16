@@ -23,6 +23,10 @@ public abstract class UI {
         System.out.println(message);
     }
 
+    public void printError(String message) {
+        print(EscapeSequences.SET_TEXT_COLOR_RED + EscapeSequences.SET_TEXT_ITALIC + message + EscapeSequences.SET_TEXT_ITALIC + EscapeSequences.RESET_TEXT_COLOR);
+    }
+
     public void clearScreen() {
         print(EscapeSequences.ERASE_SCREEN);
         print(EscapeSequences.moveCursorToLocation(0, 0));

@@ -24,10 +24,10 @@ public class PostLogin extends UI {
     @Override
     protected String getHelp() {
         return """
-                logout (l): logs out of the server
+                logout (q): logs out of the server
                 create (c): creates a new game
-                list (g): lists the games on the server
-                play (p): joins a game as a player
+                list (l): lists the games on the server
+                play (j): joins a game as a player
                 watch (w): joins a game as an observer
                 help (h): displays this help screen
                 """;
@@ -50,13 +50,13 @@ public class PostLogin extends UI {
 
     @Override
     protected void evaluate(String s) throws SwitchException {
-        if (s.equalsIgnoreCase("l")) exit();
+        if (s.equalsIgnoreCase("leave")) exit();
         if (s.equalsIgnoreCase("c") || s.equalsIgnoreCase("create")) create();
-        else if (s.equalsIgnoreCase("g") || s.equalsIgnoreCase("list")) list();
-        else if (s.equalsIgnoreCase("p") || s.equalsIgnoreCase("play")) play();
+        else if (s.equalsIgnoreCase("l") || s.equalsIgnoreCase("list")) list();
+        else if (s.equalsIgnoreCase("j") || s.equalsIgnoreCase("play")) play();
         else if (s.equalsIgnoreCase("w") || s.equalsIgnoreCase("watch")) watch();
         else {
-            print(String.format("Invalid command: %s", s));
+            printError(String.format("Invalid command: %s", s));
             help();
         }
     }
@@ -66,7 +66,7 @@ public class PostLogin extends UI {
 
         CreateResponse res = server.createGame(new CreateRequest(authToken, name));
         if (res.getMessage() != null) {
-            print(res.getMessage());
+            printError(res.getMessage());
         } else {
             print("Game created");
             games.add(res.getGameID());
@@ -76,7 +76,7 @@ public class PostLogin extends UI {
     private void list() {
         ListResponse res = server.listGames(new AuthRequest(authToken));
         if (res.getMessage() != null) {
-            print(res.getMessage());
+            printError(res.getMessage());
         } else {
             games.clear();
             int i = 1;
@@ -105,9 +105,15 @@ public class PostLogin extends UI {
         if (num == null || num.equalsIgnoreCase("q")) {
             return;
         }
-        int gameNum = Integer.parseInt(num);
+        int gameNum;
+        try {
+            gameNum = Integer.parseInt(num, 10);
+        } catch (NumberFormatException e) {
+            printError(String.format("Invalid number: %s", num));
+            return;
+        }
         if (gameNum > games.size() || gameNum < 1) {
-            print("Invalid number entered");
+            printError("Invalid number entered");
             return;
         }
         ChessGame.TeamColor teamColor = null;
@@ -121,7 +127,7 @@ public class PostLogin extends UI {
         Response res = server.join(new JoinRequest(authToken, teamColor, games.get(gameNum - 1)));
 
         if (res.getMessage() != null && teamColor != null && !res.getMessage().contains("Bad")) {
-            print(res.getMessage());
+            printError(res.getMessage());
         } else {
             throw new SwitchException(SwitchException.exceptionType.PLAY, new JoinRequest(authToken, teamColor, games.get(gameNum - 1)));
         }
@@ -148,7 +154,7 @@ public class PostLogin extends UI {
             return ChessGame.TeamColor.WHITE;
         }
 
-        print("Invalid team color entered");
+        printError("Invalid team color entered");
         return null;
     }
 }

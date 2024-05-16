@@ -47,7 +47,7 @@ public class PreLogin extends UI {
         } else if (s.equalsIgnoreCase("register") || s.equals("r")) {
             register();
         } else {
-            print(String.format("Invalid command: %s", s));
+            printError(String.format("Invalid command: %s", s));
             help();
         }
     }
@@ -71,7 +71,7 @@ public class PreLogin extends UI {
 
     private void signIn(LoginResponse response) throws SwitchException {
         if (response.getMessage() != null) {
-            print(response.getMessage());
+            printError(response.getMessage());
         } else {
             throw new SwitchException(SwitchException.exceptionType.LOGIN, response.getAuthToken(), response.getUsername());
         }
