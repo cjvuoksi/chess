@@ -1,6 +1,5 @@
 package server;
 
-import com.mysql.cj.log.Slf4JLogger;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.util.Collection;
@@ -12,8 +11,6 @@ public class SessionManager {
     private final Map<Integer, Collection<Session>> sessions = new HashMap<>();
 
     private final Map<Session, SessionInfo> sessionMap = new HashMap<>();
-
-    private final Slf4JLogger logger = new Slf4JLogger("SessionManager");
 
     public SessionManager() {
     }

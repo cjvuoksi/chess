@@ -2,8 +2,9 @@ package service.socket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mysql.cj.log.Slf4JLogger;
 import org.eclipse.jetty.websocket.api.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import websocket.messages.Error;
 import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
@@ -15,7 +16,7 @@ public class SocketSender {
 
     private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
 
-    private final Slf4JLogger logger = new Slf4JLogger("Sender");
+    private final Logger logger = LoggerFactory.getLogger("Sender");
 
     public void send(ServerMessage message, Session recipient) {
         try {
@@ -29,10 +30,12 @@ public class SocketSender {
     }
 
     private void debug(ServerMessage message) {
-        switch (message.getServerMessageType()) {
-            case NOTIFICATION -> logger.logInfo(((Notification) message).getMessage());
-            case ERROR -> logger.logInfo(((Error) message).getErrorMessage());
-            case LOAD_GAME -> logger.logInfo(message.getServerMessageType());
+        if (logger.isDebugEnabled()) {
+            switch (message.getServerMessageType()) {
+                case NOTIFICATION -> logger.debug(((Notification) message).getMessage());
+                case ERROR -> logger.debug(((Error) message).getErrorMessage());
+                case LOAD_GAME -> logger.debug(String.valueOf(message));
+            }
         }
     }
 

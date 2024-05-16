@@ -2,10 +2,11 @@ package server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mysql.cj.log.Slf4JLogger;
 import handler.*;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.HTTP.*;
 import service.socket.Connect;
 import service.socket.Leave;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeoutException;
 @WebSocket
 public class Server {
 
-    private final Slf4JLogger log = new Slf4JLogger("Server");
+    private final Logger log = LoggerFactory.getLogger("Server");
 
     private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
 
@@ -33,7 +34,6 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.webSocket("/ws", server.Server.class);
-
 
         Spark.staticFiles.location("web");
 
@@ -93,12 +93,12 @@ public class Server {
 
     @OnWebSocketConnect
     public void open(Session session) {
-        log.logInfo("Connected: " + session.getRemoteAddress().getAddress());
+        log.debug("Connected: {}", session.getRemoteAddress().getAddress());
     }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) {
-        log.logInfo(message);
+        log.debug(message);
 
         UserGameCommand userCommand = serializer.fromJson(message, UserGameCommand.class);
         if (userCommand.getCommandType() == UserGameCommand.CommandType.CONNECT) {
@@ -112,11 +112,11 @@ public class Server {
     @OnWebSocketError
     public void onError(Session session, Throwable error) {
         if (TimeoutException.class == error.getClass()) {
-            log.logInfo("Session timed out");
+            log.info("Session timed out");
             return;
         }
 
-        log.logError(error.getMessage());
+        log.error(error.getMessage());
         if (session.isOpen()) {
             try {
                 session.getRemote().sendString(serializer.toJson(new Error(error.getMessage())));
@@ -129,7 +129,7 @@ public class Server {
 
     @OnWebSocketClose
     public synchronized void onClose(Session session, int code, String reason) {
-        log.logInfo("On close: " + code + " " + reason);
+        log.info("On close: {} {}", code, reason);
 
         SessionInfo info = sessionManager.get(session);
         if (info != null) {
@@ -155,6 +155,8 @@ public class Server {
 
     @OnWebSocketFrame
     public void onFrame(org.eclipse.jetty.websocket.api.Session session, org.eclipse.jetty.websocket.api.extensions.Frame frame) {
-        log.logInfo("Frame " + frame.getType() + " " + frame.getPayload());
+        if (log.isDebugEnabled()) {
+            log.info("Frame {} {}", frame.getType(), frame.getPayload());
+        }
     }
 }
