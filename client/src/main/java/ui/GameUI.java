@@ -6,10 +6,14 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.ServerMessage;
+import webSocketMessages.userCommands.Leave;
+import webSocketMessages.userCommands.MakeMove;
+import webSocketMessages.userCommands.Resign;
 
 public class GameUI extends UI implements Observer {
     ChessGame game = new ChessGame();
     int gameID;
+    String authToken;
 
     private final ChessGame.TeamColor teamColor;
     private boolean exit = false;
@@ -44,7 +48,7 @@ public class GameUI extends UI implements Observer {
     @Override
     protected void evaluate(String s) throws SwitchException {
         if (s.equals("q") || s.equalsIgnoreCase("leave")) {
-            exit();
+            leave();
         }
         if (s.equals("m") || s.equalsIgnoreCase("move")) {
             move();
@@ -63,6 +67,17 @@ public class GameUI extends UI implements Observer {
             print(String.format("Invalid command: %s", s));
             help();
         }
+    }
+
+    private void leave() throws SwitchException {
+        if (!exit) {
+            try {
+                server.leave(new Leave(gameID, authToken, teamColor));
+            } catch (Exception e) {
+                print(e.getMessage());
+            }
+        }
+        exit();
     }
 
     private void move(ChessPosition chessPosition) throws SwitchException {
@@ -93,6 +108,12 @@ public class GameUI extends UI implements Observer {
 
         if (exit) {
             exit();
+        }
+
+        try {
+            server.move(new MakeMove(gameID, authToken, teamColor, move));
+        } catch (Exception e) {
+            print("Error occurred: " + e.getMessage());
         }
     }
 
@@ -130,9 +151,14 @@ public class GameUI extends UI implements Observer {
     }
 
     private void resign() throws SwitchException {
-
         if (exit) {
             exit();
+        }
+
+        try {
+            server.resign(new Resign(gameID, authToken, teamColor));
+        } catch (Exception e) {
+            print("Error occurred: " + e.getMessage());
         }
     }
 

@@ -4,6 +4,7 @@ import request.JoinRequest;
 import ui.Observer;
 import webSocketMessages.serverMessages.Error;
 import webSocketMessages.userCommands.Connect;
+import webSocketMessages.userCommands.UserCommand;
 
 public class WebSocketCommunicator {
     Observer observer;
@@ -28,5 +29,9 @@ public class WebSocketCommunicator {
         if (client != null) {
             client.close();
         }
+    }
+
+    public void send(UserCommand message) throws Exception {
+        client.send(message);
     }
 }

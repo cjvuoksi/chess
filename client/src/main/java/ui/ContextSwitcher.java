@@ -59,8 +59,11 @@ public class ContextSwitcher implements Observer {
                 authToken = null;
                 username = null;
             } else if (e.getType() == SwitchException.exceptionType.PLAY || e.getType() == SwitchException.exceptionType.WATCH) {
-                game = new GameUI(((JoinRequest) e.getPayload()[0]).getPlayerColor());
-                game.server.upgradeConnection(this, (JoinRequest) e.getPayload()[0]);
+                JoinRequest req = (JoinRequest) e.getPayload()[0];
+                game = new GameUI(req.getPlayerColor());
+                game.server.upgradeConnection(this, req);
+                game.gameID = req.getGameID();
+                game.authToken = req.getAuthorization();
                 current = game;
             } else if (e.getType() == SwitchException.exceptionType.LEAVE) {
                 game = null;

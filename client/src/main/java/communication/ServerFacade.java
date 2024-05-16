@@ -8,6 +8,9 @@ import response.ListResponse;
 import response.LoginResponse;
 import response.Response;
 import ui.Observer;
+import webSocketMessages.userCommands.Leave;
+import webSocketMessages.userCommands.MakeMove;
+import webSocketMessages.userCommands.Resign;
 
 public class ServerFacade {
 
@@ -49,7 +52,20 @@ public class ServerFacade {
         websocket.deinit();
     }
 
+    //WebSocket
     public void upgradeConnection(Observer observer, JoinRequest request) {
         websocket.initialize(observer, request);
+    }
+
+    public void leave(Leave leave) throws Exception {
+        websocket.send(leave);
+    }
+
+    public void move(MakeMove move) throws Exception {
+        websocket.send(move);
+    }
+
+    public void resign(Resign resign) throws Exception {
+        websocket.send(resign);
     }
 }
