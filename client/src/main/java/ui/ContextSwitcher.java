@@ -9,8 +9,6 @@ public class ContextSwitcher implements Observer {
     private PostLogin post;
     private GameUI game;
 
-    private String username;
-    private String authToken;
     private Boolean exit = false;
 
     public void start() {
@@ -49,15 +47,13 @@ public class ContextSwitcher implements Observer {
             if (e.getType() == SwitchException.exceptionType.EXIT) {
                 exit = true;
             } else if (e.getType() == SwitchException.exceptionType.LOGIN) {
-                authToken = (String) e.getPayload()[0]; // Change payload to object?
-                username = (String) e.getPayload()[1];
+                String authToken = (String) e.getPayload()[0];
+                String username = (String) e.getPayload()[1];
                 post = new PostLogin(username, authToken);
                 current = post;
             } else if (e.getType() == SwitchException.exceptionType.LOGOUT) {
                 current = pre;
                 post = null;
-                authToken = null;
-                username = null;
             } else if (e.getType() == SwitchException.exceptionType.PLAY || e.getType() == SwitchException.exceptionType.WATCH) {
                 JoinRequest req = (JoinRequest) e.getPayload()[0];
                 game = new GameUI(req.getPlayerColor());

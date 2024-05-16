@@ -1,7 +1,5 @@
 package communication;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import request.*;
 import response.CreateResponse;
 import response.ListResponse;
@@ -14,15 +12,13 @@ import webSocketMessages.userCommands.Resign;
 
 public class ServerFacade {
 
-    private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
-
     private final HttpCommunicator http = new HttpCommunicator();
 
-    private WebSocketCommunicator websocket = new WebSocketCommunicator();
+    private final WebSocketCommunicator websocket = new WebSocketCommunicator();
 
     public static final String url = "http://localhost:8080/";
 
-    //Prelogin
+    //Pre-login
     public LoginResponse register(RegisterRequest request) {
         return http.register(request);
     }
@@ -31,7 +27,7 @@ public class ServerFacade {
         return http.login(request);
     }
 
-    //Postlogin
+    //Post-login
     public Response logout(AuthRequest request) {
         return http.logout(request);
     }
