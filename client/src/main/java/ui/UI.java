@@ -65,7 +65,7 @@ public abstract class UI {
             clearScreen();
             return true;
         }
-        if (command.equalsIgnoreCase("q") || command.equals("quit")) {
+        if (command.equals("q") || command.equals("quit")) {
             exit();
         }
 

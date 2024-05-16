@@ -26,11 +26,12 @@ public class GameUI extends UI implements Observer {
     protected String getHelp() {
         return """
                 redraw (d): redraws the chess board
-                leave (q): leaves the current game allowing another to join
+                leave (Q): leaves the current game allowing another to join
                 move (m): makes a move
                 resign (r): resigns the current game
                 lm (l): highlights legal moves
                 help (h): prints this text
+                quit (q): quits the current game (keeps spot)
                 """;
     }
 
@@ -47,7 +48,7 @@ public class GameUI extends UI implements Observer {
 
     @Override
     protected void evaluate(String s) throws SwitchException {
-        if (s.equals("q") || s.equalsIgnoreCase("leave")) {
+        if (s.equals("Q") || s.equalsIgnoreCase("leave")) {
             leave();
         }
         if (s.equals("m") || s.equalsIgnoreCase("move")) {

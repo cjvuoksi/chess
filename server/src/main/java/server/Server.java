@@ -8,6 +8,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import service.HTTP.*;
 import service.socket.Connect;
+import service.socket.Leave;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -128,8 +129,8 @@ public class Server {
     private void websocketEndpoint(UserCommand command, Session root) {
         switch (command.getCommandType()) {
             case CONNECT -> new Connect(command, root, sessionManager.get(command.getId())).run();
-            case MAKE_MOVE -> log.logInfo("make move");
-            case LEAVE -> log.logInfo("leave");
+            case MAKE_MOVE -> log.logInfo("Make move");
+            case LEAVE -> new Leave(command, root, sessionManager.get(command.getId())).run();
             case RESIGN -> log.logInfo("resign");
             default -> {
                 try {
