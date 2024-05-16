@@ -43,7 +43,7 @@ public class MakeMove extends SocketService {
                 sendAll(new LoadGame(gameData));
                 sendOthers(new Notification(command.getMove().toString()));
                 if (checkmate) {
-                    sendAll(new Notification(String.format("Game over: %s won!", result.auth().username())));
+                    sendAll(new Notification(String.format("Game over: %s (%s) won by checkmate!", result.auth().username(), command.getTeamColor())));
                 } else if (gameData.game().isInCheck(opponent)) {
                     sendAll(new Notification(opponent.toString() + " is in check"));
                 } else if (stalemate) {

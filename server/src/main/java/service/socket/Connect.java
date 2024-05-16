@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 import org.eclipse.jetty.websocket.api.Session;
 import webSocketMessages.serverMessages.Error;
+import webSocketMessages.serverMessages.LoadGame;
 import webSocketMessages.serverMessages.Notification;
 import webSocketMessages.userCommands.UserCommand;
 
@@ -20,6 +21,8 @@ public class Connect extends SocketService {
         try {
             Result result = getResult();
             if (result == null) return;
+
+            sendAll(new LoadGame(result.game()));
 
             if (command.getTeamColor() == null) {
                 sendOthers(new Notification(result.auth().username() + " started watching the game"));

@@ -9,6 +9,8 @@ import webSocketMessages.userCommands.Leave;
 import webSocketMessages.userCommands.MakeMove;
 import webSocketMessages.userCommands.Resign;
 
+import java.util.Collection;
+
 public class GameUI extends UI implements Observer {
     ChessGame game = new ChessGame();
     int gameID;
@@ -42,7 +44,6 @@ public class GameUI extends UI implements Observer {
 
     @Override
     protected void menu() {
-        redraw();
     }
 
     @Override
@@ -95,11 +96,15 @@ public class GameUI extends UI implements Observer {
         ChessPosition end = parsePosition(promptInput("End position"));
 
         if (end == null) {
+            redraw();
             print("Invalid end position");
+            return;
         }
 
-        ChessMove move = new ChessMove(chessPosition, end, null);
+        ChessMove move = getMove(chessPosition, end);
+
         if (!game.validMoves(chessPosition).contains(move)) {
+            redraw();
             print("Invalid move");
             return;
         }
@@ -112,6 +117,45 @@ public class GameUI extends UI implements Observer {
             server.move(new MakeMove(gameID, authToken, teamColor, move));
         } catch (Exception e) {
             print("Error occurred: " + e.getMessage());
+        }
+    }
+
+    private ChessMove getMove(ChessPosition startPosition, ChessPosition endPosition) {
+        ChessMove move = new ChessMove(startPosition, endPosition, null);
+        if (game.getBoard().getPiece(startPosition).getPieceType() == ChessPiece.PieceType.PAWN) {
+            move = getPawnPromotion(game.validMoves(startPosition), startPosition, endPosition);
+        }
+        return move;
+    }
+
+    private ChessMove getPawnPromotion(Collection<ChessMove> validMoves, ChessPosition startPosition, ChessPosition endPosition) {
+        for (ChessMove validMove : validMoves) {
+            if (validMove.getPromotionPiece() != null) {
+                return getPromotionType(startPosition, endPosition);
+            }
+        }
+        return new ChessMove(startPosition, endPosition, null);
+    }
+
+    private ChessMove getPromotionType(ChessPosition startPosition, ChessPosition endPosition) {
+        print("1: Queen");
+        print("2: Rook");
+        print("3: Bishop");
+        print("4: Knight");
+
+        switch (promptInput("Enter promotion piece")) {
+            case "2" -> {
+                return new ChessMove(startPosition, endPosition, ChessPiece.PieceType.ROOK);
+            }
+            case "3" -> {
+                return new ChessMove(startPosition, endPosition, ChessPiece.PieceType.BISHOP);
+            }
+            case "4" -> {
+                return new ChessMove(startPosition, endPosition, ChessPiece.PieceType.KNIGHT);
+            }
+            default -> {
+                return new ChessMove(startPosition, endPosition, ChessPiece.PieceType.QUEEN);
+            }
         }
     }
 
@@ -176,6 +220,13 @@ public class GameUI extends UI implements Observer {
 
     private void draw() {
         Drawer bd = new Drawer(this);
+        if (game.isGameOver()) {
+            print("Game over");
+        } else if (game.getTeamTurn() == teamColor) {
+            print("Your turn");
+        } else {
+            print("Waiting for opponent");
+        }
         bd.printBoard(teamColor);
     }
 
