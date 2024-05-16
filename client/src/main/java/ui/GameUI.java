@@ -210,24 +210,30 @@ public class GameUI extends UI implements Observer {
 
     private void redraw() {
         clearScreen();
-        draw();
     }
 
     private void move() throws SwitchException {
-        redraw();
         if (game.getTeamTurn() != teamColor) {
             printError("It's not your turn");
+            return;
         }
 
         move(parsePosition(promptInput("Start position: ")));
     }
 
     private void draw() {
+        if (game == null) {
+            return;
+        }
         Drawer bd = new Drawer(this);
         if (game.isGameOver()) {
             print("Game over");
         } else if (game.getTeamTurn() == teamColor) {
             print("Your turn");
+        } else if (teamColor != null) {
+            StringBuilder value = new StringBuilder(teamColor.toString().toLowerCase());
+            value.replace(0, 0, String.valueOf(Character.toTitleCase(value.charAt(0))));
+            print(String.format("%s's turn", value));
         } else {
             print("Waiting for opponent...");
         }
