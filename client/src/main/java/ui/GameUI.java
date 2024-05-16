@@ -32,7 +32,8 @@ public class GameUI extends UI implements Observer {
                 resign (r): resigns the current game
                 lm (l): highlights legal moves
                 help (h): prints this text
-                quit (q): quits the current game (keeps spot)
+                quit (q): quits the current game
+                    (keeps spot as player and leaves silently as an observer)
                 """;
     }
 
@@ -230,9 +231,9 @@ public class GameUI extends UI implements Observer {
             print("Game over");
         } else if (game.getTeamTurn() == teamColor) {
             print("Your turn");
-        } else if (teamColor != null) {
-            StringBuilder value = new StringBuilder(teamColor.toString().toLowerCase());
-            value.replace(0, 0, String.valueOf(Character.toTitleCase(value.charAt(0))));
+        } else if (teamColor == null) {
+            StringBuilder value = new StringBuilder(game.getTeamTurn().toString().toLowerCase());
+            value.replace(0, 1, String.valueOf(Character.toTitleCase(value.charAt(0))));
             print(String.format("%s's turn", value));
         } else {
             print("Waiting for opponent...");
