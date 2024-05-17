@@ -11,18 +11,18 @@ import java.util.Map;
 public class SessionManager {
     private final Map<Integer, Collection<Session>> sessions = new HashMap<>();
 
-    private final Map<Session, Integer> sessionMap = new HashMap<>();
+    private final Map<Session, SessionInfo> sessionMap = new HashMap<>();
 
     private final Slf4JLogger logger = new Slf4JLogger("SessionManager");
 
     public SessionManager() {
     }
 
-    public synchronized void add(Session session, int gameID) {
-        Collection<Session> gameSessions = sessions.getOrDefault(gameID, new HashSet<>());
+    public synchronized void add(Session session, SessionInfo info) {
+        Collection<Session> gameSessions = sessions.getOrDefault(info.id(), new HashSet<>());
         gameSessions.add(session);
-        sessions.put(gameID, gameSessions);
-        sessionMap.put(session, gameID);
+        sessions.put(info.id(), gameSessions);
+        sessionMap.put(session, info);
     }
 
     public synchronized void remove(Session session, int gameID) {
@@ -45,7 +45,7 @@ public class SessionManager {
         return sessions.get(gameID);
     }
 
-    public synchronized Integer get(Session session) {
+    public synchronized SessionInfo get(Session session) {
         return sessionMap.get(session);
     }
 }
