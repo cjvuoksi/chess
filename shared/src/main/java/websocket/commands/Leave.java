@@ -1,11 +1,13 @@
-package webSocketMessages.userCommands;
+package websocket.commands;
 
 import chess.ChessGame;
 
-public class Leave extends UserCommand {
+public class Leave extends UserGameCommand {
 
     public Leave(Integer id, String authToken, ChessGame.TeamColor teamColor) {
-        super(id, authToken, teamColor);
+        super(authToken);
+        this.gameID = id;
+        this.teamColor = teamColor;
         this.commandType = CommandType.LEAVE;
     }
 }

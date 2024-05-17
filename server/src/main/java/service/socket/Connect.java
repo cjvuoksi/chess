@@ -3,17 +3,18 @@ package service.socket;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import org.eclipse.jetty.websocket.api.Session;
-import webSocketMessages.serverMessages.Error;
-import webSocketMessages.serverMessages.LoadGame;
-import webSocketMessages.serverMessages.Notification;
-import webSocketMessages.userCommands.UserCommand;
+import server.SessionInfo;
+import websocket.commands.UserGameCommand;
+import websocket.messages.Error;
+import websocket.messages.LoadGame;
+import websocket.messages.Notification;
 
 import java.util.Collection;
 
 public class Connect extends SocketService {
 
-    public Connect(UserCommand command, Session root, Collection<Session> sessions) {
-        super(command, root, sessions);
+    public Connect(UserGameCommand command, Session root, Collection<Session> sessions, SessionInfo sessionInfo) {
+        super(command, root, sessions, sessionInfo);
     }
 
     @Override
@@ -22,17 +23,17 @@ public class Connect extends SocketService {
             Result result = getResult();
             if (result == null) return;
 
-            sendAll(new LoadGame(result.game()));
+            sendRoot(new LoadGame(result.game()));
 
-            if (command.getTeamColor() == null) {
+            if (result.color() == null) {
                 sendOthers(new Notification(result.auth().username() + " started watching the game"));
-            } else if (command.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            } else if (result.color() == ChessGame.TeamColor.WHITE) {
                 if (result.auth().username().equals(result.game().whiteUsername())) {
                     sendOthers(new Notification(result.auth().username() + " joined as white"));
                 } else {
                     sendRoot(new Error("Error in joining game"));
                 }
-            } else if (command.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            } else if (result.color() == ChessGame.TeamColor.BLACK) {
                 if (result.auth().username().equals(result.game().blackUsername())) {
                     sendOthers(new Notification(result.auth().username() + " joined as black"));
                 } else {

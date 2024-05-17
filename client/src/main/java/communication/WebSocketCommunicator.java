@@ -2,9 +2,9 @@ package communication;
 
 import request.JoinRequest;
 import ui.Observer;
-import webSocketMessages.serverMessages.Error;
-import webSocketMessages.userCommands.Connect;
-import webSocketMessages.userCommands.UserCommand;
+import websocket.commands.Connect;
+import websocket.commands.UserGameCommand;
+import websocket.messages.Error;
 
 public class WebSocketCommunicator {
     Observer observer;
@@ -31,7 +31,7 @@ public class WebSocketCommunicator {
         }
     }
 
-    public void send(UserCommand message) throws Exception {
+    public void send(UserGameCommand message) throws Exception {
         client.send(message);
     }
 }

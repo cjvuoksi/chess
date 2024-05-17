@@ -5,16 +5,17 @@ import chess.InvalidMoveException;
 import dataaccess.DataAccessException;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
-import webSocketMessages.serverMessages.Error;
-import webSocketMessages.serverMessages.LoadGame;
-import webSocketMessages.serverMessages.Notification;
-import webSocketMessages.userCommands.UserCommand;
+import server.SessionInfo;
+import websocket.commands.UserGameCommand;
+import websocket.messages.Error;
+import websocket.messages.LoadGame;
+import websocket.messages.Notification;
 
 import java.util.Collection;
 
 public class MakeMove extends SocketService {
-    public MakeMove(UserCommand command, Session root, Collection<Session> sessions) {
-        super(command, root, sessions);
+    public MakeMove(UserGameCommand command, Session root, Collection<Session> sessions, SessionInfo sessionInfo) {
+        super(command, root, sessions, sessionInfo);
     }
 
     @Override
@@ -25,7 +26,7 @@ public class MakeMove extends SocketService {
             if (result == null) return;
             GameData gameData = result.game();
 
-            if (command.getTeamColor() != gameData.game().getTeamTurn()) {
+            if (result.color() != gameData.game().getTeamTurn()) {
                 sendRoot(new Error("Not your turn"));
             } else {
                 gameData.game().makeMove(command.getMove());
@@ -34,7 +35,7 @@ public class MakeMove extends SocketService {
                 boolean checkmate = gameData.game().isInCheckmate(opponent);
                 boolean stalemate = gameData.game().isInStalemate(opponent);
                 if (checkmate) {
-                    gameData.game().setWinner(command.getTeamColor());
+                    gameData.game().setWinner(result.color());
                     gameData.game().setGameOver(true);
                 } else if (stalemate) {
                     gameData.game().setGameOver(true);
@@ -43,7 +44,7 @@ public class MakeMove extends SocketService {
                 sendAll(new LoadGame(gameData));
                 sendOthers(new Notification(command.getMove().toString()));
                 if (checkmate) {
-                    sendAll(new Notification(String.format("Game over: %s (%s) won by checkmate!", result.auth().username(), command.getTeamColor())));
+                    sendAll(new Notification(String.format("Game over: %s (%s) won by checkmate!", result.auth().username(), result.color())));
                 } else if (gameData.game().isInCheck(opponent)) {
                     sendAll(new Notification(opponent.toString() + " is in check"));
                 } else if (stalemate) {

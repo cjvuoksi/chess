@@ -1,6 +1,6 @@
 package server;
 
-import org.eclipse.jetty.websocket.api.Session;
+import chess.ChessGame;
 
-public record SessionInfo(int gameID, Session session) {
+public record SessionInfo(int id, ChessGame.TeamColor color) {
 }

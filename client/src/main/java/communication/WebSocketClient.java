@@ -3,10 +3,10 @@ package communication;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ui.Observer;
-import webSocketMessages.serverMessages.Error;
-import webSocketMessages.serverMessages.Notification;
-import webSocketMessages.serverMessages.ServerMessage;
-import webSocketMessages.userCommands.UserCommand;
+import websocket.commands.UserGameCommand;
+import websocket.messages.Error;
+import websocket.messages.Notification;
+import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
 import java.net.URI;
@@ -17,7 +17,7 @@ public class WebSocketClient extends Endpoint {
     private final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
 
     public WebSocketClient(Observer observer) throws Exception {
-        URI uri = URI.create("ws://localhost:8080/connect");
+        URI uri = URI.create("ws://localhost:8080/ws");
         this.observer = observer;
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
@@ -36,7 +36,7 @@ public class WebSocketClient extends Endpoint {
         }
     }
 
-    public void send(UserCommand command) throws Exception {
+    public void send(UserGameCommand command) throws Exception {
         String message = gson.toJson(command);
         send(message);
     }

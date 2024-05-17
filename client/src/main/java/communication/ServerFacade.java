@@ -6,9 +6,9 @@ import response.ListResponse;
 import response.LoginResponse;
 import response.Response;
 import ui.Observer;
-import webSocketMessages.userCommands.Leave;
-import webSocketMessages.userCommands.MakeMove;
-import webSocketMessages.userCommands.Resign;
+import websocket.commands.Leave;
+import websocket.commands.MakeMove;
+import websocket.commands.Resign;
 
 public class ServerFacade {
 

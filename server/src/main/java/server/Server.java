@@ -14,7 +14,7 @@ import service.socket.Resign;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
-import webSocketMessages.userCommands.UserCommand;
+import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -37,7 +37,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        Spark.webSocket("/connect", Server.class);
+        Spark.webSocket("/ws", Server.class);
 
         Spark.delete("/db", this::clearApp);
         // Register
@@ -100,12 +100,13 @@ public class Server {
     public void onMessage(Session session, String message) {
         log.logInfo(message);
 
-        UserCommand userCommand = serializer.fromJson(message, UserCommand.class);
-        if (userCommand.getCommandType() == UserCommand.CommandType.CONNECT) {
-            sessionManager.add(session, userCommand.getId());
+        UserGameCommand userCommand = serializer.fromJson(message, UserGameCommand.class);
+        if (userCommand.getCommandType() == UserGameCommand.CommandType.CONNECT) {
+            sessionManager.add(session, new SessionInfo(userCommand.getGameID(), userCommand.getTeamColor()));
         }
 
-        websocketEndpoint(userCommand, session);
+
+        websocketEndpoint(userCommand, session, sessionManager.get(session));
     }
 
     @OnWebSocketError
@@ -122,18 +123,18 @@ public class Server {
     public synchronized void onClose(Session session, int code, String reason) {
         log.logInfo("On close: " + code + " " + reason);
 
-        Integer info = sessionManager.get(session);
+        SessionInfo info = sessionManager.get(session);
         if (info != null) {
-            sessionManager.remove(session, info);
+            sessionManager.remove(session, info.id());
         }
     }
 
-    private void websocketEndpoint(UserCommand command, Session root) {
+    private void websocketEndpoint(UserGameCommand command, Session root, SessionInfo info) {
         switch (command.getCommandType()) {
-            case CONNECT -> new Connect(command, root, sessionManager.get(command.getId())).run();
-            case MAKE_MOVE -> new MakeMove(command, root, sessionManager.get(command.getId())).run();
-            case LEAVE -> new Leave(command, root, sessionManager.get(command.getId())).run();
-            case RESIGN -> new Resign(command, root, sessionManager.get(command.getId())).run();
+            case CONNECT -> new Connect(command, root, sessionManager.get(command.getGameID()), info).run();
+            case MAKE_MOVE -> new MakeMove(command, root, sessionManager.get(command.getGameID()), info).run();
+            case LEAVE -> new Leave(command, root, sessionManager.get(command.getGameID()), info).run();
+            case RESIGN -> new Resign(command, root, sessionManager.get(command.getGameID()), info).run();
             default -> {
                 try {
                     root.getRemote().sendString(serializer.toJson(new Error("Unexpected value: " + command.getCommandType())));

@@ -4,15 +4,16 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
-import webSocketMessages.serverMessages.Error;
-import webSocketMessages.serverMessages.Notification;
-import webSocketMessages.userCommands.UserCommand;
+import server.SessionInfo;
+import websocket.commands.UserGameCommand;
+import websocket.messages.Error;
+import websocket.messages.Notification;
 
 import java.util.Collection;
 
 public class Leave extends SocketService {
-    public Leave(UserCommand command, Session root, Collection<Session> sessions) {
-        super(command, root, sessions);
+    public Leave(UserGameCommand command, Session root, Collection<Session> sessions, SessionInfo sessionInfo) {
+        super(command, root, sessions, sessionInfo);
     }
 
     @Override
@@ -21,7 +22,7 @@ public class Leave extends SocketService {
             Result result = getResult();
             if (result == null) return;
 
-            if (command.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            if (result.color() == ChessGame.TeamColor.WHITE) {
                 if (!result.game().whiteUsername().equals(result.auth().username())) {
                     sendRoot(new Error("You are not the white player"));
                     return;
@@ -31,7 +32,7 @@ public class Leave extends SocketService {
                 gameDAO.update(updated);
 
                 sendOthers(new Notification(String.format("%s stopped playing white", result.auth().username())));
-            } else if (command.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            } else if (result.color() == ChessGame.TeamColor.BLACK) {
                 if (!result.game().blackUsername().equals(result.auth().username())) {
                     sendRoot(new Error("You are not the black player"));
                     return;
@@ -43,6 +44,9 @@ public class Leave extends SocketService {
                 sendOthers(new Notification(String.format("%s stopped playing black", result.auth().username())));
             } else {
                 sendOthers(new Notification(String.format("%s stopped watching", result.auth().username())));
+            }
+            if (root.isOpen()) {
+                root.close();
             }
         } catch (DataAccessException e) {
             sendRoot(new Error(e.getMessage()));

@@ -1,7 +1,7 @@
 package ui;
 
 import request.JoinRequest;
-import webSocketMessages.serverMessages.ServerMessage;
+import websocket.messages.ServerMessage;
 
 public class ContextSwitcher implements Observer {
     private UI current = new PreLogin();

@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mysql.cj.log.Slf4JLogger;
 import org.eclipse.jetty.websocket.api.Session;
-import webSocketMessages.serverMessages.Error;
-import webSocketMessages.serverMessages.Notification;
-import webSocketMessages.serverMessages.ServerMessage;
+import websocket.messages.Error;
+import websocket.messages.Notification;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class SocketSender {
     private void debug(ServerMessage message) {
         switch (message.getServerMessageType()) {
             case NOTIFICATION -> logger.logInfo(((Notification) message).getMessage());
-            case ERROR -> logger.logInfo(((Error) message).getMessage());
+            case ERROR -> logger.logInfo(((Error) message).getErrorMessage());
             case LOAD_GAME -> logger.logInfo(message.getServerMessageType());
         }
     }
