@@ -10,6 +10,7 @@ import service.HTTP.*;
 import service.socket.Connect;
 import service.socket.Leave;
 import service.socket.MakeMove;
+import service.socket.Resign;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -132,7 +133,7 @@ public class Server {
             case CONNECT -> new Connect(command, root, sessionManager.get(command.getId())).run();
             case MAKE_MOVE -> new MakeMove(command, root, sessionManager.get(command.getId())).run();
             case LEAVE -> new Leave(command, root, sessionManager.get(command.getId())).run();
-            case RESIGN -> log.logInfo("resign");
+            case RESIGN -> new Resign(command, root, sessionManager.get(command.getId())).run();
             default -> {
                 try {
                     root.getRemote().sendString(serializer.toJson(new Error("Unexpected value: " + command.getCommandType())));
