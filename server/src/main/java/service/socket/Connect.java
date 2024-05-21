@@ -40,8 +40,6 @@ public class Connect extends SocketService {
                     sendRoot(new Error("Error in joining game"));
                 }
             }
-
-
         } catch (DataAccessException e) {
             sendRoot(new Error(e.getMessage()));
         }

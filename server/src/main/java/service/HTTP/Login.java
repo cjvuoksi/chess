@@ -16,6 +16,10 @@ public class Login extends HTTPService {
     public Response run(Request req) throws DataAccessException {
         UserRequest r = (UserRequest) req;
 
+        if (r.getUsername() == null || r.getPassword() == null) {
+            throw new DataAccessException("Error: bad request", 400);
+        }
+
         UserData user = userDAO.find(r.getUsername());
         if (user == null || !BCrypt.checkpw(r.getPassword(), user.password())) {
             throw new DataAccessException("Error: unauthorized", 401);
