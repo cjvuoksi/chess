@@ -69,13 +69,6 @@ public class UnitTest {
         }
     }
 
-    private void badLogin() {
-        assertFail(new Login(), new UserRequest(bad.username(), bad.password()));
-        assertFail(new Login(), new UserRequest(null, bad.password()));
-        assertFail(new Login(), new UserRequest(bad.username(), null));
-        assertFail(new Login(), new UserRequest(null, null));
-    }
-
     private void assertFail(HTTPService endpoint, Request request) {
         assertFail(endpoint, DataAccessException.class, request);
     }
@@ -97,6 +90,29 @@ public class UnitTest {
     @Order(2)
     @DisplayName("Invalid login")
     void invalidLogin() {
-        assertAuthChange(0, this::badLogin);
+        assertAuthChange(0, () -> {
+            assertFail(new Login(), new UserRequest(bad.username(), bad.password()));
+            assertFail(new Login(), new UserRequest(null, bad.password()));
+            assertFail(new Login(), new UserRequest(bad.username(), null));
+            assertFail(new Login(), new UserRequest(null, null));
+        });
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Valid Logout")
+    void logout() {
+        assertAuthChange(-1, this::tearDownEach);
+        setUpEach();
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Invalid Logout")
+    void invalidLogout() {
+        assertAuthChange(0, () -> {
+            assertFail(new Logout(), new AuthRequest(badAuth));
+            assertFail(new Logout(), new AuthRequest(null));
+        });
     }
 }
