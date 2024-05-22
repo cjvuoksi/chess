@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UnitTest {
     private static UserData test = new UserData("test", "test", "test");
     private static UserData bad = new UserData("bad", "bad", "bad");
-    private final String badAuth = "bad";
+    private static String badAuth = "bad";
     private static String test_auth;
     private String auth;
     private static final ServiceFacade accessor = new ServiceFacade();
@@ -219,18 +219,33 @@ public class UnitTest {
             if (accessor.getGameDAO().findAll().isEmpty()) {
                 create();
             }
-
+            LoginResponse response = (LoginResponse) new Register().run(new RegisterRequest(bad.username(), bad.password(), bad.email()));
+            badAuth = response.getAuthToken();
+            new Join().run(new JoinRequest(badAuth, ChessGame.TeamColor.BLACK, gameID));
             new Join().run(new JoinRequest(auth, ChessGame.TeamColor.WHITE, gameID));
             GameData updated = accessor.getGameDAO().find(gameID);
             assertNotNull(updated);
-            assertNull(updated.blackUsername());
+            assertEquals(bad.username(), updated.blackUsername());
             assertEquals(test.username(), updated.whiteUsername());
 
-            new Join().run(new JoinRequest(auth, ChessGame.TeamColor.BLACK, gameID));
-
-            updated = accessor.getGameDAO().find(gameID);
-            assertNotNull(updated);
-            assertEquals(test.username(), updated.blackUsername());
+            assertDoesNotThrow(() -> new Join().run(new JoinRequest(badAuth, ChessGame.TeamColor.BLACK, gameID)));
+            assertDoesNotThrow(() -> new Join().run(new JoinRequest(auth, ChessGame.TeamColor.WHITE, gameID)));
         });
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Invalid Join")
+    void invalidJoin() {
+        try {
+            if (accessor.getGameDAO().findAll().isEmpty()) {
+                join();
+            }
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+        assertFail(new Join(), new JoinRequest(badAuth, ChessGame.TeamColor.WHITE, gameID));
+        assertFail(new Join(), new JoinRequest(auth, ChessGame.TeamColor.BLACK, gameID));
+        assertFail(new Join(), new JoinRequest(null, null, gameID));
     }
 }

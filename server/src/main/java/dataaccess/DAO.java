@@ -91,6 +91,7 @@ public abstract class DAO<V extends Record, K> {
     }
 
     public V find(K key) throws DataAccessException {
+        if (key == null) throw new DataAccessException("Error: bad request", 404);
         Collection<V> results = access(findStatement, key.toString());
         if (results.isEmpty()) {
             return null;
