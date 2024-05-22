@@ -16,7 +16,7 @@ import service.HTTP.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UnitTest {
+public class ServiceTest {
     private static UserData test = new UserData("test", "test", "test");
     private static UserData bad = new UserData("bad", "bad", "bad");
     private static String badAuth = "bad";
