@@ -15,6 +15,10 @@ public class Create extends HTTPService {
     public Response run(Request req) throws DataAccessException {
         CreateRequest r = (CreateRequest) req;
 
+        if (r.getAuthorization() == null || r.getGameName() == null) {
+            throw new DataAccessException("Error: bad request", 400);
+        }
+
         if (Service.authDAO.find(r.getAuthorization()) == null) {
             throw new DataAccessException("Error: unauthorized", 401);
         }

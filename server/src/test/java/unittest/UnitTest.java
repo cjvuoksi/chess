@@ -4,10 +4,8 @@ import dataaccess.DAO;
 import dataaccess.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.*;
-import request.AuthRequest;
-import request.RegisterRequest;
-import request.Request;
-import request.UserRequest;
+import request.*;
+import response.CreateResponse;
 import response.LoginResponse;
 import response.Response;
 import service.HTTP.*;
@@ -22,6 +20,7 @@ public class UnitTest {
     private static String test_auth;
     private String auth;
     private static final ServiceFacade accessor = new ServiceFacade();
+    private int gameID;
 
     @BeforeAll
     static void setUp() {
@@ -66,6 +65,10 @@ public class UnitTest {
 
     private void assertUserChange(int changeAmount, Runnable function) {
         assertDAOChange(changeAmount, accessor.getUserDAO(), function);
+    }
+
+    private void assertGameChange(int changeAmount, Runnable function) {
+        assertDAOChange(changeAmount, accessor.getGameDAO(), function);
     }
 
     private void assertDAOChange(int changeAmount, DAO dao, Runnable function) {
@@ -148,4 +151,31 @@ public class UnitTest {
             assertFail(new Register(), new RegisterRequest(test.username(), null, test.email()));
         });
     }
+
+    @Test
+    @Order(7)
+    @DisplayName("Valid Create")
+    void create() {
+        assertGameChange(1, () -> {
+            try {
+                CreateResponse response = (CreateResponse) new Create().run(new CreateRequest(auth, "game"));
+                assertNull(response.getMessage());
+                gameID = response.getGameID();
+            } catch (DataAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("Invalid Create")
+    void invalidCreate() {
+        assertGameChange(0, () -> {
+            assertFail(new Create(), new CreateRequest(badAuth, "game"));
+            assertFail(new Create(), new CreateRequest(null, "game"));
+            assertFail(new Create(), new CreateRequest(auth, null));
+        });
+    }
+
 }
