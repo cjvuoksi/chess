@@ -109,6 +109,37 @@ public class DAOTest {
         }
     }
 
+    @Test
+    @Order(5)
+    @DisplayName("Update")
+    void update() {
+        assertDoesNotThrow(() -> {
+            game.update(new GameData(gameID, testAuth.username(), testAuth.username(), testGame.gameName(), testGame.game()));
+        });
+        try {
+            Result res = getResult();
+            assertEquals(testUser.username(), res.gameData.blackUsername());
+            assertEquals(testUser.username(), res.gameData.whiteUsername());
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Invalid Update")
+    void invalidUpdate() {
+        assertThrows(NullPointerException.class, () -> {
+            game.update(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            user.update(null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            auth.update(null);
+        });
+    }
+
 
     private static Result getResult() throws DataAccessException {
         UserData userData = user.find(testUser.username());
