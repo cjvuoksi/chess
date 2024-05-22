@@ -55,6 +55,9 @@ public class UnitTest {
     @AfterEach
     void tearDownEach() {
         try {
+            if (accessor.getAuthDAO().findAll().isEmpty()) {
+                return;
+            }
             Response response = new Logout().run(new AuthRequest(auth));
             assertNull(response.getMessage(), "Error occurred: " + response.getMessage());
         } catch (DataAccessException e) {
@@ -247,5 +250,29 @@ public class UnitTest {
         assertFail(new Join(), new JoinRequest(badAuth, ChessGame.TeamColor.WHITE, gameID));
         assertFail(new Join(), new JoinRequest(auth, ChessGame.TeamColor.BLACK, gameID));
         assertFail(new Join(), new JoinRequest(null, null, gameID));
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("Clear")
+    void clear() {
+        assertDoesNotThrow(() -> {
+            new Clear().run(new Request());
+            new Clear().run(new Request());
+        });
+        try {
+            assertTrue(accessor.getGameDAO().findAll().isEmpty());
+            assertTrue(accessor.getAuthDAO().findAll().isEmpty());
+            assertTrue(accessor.getUserDAO().findAll().isEmpty());
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @AfterAll
+    static void tearDown() {
+        assertDoesNotThrow(() -> {
+            new Clear().run(new Request());
+        });
     }
 }
