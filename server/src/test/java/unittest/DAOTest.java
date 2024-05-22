@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -111,6 +112,23 @@ public class DAOTest {
 
     @Test
     @Order(5)
+    @DisplayName("Find All")
+    void findAll() {
+        if (canon == null) {
+            create();
+        }
+
+        assertDoesNotThrow(() -> {
+            Collection<UserData> users = user.findAll();
+            Collection<GameData> games = game.findAll();
+            Collection<AuthData> auths = auth.findAll();
+
+            assertEquals(canon, new Result(users.iterator().next(), auths.iterator().next(), games.iterator().next()));
+        });
+    }
+
+    @Test
+    @Order(6)
     @DisplayName("Update")
     void update() {
         assertDoesNotThrow(() -> {
@@ -126,7 +144,7 @@ public class DAOTest {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @DisplayName("Invalid Update")
     void invalidUpdate() {
         assertThrows(NullPointerException.class, () -> {
