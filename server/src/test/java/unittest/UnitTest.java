@@ -1,5 +1,6 @@
 package unittest;
 
+import chess.ChessGame;
 import dataaccess.DAO;
 import dataaccess.DataAccessException;
 import model.GameData;
@@ -22,7 +23,7 @@ public class UnitTest {
     private static String test_auth;
     private String auth;
     private static final ServiceFacade accessor = new ServiceFacade();
-    private int gameID;
+    private static Integer gameID;
 
     @BeforeAll
     static void setUp() {
@@ -208,5 +209,28 @@ public class UnitTest {
     void invalidList() {
         assertFail(new List(), new AuthRequest(badAuth));
         assertFail(new List(), new AuthRequest(null));
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("Valid Join")
+    void join() {
+        assertDoesNotThrow(() -> {
+            if (accessor.getGameDAO().findAll().isEmpty()) {
+                create();
+            }
+
+            new Join().run(new JoinRequest(auth, ChessGame.TeamColor.WHITE, gameID));
+            GameData updated = accessor.getGameDAO().find(gameID);
+            assertNotNull(updated);
+            assertNull(updated.blackUsername());
+            assertEquals(test.username(), updated.whiteUsername());
+
+            new Join().run(new JoinRequest(auth, ChessGame.TeamColor.BLACK, gameID));
+
+            updated = accessor.getGameDAO().find(gameID);
+            assertNotNull(updated);
+            assertEquals(test.username(), updated.blackUsername());
+        });
     }
 }
