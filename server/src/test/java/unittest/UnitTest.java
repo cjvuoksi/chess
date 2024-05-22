@@ -2,10 +2,12 @@ package unittest;
 
 import dataaccess.DAO;
 import dataaccess.DataAccessException;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import request.*;
 import response.CreateResponse;
+import response.ListResponse;
 import response.LoginResponse;
 import response.Response;
 import service.HTTP.*;
@@ -161,6 +163,10 @@ public class UnitTest {
                 CreateResponse response = (CreateResponse) new Create().run(new CreateRequest(auth, "game"));
                 assertNull(response.getMessage());
                 gameID = response.getGameID();
+                GameData game = accessor.getGameDAO().find(gameID);
+                assertNotNull(game);
+                assertEquals("game", game.gameName());
+                assertEquals(gameID, game.gameID());
             } catch (DataAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -178,4 +184,29 @@ public class UnitTest {
         });
     }
 
+    @Test
+    @Order(9)
+    @DisplayName("Valid List")
+    void list() {
+        try {
+            if (accessor.getGameDAO().findAll().isEmpty()) {
+                create();
+            }
+
+            ListResponse response = (ListResponse) new List().run(new AuthRequest(auth));
+            assertFalse(response.getGames().isEmpty());
+            assertEquals(response.getGames().size(), 1);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("Invalid List")
+    void invalidList() {
+        assertFail(new List(), new AuthRequest(badAuth));
+        assertFail(new List(), new AuthRequest(null));
+    }
 }
