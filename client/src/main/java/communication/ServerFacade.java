@@ -12,11 +12,21 @@ import websocket.commands.Resign;
 
 public class ServerFacade {
 
-    private final HttpCommunicator http = new HttpCommunicator();
+    private final HttpCommunicator http;
 
     private final WebSocketCommunicator websocket = new WebSocketCommunicator();
 
-    public static final String url = "http://localhost:8080/";
+    public final String url;
+
+    public ServerFacade() {
+        url = "http://localhost:8080/";
+        http = new HttpCommunicator(url);
+    }
+
+    public ServerFacade(int port) {
+        url = "http://localhost:" + port + "/";
+        http = new HttpCommunicator(url);
+    }
 
     //Pre-login
     public LoginResponse register(RegisterRequest request) {

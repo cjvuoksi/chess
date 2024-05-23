@@ -15,6 +15,12 @@ import java.lang.reflect.InvocationTargetException;
 public class HttpCommunicator {
     private final Gson serializer = new GsonBuilder().enableComplexMapKeySerialization().create();
 
+    private final String url;
+
+    public HttpCommunicator(String url) {
+        this.url = url;
+    }
+
     private Response executeService(Request request, Class<? extends Response> resultType, String path, String method) {
         try {
             String body = serializer.toJson(request);
@@ -22,7 +28,7 @@ public class HttpCommunicator {
             if (request.getClass() == AuthRequest.class) {
                 body = null;
             }
-            HttpClient client = new HttpClient(ServerFacade.url);
+            HttpClient client = new HttpClient(url);
 
             if (request instanceof AuthRequest) {
                 return client.getServerResponse(path, body, method, resultType, ((AuthRequest) request).getAuthorization());
