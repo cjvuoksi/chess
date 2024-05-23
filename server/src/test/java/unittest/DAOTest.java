@@ -29,14 +29,10 @@ public class DAOTest {
     static private final String bad = "bad";
     static private final int badID = 0;
 
-
+    @AfterAll
     @BeforeAll
     static void setUp() {
-        assertDoesNotThrow(() -> {
-            user.clear();
-            auth.clear();
-            game.clear();
-        });
+        clearDAOs();
     }
 
     @Test
@@ -166,22 +162,19 @@ public class DAOTest {
 
         assertDoesNotThrow(() -> {
             user.delete(testUser.username());
-            auth.delete(testAuth.authToken());
+            auth.delete(token);
             game.delete(gameID);
         }, "Delete failed");
 
         assertDoesNotThrow(() -> {
-            assertNull(user.find(testUser.username()));
-            assertNull(auth.find(testAuth.authToken()));
-            assertNull(game.find(gameID));
+            Result testResult = getResult();
+            assertNull(testResult.userData);
+            assertNull(testResult.authData);
+            assertNull(testResult.gameData);
+
         }, "Deleted item found in db");
 
-        assertDoesNotThrow(() -> {
-            user.create(testUser);
-            auth.create(testAuth);
-            game.setMake(true);
-            game.create(testGame);
-        }, "Error in recreating deleted items");
+        assertDoesNotThrow(this::create, "Error in recreating deleted items");
     }
 
     @Test
@@ -197,12 +190,42 @@ public class DAOTest {
         }
     }
 
+    @Test
+    @Order(10)
+    @DisplayName("Clear")
+    void clear() {
+        clearDAOs();
+        clearDAOs();
+    }
+
+    private static void clearDAOs() {
+        assertDoesNotThrow(() -> {
+            user.clear();
+            auth.clear();
+            game.clear();
+        });
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("Invalid Find All")
+    void InvalidFindAll() {
+        assertDoesNotThrow(() -> {
+            assertEmpty(user.findAll());
+            assertEmpty(auth.findAll());
+            assertEmpty(game.findAll());
+        });
+    }
+
+    private void assertEmpty(Collection<? extends Record> all) {
+        assertTrue(all.isEmpty());
+    }
+
     private static Result getResult() throws DataAccessException {
         UserData userData = user.find(testUser.username());
         AuthData authData = auth.find(token);
         GameData gameData = game.find(gameID);
-        Result result = new Result(userData, authData, gameData);
-        return result;
+        return new Result(userData, authData, gameData);
     }
 
     private record Result(UserData userData, AuthData authData, GameData gameData) {
