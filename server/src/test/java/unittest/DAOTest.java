@@ -8,16 +8,14 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Collection;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DAOTest {
     static private final UserDAO user = new UserDAO();
     static private final AuthDAO auth = new AuthDAO();
@@ -158,6 +156,46 @@ public class DAOTest {
         });
     }
 
+    @Test
+    @Order(8)
+    @DisplayName("Delete")
+    void delete() {
+        if (canon == null) {
+            create();
+        }
+
+        assertDoesNotThrow(() -> {
+            user.delete(testUser.username());
+            auth.delete(testAuth.authToken());
+            game.delete(gameID);
+        }, "Delete failed");
+
+        assertDoesNotThrow(() -> {
+            assertNull(user.find(testUser.username()));
+            assertNull(auth.find(testAuth.authToken()));
+            assertNull(game.find(gameID));
+        }, "Deleted item found in db");
+
+        assertDoesNotThrow(() -> {
+            user.create(testUser);
+            auth.create(testAuth);
+            game.setMake(true);
+            game.create(testGame);
+        }, "Error in recreating deleted items");
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("Invalid Delete")
+    void invalidDelete() {
+        try {
+            assertEquals(0, user.delete(bad), "Delete succeeded for bad username");
+            assertEquals(0, auth.delete(bad), "Delete succeeded for bad token");
+            assertEquals(0, game.delete(0), "Delete succeeded for bad id");
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static Result getResult() throws DataAccessException {
         UserData userData = user.find(testUser.username());
