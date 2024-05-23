@@ -21,7 +21,7 @@ public class HttpCommunicator {
         this.url = url;
     }
 
-    private Response executeService(Request request, Class<? extends Response> resultType, String path, String method) {
+    public Response executeService(Request request, Class<? extends Response> resultType, String path, String method) {
         try {
             String body = serializer.toJson(request);
 

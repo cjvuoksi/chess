@@ -12,7 +12,7 @@ import websocket.commands.Resign;
 
 public class ServerFacade {
 
-    private final HttpCommunicator http;
+    protected final HttpCommunicator http;
 
     private final WebSocketCommunicator websocket = new WebSocketCommunicator();
 
