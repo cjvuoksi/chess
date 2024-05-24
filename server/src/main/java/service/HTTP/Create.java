@@ -12,15 +12,15 @@ import service.Service;
 public class Create extends HTTPService {
 
     @Override
-    public Response run(Request req) throws DataAccessException {
+    public Response run(Request req) throws ServiceException, DataAccessException {
         CreateRequest r = (CreateRequest) req;
 
         if (r.getAuthorization() == null || r.getGameName() == null) {
-            throw new DataAccessException("Error: bad request", 400);
+            throw new ServiceException("Error: bad request", 400);
         }
 
         if (Service.authDAO.find(r.getAuthorization()) == null) {
-            throw new DataAccessException("Error: unauthorized", 401);
+            throw new ServiceException("Error: unauthorized", 401);
         }
         Service.gameDAO.setMake(true);
         int gameID = Service.gameDAO.create(new GameData(0, null, null, r.getGameName(), new ChessGame()));

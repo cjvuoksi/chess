@@ -32,7 +32,7 @@ public class ServiceTest {
             LoginResponse response = (LoginResponse) new Register().run(new RegisterRequest(test.username(), test.password(), test.email()));
             assertNull(response.getMessage(), "Error occurred: " + response.getMessage());
             test_auth = response.getAuthToken();
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | ServiceException e) {
             throw new RuntimeException(e);
         }
     }
@@ -47,7 +47,7 @@ public class ServiceTest {
             if (response.getAuthToken() != null) {
                 auth = response.getAuthToken();
             }
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | ServiceException e) {
             throw new RuntimeException(e);
         }
     }
@@ -60,7 +60,7 @@ public class ServiceTest {
             }
             Response response = new Logout().run(new AuthRequest(auth));
             assertNull(response.getMessage(), "Error occurred: " + response.getMessage());
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | ServiceException e) {
             throw new RuntimeException(e);
         }
     }
@@ -88,7 +88,7 @@ public class ServiceTest {
     }
 
     private void assertFail(HTTPService endpoint, Request request) {
-        assertFail(endpoint, DataAccessException.class, request);
+        assertFail(endpoint, ServiceException.class, request);
     }
 
     private void assertFail(HTTPService endpoint, Class<? extends Exception> exception, Request request) {
@@ -171,7 +171,7 @@ public class ServiceTest {
                 assertNotNull(game);
                 assertEquals("game", game.gameName());
                 assertEquals(gameID, game.gameID());
-            } catch (DataAccessException e) {
+            } catch (DataAccessException | ServiceException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -200,7 +200,7 @@ public class ServiceTest {
             ListResponse response = (ListResponse) new List().run(new AuthRequest(auth));
             assertFalse(response.getGames().isEmpty());
             assertEquals(response.getGames().size(), 1);
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | ServiceException e) {
             throw new RuntimeException(e);
         }
 
@@ -249,7 +249,7 @@ public class ServiceTest {
         }
         assertFail(new Join(), new JoinRequest(badAuth, ChessGame.TeamColor.WHITE, gameID));
         assertFail(new Join(), new JoinRequest(auth, ChessGame.TeamColor.BLACK, gameID));
-        assertFail(new Join(), new JoinRequest(null, null, gameID));
+        assertFail(new Join(), DataAccessException.class, new JoinRequest(null, null, gameID));
     }
 
     @Test

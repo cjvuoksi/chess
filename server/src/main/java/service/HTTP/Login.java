@@ -13,16 +13,16 @@ import java.util.UUID;
 
 public class Login extends HTTPService {
     @Override
-    public Response run(Request req) throws DataAccessException {
+    public Response run(Request req) throws DataAccessException, ServiceException {
         UserRequest r = (UserRequest) req;
 
         if (r.getUsername() == null || r.getPassword() == null) {
-            throw new DataAccessException("Error: bad request", 400);
+            throw new ServiceException("Error: bad request", 400);
         }
 
         UserData user = userDAO.find(r.getUsername());
         if (user == null || !BCrypt.checkpw(r.getPassword(), user.password())) {
-            throw new DataAccessException("Error: unauthorized", 401);
+            throw new ServiceException("Error: unauthorized", 401);
         }
 
         String authToken = UUID.randomUUID().toString();

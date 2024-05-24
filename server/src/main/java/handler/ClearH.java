@@ -1,8 +1,8 @@
 package handler;
 
-import dataaccess.DataAccessException;
 import request.Request;
 import service.HTTP.HTTPService;
+import service.HTTP.ServiceException;
 import spark.Response;
 
 public class ClearH extends Handler {
@@ -11,7 +11,7 @@ public class ClearH extends Handler {
     }
 
     @Override
-    protected Request getRequest() throws DataAccessException {
+    protected Request getRequest() throws ServiceException {
         return null;
     }
 }

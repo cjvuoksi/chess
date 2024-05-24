@@ -1,9 +1,9 @@
 package handler;
 
-import dataaccess.DataAccessException;
 import request.RegisterRequest;
 import request.Request;
 import service.HTTP.HTTPService;
+import service.HTTP.ServiceException;
 import spark.Response;
 
 public class RegisterH extends Handler {
@@ -12,10 +12,10 @@ public class RegisterH extends Handler {
     }
 
     @Override
-    protected Request getRequest() throws DataAccessException {
+    protected Request getRequest() throws ServiceException {
         RegisterRequest req = serializer.fromJson(request.body(), RegisterRequest.class);
         if (request.body().isEmpty() || req.getUsername() == null || req.getPassword() == null || req.getEmail() == null) {
-            throw new DataAccessException("Error: bad request", 400);
+            throw new ServiceException("Error: bad request", 400);
         }
         return req;
     }

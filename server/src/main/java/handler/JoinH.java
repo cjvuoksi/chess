@@ -1,9 +1,9 @@
 package handler;
 
-import dataaccess.DataAccessException;
 import request.JoinRequest;
 import request.Request;
 import service.HTTP.HTTPService;
+import service.HTTP.ServiceException;
 import spark.Response;
 
 public class JoinH extends Handler {
@@ -12,10 +12,10 @@ public class JoinH extends Handler {
     }
 
     @Override
-    protected Request getRequest() throws DataAccessException {
+    protected Request getRequest() throws ServiceException {
         JoinRequest req = serializer.fromJson(request.body(), JoinRequest.class);
         if (req.getGameID() == 0 || !request.headers().contains("Authorization")) {
-            throw new DataAccessException("Error: bad request", 400);
+            throw new ServiceException("Error: bad request", 400);
         }
         req.setAuthorization(request.headers("Authorization"));
         return req;

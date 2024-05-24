@@ -10,5 +10,5 @@ public abstract class HTTPService extends Service {
     public HTTPService() {
     }
 
-    public abstract Response run(Request req) throws DataAccessException;
+    public abstract Response run(Request req) throws DataAccessException, ServiceException;
 }

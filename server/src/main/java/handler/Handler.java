@@ -6,6 +6,7 @@ import dataaccess.DataAccessException;
 import request.Request;
 import response.Response;
 import service.HTTP.HTTPService;
+import service.HTTP.ServiceException;
 
 public abstract class Handler {
     protected final spark.Request request;
@@ -25,10 +26,13 @@ public abstract class Handler {
             response.status(200);
             return serializer.toJson(service.run(getRequest()));
         } catch (DataAccessException e) {
-            response.status(e.getStatusCode());
+            response.status(500);
+            return serializer.toJson(new Response(e.getMessage()));
+        } catch (ServiceException e) {
+            response.status(e.getCode());
             return serializer.toJson(new Response(e.getMessage()));
         }
     }
 
-    protected abstract Request getRequest() throws DataAccessException;
+    protected abstract Request getRequest() throws ServiceException;
 }

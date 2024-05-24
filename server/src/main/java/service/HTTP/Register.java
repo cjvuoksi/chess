@@ -13,15 +13,15 @@ import java.util.UUID;
 
 public class Register extends HTTPService {
     @Override
-    public Response run(Request req) throws DataAccessException {
+    public Response run(Request req) throws DataAccessException, ServiceException {
         RegisterRequest r = (RegisterRequest) req;
 
         if (r.getUsername() == null || r.getPassword() == null || r.getEmail() == null) {
-            throw new DataAccessException("Error: bad request", 400);
+            throw new ServiceException("Error: bad request", 400);
         }
 
         if (userDAO.find(r.getUsername()) != null) {
-            throw new DataAccessException("Error: already taken", 403);
+            throw new ServiceException("Error: already taken", 403);
         }
 
         String hash = BCrypt.hashpw(r.getPassword(), BCrypt.gensalt());
