@@ -9,5 +9,3 @@ public class DataAccessException extends Exception {
         super(message);
     }
 }
-
-//TODO make more exceptions that correspond to errors
