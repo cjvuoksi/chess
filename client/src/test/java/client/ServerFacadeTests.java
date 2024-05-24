@@ -37,6 +37,7 @@ public class ServerFacadeTests {
 
     @AfterAll
     static void stopServer() {
+        clear();
         server.stop();
     }
 
@@ -79,13 +80,55 @@ public class ServerFacadeTests {
 
     @Test
     @Order(5)
+    @DisplayName("Create")
+    public void create() {
+
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Invalid Create")
+    public void invalidCreate() {
+
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Join")
+    public void join() {
+
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("Invalid Join")
+    public void invalidJoin() {
+
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("List Games")
+    public void listGames() {
+
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("Invalid List Games")
+    public void invalidListGames() {
+
+    }
+
+    @Test
+    @Order(11)
     @DisplayName("Logout")
     public void logout() {
 
     }
 
     @Test
-    @Order(6)
+    @Order(12)
     @DisplayName("Invalid Logout")
     public void invalidLogout() {
 
