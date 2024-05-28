@@ -1,10 +1,6 @@
-package unittest;
+package dataaccess;
 
 import chess.ChessGame;
-import dataaccess.AuthDAO;
-import dataaccess.DataAccessException;
-import dataaccess.GameDao;
-import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -17,17 +13,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DAOTest {
-    static private final UserDAO user = new UserDAO();
-    static private final AuthDAO auth = new AuthDAO();
-    static private final GameDao game = new GameDao();
-    static private final UserData testUser = new UserData("test", "test", "test");
-    static private final String token = UUID.randomUUID().toString();
-    static private final AuthData testAuth = new AuthData(token, testUser.username());
+    static private final UserDAO USER = new UserDAO();
+    static private final AuthDAO AUTH = new AuthDAO();
+    static private final GameDao GAME = new GameDao();
+    static private final UserData TEST_USER = new UserData("test", "test", "test");
+    static private final String TOKEN = UUID.randomUUID().toString();
+    static private final AuthData TEST_AUTH = new AuthData(TOKEN, TEST_USER.username());
     static private GameData testGame;
     static private Result canon;
     static private int gameID;
-    static private final String bad = "bad";
-    static private final int badID = 0;
+    static private final String BAD = "bad";
+    static private final int BAD_ID = 0;
 
     @AfterAll
     @BeforeAll
@@ -40,12 +36,12 @@ public class DAOTest {
     @DisplayName("Create")
     void create() {
         assertDoesNotThrow(() -> {
-            user.create(testUser);
-            auth.create(testAuth);
-            game.setMake(true);
-            gameID = game.create(new GameData(0, null, null, "game", new ChessGame()));
+            USER.create(TEST_USER);
+            AUTH.create(TEST_AUTH);
+            GAME.setMake(true);
+            gameID = GAME.create(new GameData(0, null, null, "game", new ChessGame()));
             testGame = new GameData(gameID, null, null, "game", new ChessGame());
-            canon = new Result(testUser, testAuth, testGame);
+            canon = new Result(TEST_USER, TEST_AUTH, testGame);
         });
         try {
             Result result = getResult();
@@ -60,13 +56,13 @@ public class DAOTest {
     @DisplayName("Invalid Create")
     void invalidCreate() {
         assertThrows(DataAccessException.class, () ->
-                user.create(new UserData(null, null, null))
+                USER.create(new UserData(null, null, null))
         );
         assertThrows(DataAccessException.class, () ->
-                auth.create(new AuthData(null, null))
+                AUTH.create(new AuthData(null, null))
         );
         assertThrows(DataAccessException.class, () ->
-                game.create(new GameData(0, null, null, null, null))
+                GAME.create(new GameData(0, null, null, null, null))
         );
     }
 
@@ -87,18 +83,18 @@ public class DAOTest {
     @DisplayName("Invalid Find")
     void invalidFind() {
         assertThrows(DataAccessException.class, () ->
-                user.find(null)
+                USER.find(null)
         );
         assertThrows(DataAccessException.class, () ->
-                auth.find(null)
+                AUTH.find(null)
         );
         assertThrows(DataAccessException.class, () ->
-                game.find(null)
+                GAME.find(null)
         );
         try {
-            assertNull(user.find(bad));
-            assertNull(auth.find(bad));
-            assertNull(game.find(badID));
+            assertNull(USER.find(BAD));
+            assertNull(AUTH.find(BAD));
+            assertNull(GAME.find(BAD_ID));
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
@@ -113,9 +109,9 @@ public class DAOTest {
         }
 
         assertDoesNotThrow(() -> {
-            Collection<UserData> users = user.findAll();
-            Collection<GameData> games = game.findAll();
-            Collection<AuthData> auths = auth.findAll();
+            Collection<UserData> users = USER.findAll();
+            Collection<GameData> games = GAME.findAll();
+            Collection<AuthData> auths = AUTH.findAll();
 
             assertEquals(canon, new Result(users.iterator().next(), auths.iterator().next(), games.iterator().next()));
         });
@@ -126,12 +122,12 @@ public class DAOTest {
     @DisplayName("Update")
     void update() {
         assertDoesNotThrow(() -> {
-            game.update(new GameData(gameID, testAuth.username(), testAuth.username(), testGame.gameName(), testGame.game()));
+            GAME.update(new GameData(gameID, TEST_AUTH.username(), TEST_AUTH.username(), testGame.gameName(), testGame.game()));
         });
         try {
             Result res = getResult();
-            assertEquals(testUser.username(), res.gameData.blackUsername());
-            assertEquals(testUser.username(), res.gameData.whiteUsername());
+            assertEquals(TEST_USER.username(), res.gameData.blackUsername());
+            assertEquals(TEST_USER.username(), res.gameData.whiteUsername());
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
@@ -142,13 +138,13 @@ public class DAOTest {
     @DisplayName("Invalid Update")
     void invalidUpdate() {
         assertThrows(NullPointerException.class, () -> {
-            game.update(null);
+            GAME.update(null);
         });
         assertThrows(NullPointerException.class, () -> {
-            user.update(null);
+            USER.update(null);
         });
         assertThrows(NullPointerException.class, () -> {
-            auth.update(null);
+            AUTH.update(null);
         });
     }
 
@@ -161,9 +157,9 @@ public class DAOTest {
         }
 
         assertDoesNotThrow(() -> {
-            user.delete(testUser.username());
-            auth.delete(token);
-            game.delete(gameID);
+            USER.delete(TEST_USER.username());
+            AUTH.delete(TOKEN);
+            GAME.delete(gameID);
         }, "Delete failed");
 
         assertDoesNotThrow(() -> {
@@ -182,9 +178,9 @@ public class DAOTest {
     @DisplayName("Invalid Delete")
     void invalidDelete() {
         try {
-            assertEquals(0, user.delete(bad), "Delete succeeded for bad username");
-            assertEquals(0, auth.delete(bad), "Delete succeeded for bad token");
-            assertEquals(0, game.delete(0), "Delete succeeded for bad id");
+            assertEquals(0, USER.delete(BAD), "Delete succeeded for bad username");
+            assertEquals(0, AUTH.delete(BAD), "Delete succeeded for bad token");
+            assertEquals(0, GAME.delete(0), "Delete succeeded for bad id");
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
@@ -200,9 +196,9 @@ public class DAOTest {
 
     private static void clearDAOs() {
         assertDoesNotThrow(() -> {
-            user.clear();
-            auth.clear();
-            game.clear();
+            USER.clear();
+            AUTH.clear();
+            GAME.clear();
         });
     }
 
@@ -211,9 +207,9 @@ public class DAOTest {
     @DisplayName("Invalid Find All")
     void InvalidFindAll() {
         assertDoesNotThrow(() -> {
-            assertEmpty(user.findAll());
-            assertEmpty(auth.findAll());
-            assertEmpty(game.findAll());
+            assertEmpty(USER.findAll());
+            assertEmpty(AUTH.findAll());
+            assertEmpty(GAME.findAll());
         });
     }
 
@@ -222,9 +218,9 @@ public class DAOTest {
     }
 
     private static Result getResult() throws DataAccessException {
-        UserData userData = user.find(testUser.username());
-        AuthData authData = auth.find(token);
-        GameData gameData = game.find(gameID);
+        UserData userData = USER.find(TEST_USER.username());
+        AuthData authData = AUTH.find(TOKEN);
+        GameData gameData = GAME.find(gameID);
         return new Result(userData, authData, gameData);
     }
 

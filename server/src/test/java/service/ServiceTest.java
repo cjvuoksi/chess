@@ -1,4 +1,4 @@
-package unittest;
+package service;
 
 import chess.ChessGame;
 import dataaccess.DAO;
@@ -22,7 +22,7 @@ public class ServiceTest {
     private static String badAuth = "bad";
     private static String test_auth;
     private String auth;
-    private static final ServiceFacade accessor = new ServiceFacade();
+    private static final ServiceFacade ACCESSOR = new ServiceFacade();
     private static Integer gameID;
 
     @BeforeAll
@@ -55,7 +55,7 @@ public class ServiceTest {
     @AfterEach
     void tearDownEach() {
         try {
-            if (accessor.getAuthDAO().findAll().isEmpty()) {
+            if (ACCESSOR.getAuthDAO().findAll().isEmpty()) {
                 return;
             }
             Response response = new Logout().run(new AuthRequest(auth));
@@ -66,15 +66,15 @@ public class ServiceTest {
     }
 
     private void assertAuthChange(int changeAmount, Runnable function) {
-        assertDAOChange(changeAmount, accessor.getAuthDAO(), function);
+        assertDAOChange(changeAmount, ACCESSOR.getAuthDAO(), function);
     }
 
     private void assertUserChange(int changeAmount, Runnable function) {
-        assertDAOChange(changeAmount, accessor.getUserDAO(), function);
+        assertDAOChange(changeAmount, ACCESSOR.getUserDAO(), function);
     }
 
     private void assertGameChange(int changeAmount, Runnable function) {
-        assertDAOChange(changeAmount, accessor.getGameDAO(), function);
+        assertDAOChange(changeAmount, ACCESSOR.getGameDAO(), function);
     }
 
     private void assertDAOChange(int changeAmount, DAO dao, Runnable function) {
@@ -167,7 +167,7 @@ public class ServiceTest {
                 CreateResponse response = (CreateResponse) new Create().run(new CreateRequest(auth, "game"));
                 assertNull(response.getMessage());
                 gameID = response.getGameID();
-                GameData game = accessor.getGameDAO().find(gameID);
+                GameData game = ACCESSOR.getGameDAO().find(gameID);
                 assertNotNull(game);
                 assertEquals("game", game.gameName());
                 assertEquals(gameID, game.gameID());
@@ -193,7 +193,7 @@ public class ServiceTest {
     @DisplayName("Valid List")
     void list() {
         try {
-            if (accessor.getGameDAO().findAll().isEmpty()) {
+            if (ACCESSOR.getGameDAO().findAll().isEmpty()) {
                 create();
             }
 
@@ -219,14 +219,14 @@ public class ServiceTest {
     @DisplayName("Valid Join")
     void join() {
         assertDoesNotThrow(() -> {
-            if (accessor.getGameDAO().findAll().isEmpty()) {
+            if (ACCESSOR.getGameDAO().findAll().isEmpty()) {
                 create();
             }
             LoginResponse response = (LoginResponse) new Register().run(new RegisterRequest(bad.username(), bad.password(), bad.email()));
             badAuth = response.getAuthToken();
             new Join().run(new JoinRequest(badAuth, ChessGame.TeamColor.BLACK, gameID));
             new Join().run(new JoinRequest(auth, ChessGame.TeamColor.WHITE, gameID));
-            GameData updated = accessor.getGameDAO().find(gameID);
+            GameData updated = ACCESSOR.getGameDAO().find(gameID);
             assertNotNull(updated);
             assertEquals(bad.username(), updated.blackUsername());
             assertEquals(test.username(), updated.whiteUsername());
@@ -241,7 +241,7 @@ public class ServiceTest {
     @DisplayName("Invalid Join")
     void invalidJoin() {
         try {
-            if (accessor.getGameDAO().findAll().isEmpty()) {
+            if (ACCESSOR.getGameDAO().findAll().isEmpty()) {
                 join();
             }
         } catch (DataAccessException e) {
@@ -261,9 +261,9 @@ public class ServiceTest {
             new Clear().run(new Request());
         });
         try {
-            assertTrue(accessor.getGameDAO().findAll().isEmpty());
-            assertTrue(accessor.getAuthDAO().findAll().isEmpty());
-            assertTrue(accessor.getUserDAO().findAll().isEmpty());
+            assertTrue(ACCESSOR.getGameDAO().findAll().isEmpty());
+            assertTrue(ACCESSOR.getAuthDAO().findAll().isEmpty());
+            assertTrue(ACCESSOR.getUserDAO().findAll().isEmpty());
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
