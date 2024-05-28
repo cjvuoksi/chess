@@ -228,7 +228,16 @@ public class GameUI extends UI implements Observer {
         }
         Drawer bd = new Drawer(this);
         if (game.isGameOver()) {
-            print("Game over");
+            ChessGame.TeamColor winner = game.getWinner();
+            String msg = "stalemate";
+            if (winner != null) {
+                if (winner == ChessGame.TeamColor.BLACK) {
+                    msg = "Black won";
+                } else {
+                    msg = "White won";
+                }
+            }
+            print("Game over: " + msg);
         } else if (game.getTeamTurn() == teamColor) {
             print("Your turn");
         } else if (teamColor == null) {

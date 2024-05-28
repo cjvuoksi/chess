@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceTest {
-    private static UserData test = new UserData("test", "test", "test");
-    private static UserData bad = new UserData("bad", "bad", "bad");
+    private static final UserData TEST = new UserData("test", "test", "test");
+    private static final UserData BAD = new UserData("bad", "bad", "bad");
     private static String badAuth = "bad";
     private static String test_auth;
     private String auth;
@@ -29,7 +29,7 @@ public class ServiceTest {
     static void setUp() {
         try {
             new Clear().run(new Request());
-            LoginResponse response = (LoginResponse) new Register().run(new RegisterRequest(test.username(), test.password(), test.email()));
+            LoginResponse response = (LoginResponse) new Register().run(new RegisterRequest(TEST.username(), TEST.password(), TEST.email()));
             assertNull(response.getMessage(), "Error occurred: " + response.getMessage());
             test_auth = response.getAuthToken();
         } catch (DataAccessException | ServiceException e) {
@@ -40,10 +40,10 @@ public class ServiceTest {
     @BeforeEach
     void setUpEach() {
         try {
-            LoginResponse response = (LoginResponse) new Login().run(new UserRequest(test.username(), test.password()));
+            LoginResponse response = (LoginResponse) new Login().run(new UserRequest(TEST.username(), TEST.password()));
             assertNull(response.getMessage(), "Error occurred for valid login: " + response.getMessage());
             assertNotEquals(response.getAuthToken(), test_auth, "Expected unique auth token");
-            assertEquals(response.getUsername(), test.username(), "Expected usernames to match");
+            assertEquals(response.getUsername(), TEST.username(), "Expected usernames to match");
             if (response.getAuthToken() != null) {
                 auth = response.getAuthToken();
             }
@@ -109,9 +109,9 @@ public class ServiceTest {
     @DisplayName("Invalid login")
     void invalidLogin() {
         assertAuthChange(0, () -> {
-            assertFail(new Login(), new UserRequest(bad.username(), bad.password()));
-            assertFail(new Login(), new UserRequest(null, bad.password()));
-            assertFail(new Login(), new UserRequest(bad.username(), null));
+            assertFail(new Login(), new UserRequest(BAD.username(), BAD.password()));
+            assertFail(new Login(), new UserRequest(null, BAD.password()));
+            assertFail(new Login(), new UserRequest(BAD.username(), null));
             assertFail(new Login(), new UserRequest(null, null));
         });
     }
@@ -138,9 +138,7 @@ public class ServiceTest {
     @Order(5)
     @DisplayName("Valid Register")
     void register() {
-        assertUserChange(1, () -> {
-            assertDoesNotThrow(() -> new Register().run(new RegisterRequest("temp", "temp", "temp")));
-        });
+        assertUserChange(1, () -> assertDoesNotThrow(() -> new Register().run(new RegisterRequest("temp", "temp", "temp"))));
     }
 
     @Test
@@ -148,13 +146,13 @@ public class ServiceTest {
     @DisplayName("Invalid Register")
     void invalidRegister() {
         assertUserChange(0, () -> {
-            assertFail(new Register(), new RegisterRequest(test.username(), test.password(), test.email()));
-            assertFail(new Register(), new RegisterRequest(test.username(), null, null));
-            assertFail(new Register(), new RegisterRequest(null, test.password(), null));
-            assertFail(new Register(), new RegisterRequest(null, null, test.email()));
-            assertFail(new Register(), new RegisterRequest(test.username(), test.password(), null));
-            assertFail(new Register(), new RegisterRequest(null, test.password(), test.email()));
-            assertFail(new Register(), new RegisterRequest(test.username(), null, test.email()));
+            assertFail(new Register(), new RegisterRequest(TEST.username(), TEST.password(), TEST.email()));
+            assertFail(new Register(), new RegisterRequest(TEST.username(), null, null));
+            assertFail(new Register(), new RegisterRequest(null, TEST.password(), null));
+            assertFail(new Register(), new RegisterRequest(null, null, TEST.email()));
+            assertFail(new Register(), new RegisterRequest(TEST.username(), TEST.password(), null));
+            assertFail(new Register(), new RegisterRequest(null, TEST.password(), TEST.email()));
+            assertFail(new Register(), new RegisterRequest(TEST.username(), null, TEST.email()));
         });
     }
 
@@ -222,14 +220,14 @@ public class ServiceTest {
             if (ACCESSOR.getGameDAO().findAll().isEmpty()) {
                 create();
             }
-            LoginResponse response = (LoginResponse) new Register().run(new RegisterRequest(bad.username(), bad.password(), bad.email()));
+            LoginResponse response = (LoginResponse) new Register().run(new RegisterRequest(BAD.username(), BAD.password(), BAD.email()));
             badAuth = response.getAuthToken();
             new Join().run(new JoinRequest(badAuth, ChessGame.TeamColor.BLACK, gameID));
             new Join().run(new JoinRequest(auth, ChessGame.TeamColor.WHITE, gameID));
             GameData updated = ACCESSOR.getGameDAO().find(gameID);
             assertNotNull(updated);
-            assertEquals(bad.username(), updated.blackUsername());
-            assertEquals(test.username(), updated.whiteUsername());
+            assertEquals(BAD.username(), updated.blackUsername());
+            assertEquals(TEST.username(), updated.whiteUsername());
 
             assertDoesNotThrow(() -> new Join().run(new JoinRequest(badAuth, ChessGame.TeamColor.BLACK, gameID)));
             assertDoesNotThrow(() -> new Join().run(new JoinRequest(auth, ChessGame.TeamColor.WHITE, gameID)));

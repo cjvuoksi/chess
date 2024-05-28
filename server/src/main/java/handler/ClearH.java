@@ -2,7 +2,6 @@ package handler;
 
 import request.Request;
 import service.HTTP.HTTPService;
-import service.HTTP.ServiceException;
 import spark.Response;
 
 public class ClearH extends Handler {
@@ -11,7 +10,7 @@ public class ClearH extends Handler {
     }
 
     @Override
-    protected Request getRequest() throws ServiceException {
+    protected Request getRequest() {
         return null;
     }
 }

@@ -21,7 +21,7 @@ public class ServerFacadeTests {
     private static Server server;
     private static ServerFacadeExposer serverFacade;
     private static HttpCommunicator http;
-    private static UserData testUser = new UserData("test", "test", "test");
+    private static final UserData TEST_USER = new UserData("test", "test", "test");
     private static String token;
     private static String token2;
     private static int gameID = 0;
@@ -63,9 +63,9 @@ public class ServerFacadeTests {
 
 
     private void register() {
-        LoginResponse response = serverFacade.register(new RegisterRequest(testUser.username(), testUser.password(), testUser.email()));
+        LoginResponse response = serverFacade.register(new RegisterRequest(TEST_USER.username(), TEST_USER.password(), TEST_USER.email()));
         assertNull(response.getMessage());
-        assertEquals(testUser.username(), response.getUsername());
+        assertEquals(TEST_USER.username(), response.getUsername());
         assertNotNull(response.getAuthToken());
         token = response.getAuthToken();
     }
@@ -75,7 +75,7 @@ public class ServerFacadeTests {
     @Order(2)
     @DisplayName("Invalid Register")
     public void invalidRegister() {
-        LoginResponse response = serverFacade.register(new RegisterRequest(testUser.username(), testUser.password(), testUser.email()));
+        LoginResponse response = serverFacade.register(new RegisterRequest(TEST_USER.username(), TEST_USER.password(), TEST_USER.email()));
         assertNotNull(response.getMessage());
     }
 
@@ -83,9 +83,9 @@ public class ServerFacadeTests {
     @Order(3)
     @DisplayName("Login")
     public void login() {
-        LoginResponse response = serverFacade.login(new UserRequest(testUser.username(), testUser.password()));
+        LoginResponse response = serverFacade.login(new UserRequest(TEST_USER.username(), TEST_USER.password()));
         assertNull(response.getMessage());
-        assertEquals(testUser.username(), response.getUsername());
+        assertEquals(TEST_USER.username(), response.getUsername());
         assertNotEquals(token, response.getAuthToken());
         token2 = response.getAuthToken();
     }

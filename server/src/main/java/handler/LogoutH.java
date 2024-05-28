@@ -3,7 +3,6 @@ package handler;
 import request.AuthRequest;
 import request.Request;
 import service.HTTP.HTTPService;
-import service.HTTP.ServiceException;
 import spark.Response;
 
 public class LogoutH extends Handler {
@@ -12,7 +11,7 @@ public class LogoutH extends Handler {
     }
 
     @Override
-    protected Request getRequest() throws ServiceException {
+    protected Request getRequest() {
         return new AuthRequest(request.headers("Authorization"));
     }
 }
