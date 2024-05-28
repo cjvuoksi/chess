@@ -11,6 +11,8 @@ import response.LoginResponse;
 import response.Response;
 import server.Server;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -165,14 +167,22 @@ public class ServerFacadeTests {
     @Order(11)
     @DisplayName("Logout")
     public void logout() {
-
+        if (token2 == null) {
+            login();
+        }
+        Response response = serverFacade.logout(new AuthRequest(token2));
+        token2 = "done";
+        assertNull(response.getMessage());
     }
 
     @Test
     @Order(12)
     @DisplayName("Invalid Logout")
     public void invalidLogout() {
-
+        if (!Objects.equals(token2, "done")) {
+            logout();
+        }
+        Response response = serverFacade.logout(new AuthRequest(token2));
+        assertNotNull(response.getMessage());
     }
-
 }
