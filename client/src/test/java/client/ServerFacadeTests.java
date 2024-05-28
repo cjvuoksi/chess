@@ -6,6 +6,7 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import request.*;
 import response.CreateResponse;
+import response.ListResponse;
 import response.LoginResponse;
 import response.Response;
 import server.Server;
@@ -143,14 +144,21 @@ public class ServerFacadeTests {
     @Order(9)
     @DisplayName("List Games")
     public void listGames() {
+        if (gameID == 0) {
+            join();
+        }
 
+        ListResponse response = serverFacade.listGames(new AuthRequest(token));
+        assertNull(response.getMessage());
+        assertNotNull(response.getGames());
     }
 
     @Test
     @Order(10)
     @DisplayName("Invalid List Games")
     public void invalidListGames() {
-
+        ListResponse response = serverFacade.listGames(new AuthRequest("bad"));
+        assertNotNull(response.getMessage());
     }
 
     @Test
