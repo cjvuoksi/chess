@@ -1,12 +1,10 @@
 package client;
 
+import chess.ChessGame;
 import communication.HttpCommunicator;
 import model.UserData;
 import org.junit.jupiter.api.*;
-import request.CreateRequest;
-import request.RegisterRequest;
-import request.Request;
-import request.UserRequest;
+import request.*;
 import response.CreateResponse;
 import response.LoginResponse;
 import response.Response;
@@ -112,20 +110,33 @@ public class ServerFacadeTests {
     @DisplayName("Invalid Create")
     public void invalidCreate() {
         CreateResponse response = serverFacade.createGame(new CreateRequest("bad", null));
+        assertNotNull(response.getMessage());
     }
 
     @Test
     @Order(7)
     @DisplayName("Join")
     public void join() {
+        if (gameID == 0) {
+            create();
+        }
 
+        Response response = serverFacade.join(new JoinRequest(token, ChessGame.TeamColor.WHITE, gameID));
+        assertNull(response.getMessage());
+        response = serverFacade.join(new JoinRequest(token, ChessGame.TeamColor.BLACK, gameID));
+        assertNull(response.getMessage());
     }
 
     @Test
     @Order(8)
     @DisplayName("Invalid Join")
     public void invalidJoin() {
+        if (gameID == 0) {
+            join();
+        }
 
+        Response response = serverFacade.join(new JoinRequest("bad", ChessGame.TeamColor.WHITE, gameID));
+        assertNotNull(response.getMessage());
     }
 
     @Test
