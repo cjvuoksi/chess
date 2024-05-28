@@ -5,6 +5,7 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import request.RegisterRequest;
 import request.Request;
+import request.UserRequest;
 import response.LoginResponse;
 import response.Response;
 import server.Server;
@@ -19,6 +20,7 @@ public class ServerFacadeTests {
     private static HttpCommunicator http;
     private static UserData testUser = new UserData("test", "test", "test");
     private static String token;
+    private static String token2;
     private static int gameID;
 
     @BeforeAll
@@ -68,14 +70,22 @@ public class ServerFacadeTests {
     @Order(3)
     @DisplayName("Login")
     public void login() {
-
+        if (token == null) {
+            register();
+        }
+        LoginResponse response = serverFacade.login(new UserRequest(testUser.username(), testUser.password()));
+        assertNull(response.getMessage());
+        assertEquals(testUser.username(), response.getUsername());
+        assertNotEquals(token, response.getAuthToken());
+        token2 = response.getAuthToken();
     }
 
     @Test
     @Order(4)
     @DisplayName("Invalid Login")
     public void invalidLogin() {
-
+        LoginResponse response = serverFacade.login(new UserRequest("bad", "bad"));
+        assertNotNull(response.getMessage());
     }
 
     @Test
