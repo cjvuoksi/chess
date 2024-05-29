@@ -12,9 +12,9 @@ import response.Response;
 import java.util.ArrayList;
 
 public class PostLogin extends UI {
-    String username;
-    String authToken;
-    ArrayList<Integer> games = new ArrayList<>();
+    final String username;
+    final String authToken;
+    final ArrayList<Integer> games = new ArrayList<>();
 
     public PostLogin(String username, String authToken) {
         this.username = username;

@@ -5,7 +5,7 @@ import dataaccess.GameDao;
 import dataaccess.UserDAO;
 
 public abstract class Service {
-    protected static UserDAO userDAO = new UserDAO();
-    protected static AuthDAO authDAO = new AuthDAO();
-    protected static GameDao gameDAO = new GameDao();
+    protected static final UserDAO userDAO = new UserDAO();
+    protected static final AuthDAO authDAO = new AuthDAO();
+    protected static final GameDao gameDAO = new GameDao();
 }
