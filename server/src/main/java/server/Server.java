@@ -93,7 +93,8 @@ public class Server {
 
     @OnWebSocketConnect
     public void open(Session session) {
-        log.logInfo(session.getUpgradeRequest());
+//        log.logInfo(session.getUpgradeRequest());
+        log.logInfo("New connection opened");
     }
 
     @OnWebSocketMessage
@@ -117,6 +118,9 @@ public class Server {
         }
 
         log.logError(error.getMessage());
+//        log.logError(error.getCause());
+        log.logError(error.getStackTrace());
+        error.printStackTrace();
     }
 
     @OnWebSocketClose

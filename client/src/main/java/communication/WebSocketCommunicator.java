@@ -16,8 +16,10 @@ public class WebSocketCommunicator {
 
         try {
             this.client = new WebSocketClient(observer);
-            client.send(new Connect(request.getGameID(), request.getAuthorization(), request.getPlayerColor()));
-            connected = true;
+            if (this.client.session.isOpen()) {
+                this.connected = true;
+                client.send(new Connect(request.getGameID(), request.getAuthorization(), request.getPlayerColor()));
+            }
         } catch (Exception e) {
             connected = false;
             observer.notify(new Error("Failed to connect to websocket: " + e.getMessage()));
