@@ -283,6 +283,14 @@ public class GameUI extends UI implements Observer {
         exit = true;
     }
 
+    @Override
+    protected boolean evaluateCommonCommand(String command) throws SwitchException {
+        if (exit) {
+            exit();
+        }
+        return super.evaluateCommonCommand(command);
+    }
+
     private void close() {
         server.close();
     }

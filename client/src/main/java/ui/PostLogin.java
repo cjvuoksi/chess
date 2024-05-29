@@ -93,12 +93,14 @@ public class PostLogin extends UI {
                 i++;
             }
         }
+        if (games.isEmpty()) {
+            print("No games in the data base");
+        }
     }
 
     private void join(Boolean asPlayer) throws SwitchException {
         list();
         if (games.isEmpty()) {
-            print("No games in the data base");
             return;
         }
         String num = promptInput("Enter number to play or (q) to escape: ");

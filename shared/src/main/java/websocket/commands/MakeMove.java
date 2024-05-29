@@ -10,5 +10,6 @@ public class MakeMove extends UserGameCommand {
         this.gameID = id;
         this.teamColor = teamColor;
         this.commandType = CommandType.MAKE_MOVE;
+        this.move = move;
     }
 }
