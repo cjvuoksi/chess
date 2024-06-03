@@ -28,16 +28,12 @@ public class Server {
 
     private final SessionManager sessionManager = new SessionManager();
 
-    public static void main(String[] args) {
-        new Server().run(8080);
-    }
-
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
-        Spark.staticFiles.location("web");
-
         Spark.webSocket("/ws", Server.class);
+
+        Spark.staticFiles.location("web");
 
         Spark.delete("/db", this::clearApp);
         // Register
@@ -93,8 +89,11 @@ public class Server {
 
     @OnWebSocketConnect
     public void open(Session session) {
-//        log.logInfo(session.getUpgradeRequest());
         log.logInfo("New connection opened");
+        log.logInfo(session.getUpgradeRequest().getProtocolVersion());
+        log.logInfo(session.getProtocolVersion());
+        log.logInfo(session.getRemote().getInetSocketAddress());
+
     }
 
     @OnWebSocketMessage

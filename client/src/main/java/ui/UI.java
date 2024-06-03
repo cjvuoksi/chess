@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public abstract class UI {
 
-    protected final ServerFacade server = new ServerFacade();
+    protected ServerFacade server = new ServerFacade();
 
     public void help() {
         print(getHelp());
