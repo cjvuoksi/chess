@@ -120,5 +120,45 @@
     <h3>Response</h3>
     <pre id="response" readonly></pre>
 </div>
+<div class="ws" id="ws">
+    <h2>Websocket</h2>
+    <table>
+        <tr>
+            <td class="endpoint" onclick="connect()">
+                <div class="method"></div>
+                <div class="path">/ws</div>
+            </td>
+            <td>
+                <span class="description">Register a user</span> If successful, an authorization authToken is returned.
+                You
+                may use the authToken with future requests that require authorization. No authorization authToken is
+                required
+                to call this endpoint.
+            </td>
+        </tr>
+    </table>
+    <div id="ws_exec">
+        <div class="box">
+            <h3>UserCommand</h3>
+            <div class="input"><label for="typeBox">Type:</label> <input type="text" id="typeBox"/></div>
+
+            <div class="input">
+                <label for="endBox">Endpoint:</label> <input type="text" id="endBox" name="handleBox" value="/ws"
+                                                             readonly/>
+            </div>
+
+            <div class="input">
+                <label for="userCommandBox">User Command:</label> <textarea id="userCommandBox"
+                                                                            name="userCommandBox"></textarea>
+            </div>
+
+            <button onclick="submitUserCommand()">Send</button>
+        </div>
+    </div>
+    <div class="box">
+        <h3>Response</h3>
+        <pre id="serverMessage" readonly></pre>
+    </div>
+</div>
 </body>
 </html>

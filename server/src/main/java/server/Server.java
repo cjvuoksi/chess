@@ -89,11 +89,7 @@ public class Server {
 
     @OnWebSocketConnect
     public void open(Session session) {
-        log.logInfo("New connection opened");
-        log.logInfo(session.getUpgradeRequest().getProtocolVersion());
-        log.logInfo(session.getProtocolVersion());
-        log.logInfo(session.getRemote().getInetSocketAddress());
-
+        log.logInfo("Connected: " + session.getRemoteAddress().getAddress());
     }
 
     @OnWebSocketMessage
@@ -146,5 +142,10 @@ public class Server {
                 }
             }
         }
+    }
+
+    @OnWebSocketFrame
+    public void onFrame(org.eclipse.jetty.websocket.api.Session session, org.eclipse.jetty.websocket.api.extensions.Frame frame) {
+        log.logInfo("Frame " + frame.getType() + " " + frame.getPayload());
     }
 }

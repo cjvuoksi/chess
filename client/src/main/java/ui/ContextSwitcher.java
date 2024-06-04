@@ -18,20 +18,20 @@ public class ContextSwitcher implements Observer {
             if (game != null) {
                 try {
                     game.exit();
-                } catch (SwitchException _) {
+                } catch (SwitchException e) {
 
                 }
             }
             if (post != null) {
                 try {
                     post.exit();
-                } catch (SwitchException _) {
+                } catch (SwitchException e) {
 
                 }
             }
             try {
                 pre.exit();
-            } catch (SwitchException _) {
+            } catch (SwitchException e) {
 
             }
         }));

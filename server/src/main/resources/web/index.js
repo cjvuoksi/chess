@@ -25,15 +25,58 @@ function send(path, params, method, authToken) {
     })
         .then((response) => {
             if (!response.ok) errStr = response.status + ': ' + response.statusText + '\n';
+            if (response.ok && path === '/game' && method === 'PUT') {
+                wsStart()
+            }
             return response.json();
         })
         .then((data) => {
             document.getElementById('authToken').value = data.authToken || authToken || 'none';
             document.getElementById('response').innerText = errStr + JSON.stringify(data, null, 2);
+
         })
         .catch((error) => {
             document.getElementById('response').innerText = error;
         });
+}
+
+let ws;
+
+function wsStart() {
+    ws = new WebSocket('ws://localhost:8080/ws');
+
+    ws.onopen = () => {
+        console.log("New WS connection");
+        document.getElementById('ws').style.display = "block";
+    }
+    ws.onmessage = onmessage;
+    ws.onclose = () => {
+        console.log("WS closed");
+        document.getElementById('ws').style.display = "none";
+    }
+    ws.onerror = wsError;
+}
+
+function wsError(event) {
+    console.log(event);
+}
+
+function onmessage(event) {
+    const servermessage = event.data;
+    console.log(event.data);
+}
+
+function submitUserCommand() {
+    const type = document.getElementById('typeBox').value;
+    const command = document.getElementById('userCommandBox').value;
+
+    if (type && command) {
+        sendUserCommand(command)
+    }
+}
+
+function sendUserCommand(command) {
+    ws.send(command);
 }
 
 function displayRequest(method, endpoint, request) {
@@ -73,4 +116,28 @@ function createGame() {
 
 function joinGame() {
     displayRequest('PUT', '/game', {playerColor: 'WHITE/BLACK/empty', gameID: 0});
+}
+
+function displayUserCommand(type, request) {
+    document.getElementById('typeBox').value = type;
+    document.getElementById('endBox').value = "/ws";
+    const body = request ? JSON.stringify(request, null, 2) : '';
+    document.getElementById('userCommandBox').value = body;
+    window.scrollBy({
+        top: document.getElementById('ws_exec').getBoundingClientRect().top,
+        behavior: "smooth"
+    });
+}
+
+function connect() {
+    displayUserCommand("CONNECT", {
+        type: "CONNECT",
+        teamColor: 'WHITE/BLACK',
+        gameID: 0,
+        authToken: document.getElementById('authToken').value
+    })
+}
+
+function makeMove() {
+    displayUserCommand("MAKEMOVE",)
 }
