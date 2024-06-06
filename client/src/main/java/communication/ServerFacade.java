@@ -1,5 +1,6 @@
 package communication;
 
+import port.Port;
 import request.*;
 import response.CreateResponse;
 import response.ListResponse;
@@ -19,11 +20,12 @@ public class ServerFacade {
     public final String url;
 
     public ServerFacade() {
-        url = "http://localhost:8080/";
+        url = "http://localhost:" + Port.port + "/";
         http = new HttpCommunicator(url);
     }
 
     public ServerFacade(int port) {
+        Port.port = port;
         url = "http://localhost:" + port + "/";
         http = new HttpCommunicator(url);
     }

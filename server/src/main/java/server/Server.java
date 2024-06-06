@@ -31,7 +31,9 @@ public class Server {
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
-        Spark.webSocket("/ws", Server.class);
+        Spark.webSocket("/ws", server.Server.class);
+
+        Spark.webSocket("/echo", server.Echo.class);
 
         Spark.staticFiles.location("web");
 
@@ -48,6 +50,8 @@ public class Server {
         Spark.post("/game", this::createGame);
         // Join Game
         Spark.put("/game", this::joinGame);
+
+        Spark.internalServerError(serializer.toJson(new response.Response("Internal Server Error")));
 
         Spark.awaitInitialization();
         return Spark.port();

@@ -11,13 +11,15 @@ import websocket.messages.ServerMessage;
 import javax.websocket.*;
 import java.net.URI;
 
+import static port.Port.port;
+
 public class WebSocketClient extends Endpoint {
     private final Observer observer;
     Session session;
     private final Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
 
     public WebSocketClient(Observer observer) throws Exception {
-        URI uri = URI.create("ws://localhost:8080/ws");
+        URI uri = URI.create("ws://localhost:" + port + "/ws");
         this.observer = observer;
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
