@@ -175,7 +175,14 @@ const BOARD_SIZE = 8;
 function displayBoard() {
     output = document.getElementById("board");
     chess.board.chessBoard.forEach((value, key, map) => {
-
+        console.log("Key:", key, "Value:", value);
+        str = String(key.row).concat(String(key.col));
+        console.log("String:", str);
+        console.log(`Attempting to add ${value} to location: ${str}`)
+        square = document.getElementById(str)
+        if (square !== null) {
+            square.innerText = value;
+        }
     })
     //TODO make interactive
 }
