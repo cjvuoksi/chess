@@ -109,5 +109,32 @@ code {
 }
 
 .ws {
-    display: none;
+    display: block;
 }
+
+.board {
+    max-width: 50%;
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    gap: 0;
+}
+
+.square {
+    height: min-content;
+    display: flex;
+}
+
+@media screen
+and (max-width: 480px) {
+    .board {
+        min-width: 100%;
+    }
+}
+
+@media screen
+and (max-width: 960px) {
+    .board {
+        max-width: 75%;
+    }
+}
+

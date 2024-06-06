@@ -125,15 +125,32 @@
     <table>
         <tr>
             <td class="endpoint" onclick="connect()">
-                <div class="method"></div>
+                <div class="method">CONNECT</div>
                 <div class="path">/ws</div>
             </td>
             <td>
-                <span class="description">Register a user</span> If successful, an authorization authToken is returned.
-                You
-                may use the authToken with future requests that require authorization. No authorization authToken is
-                required
-                to call this endpoint.
+                <span class="description">Connect to the game</span> If successful, you should start receiving websocket
+                messages
+            </td>
+        </tr>
+        <tr>
+            <td class="endpoint" onclick="makeMove()">
+                <div class="method">MAKEMOVE</div>
+                <div class="path">/ws</div>
+            </td>
+            <td>
+                <span class="description">Make a move</span> If successful, the chess board should be updated with the
+                input move.
+            </td>
+        </tr>
+        <tr>
+            <td class="endpoint" onclick="leave()">
+                <div class="method">LEAVE</div>
+                <div class="path">/ws</div>
+            </td>
+            <td>
+                <span class="description">Leaves the game</span> Removes user from the current chess game and closes the
+                websocket connection.
             </td>
         </tr>
     </table>
@@ -158,6 +175,335 @@
     <div class="box">
         <h3>Response</h3>
         <pre id="serverMessage" readonly></pre>
+        <div id="game" class="board">
+            <div class="square" id="81">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square" id="82">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square" id="83">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square" id="84">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square" id="85">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square" id="86">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#373003"></rect>
+                </svg>
+            </div>
+            <div class="square">
+                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
+                    <rect height="1" width="1" fill="#b8b5a2"></rect>
+                </svg>
+            </div>
+        </div>
     </div>
 </div>
 </body>
