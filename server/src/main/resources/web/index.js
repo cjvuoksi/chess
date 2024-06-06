@@ -94,6 +94,7 @@ function wsStart() {
     ws.onclose = () => {
         console.log("WS closed");
         document.getElementById('ws').style.display = "none";
+        window.alert("Websocket connection closed"); //FIXME
     }
     ws.onerror = wsError;
 }
