@@ -119,9 +119,23 @@ code {
     gap: 0;
 }
 
+svg {
+    z-index: -1;
+}
+
+.light {
+    background-color: #f7f0e0;
+}
+
+.dark {
+    background-color: #b8b5a2;
+}
+
 .square {
-    height: min-content;
     display: flex;
+    font-size: 5vw;
+    justify-content: center;
+    aspect-ratio: 1;
 }
 
 @media screen
@@ -129,12 +143,20 @@ and (max-width: 480px) {
     .board {
         min-width: 100%;
     }
+
+    .square {
+        font-size: 5vw;
+    }
 }
 
 @media screen
 and (max-width: 960px) {
     .board {
         max-width: 75%;
+    }
+
+    .square {
+        font-size: 6.5vw;
     }
 }
 

@@ -135,11 +135,12 @@
         </tr>
         <tr>
             <td class="endpoint" onclick="makeMove()">
-                <div class="method">MAKEMOVE</div>
+                <div class="method">RESIGN</div>
                 <div class="path">/ws</div>
             </td>
             <td>
-                <span class="description">Make a move</span> If successful, the chess board should be updated with the
+                <span class="description">Resign the game</span> If successful, the chess board should be updated with
+                the
                 input move.
             </td>
         </tr>
@@ -172,337 +173,81 @@
             <button onclick="submitUserCommand()">Send</button>
         </div>
     </div>
-    <div class="box">
+    <div class="box" data="#b8b5a2; #f7f0e0;">
         <h3>Response</h3>
         <pre id="serverMessage" readonly></pre>
         <div id="game" class="board">
-            <div class="square" id="81">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="82">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="83">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="84">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="85">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="86">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="87">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="88">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
+            <div class="square light" id="81"></div>
+            <div class="square dark" id="82"></div>
+            <div class="square light" id="83"></div>
+            <div class="square dark" id="84"></div>
+            <div class="square light" id="85"></div>
+            <div class="square dark" id="86"></div>
+            <div class="square light" id="87"></div>
+            <div class="square dark" id="88"></div>
 
-            <div class="square" id="71">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="72">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="73">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="74">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="75">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="76">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="77">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="78">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
+            <div class="square dark" id="71"></div>
+            <div class="square light" id="72"></div>
+            <div class="square dark" id="73"></div>
+            <div class="square light" id="74"></div>
+            <div class="square dark" id="75"></div>
+            <div class="square light" id="76"></div>
+            <div class="square dark" id="77"></div>
+            <div class="square light" id="78"></div>
 
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
+            <div class="square light" id="61"></div>
+            <div class="square dark" id="62"></div>
+            <div class="square light" id="63"></div>
+            <div class="square dark" id="64"></div>
+            <div class="square light" id="65"></div>
+            <div class="square dark" id="66"></div>
+            <div class="square light" id="67"></div>
+            <div class="square dark" id="68"></div>
 
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
+            <div class="square dark" id="51"></div>
+            <div class="square light" id="52"></div>
+            <div class="square dark" id="53"></div>
+            <div class="square light" id="54"></div>
+            <div class="square dark" id="55"></div>
+            <div class="square light" id="56"></div>
+            <div class="square dark" id="57"></div>
+            <div class="square light" id="58"></div>
 
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
+            <div class="square light" id="41"></div>
+            <div class="square dark" id="42"></div>
+            <div class="square light" id="43"></div>
+            <div class="square dark" id="44"></div>
+            <div class="square light" id="45"></div>
+            <div class="square dark" id="46"></div>
+            <div class="square light" id="47"></div>
+            <div class="square dark" id="48"></div>
 
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
+            <div class="square dark" id="31"></div>
+            <div class="square light" id="32"></div>
+            <div class="square dark" id="33"></div>
+            <div class="square light" id="34"></div>
+            <div class="square dark" id="35"></div>
+            <div class="square light" id="36"></div>
+            <div class="square dark" id="37"></div>
+            <div class="square light" id="38"></div>
 
-            <div class="square" id="28">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="27">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="26">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="25">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="24">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="23">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="22">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="21">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
+            <div class="square light" id="21"></div>
+            <div class="square dark" id="22"></div>
+            <div class="square light" id="23"></div>
+            <div class="square dark" id="24"></div>
+            <div class="square light" id="25"></div>
+            <div class="square dark" id="26"></div>
+            <div class="square light" id="27"></div>
+            <div class="square dark" id="28"></div>
 
-            <div class="square" id="18">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="17">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="16">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="15">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="14">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="13">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
-            <div class="square" id="12">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#373003"></rect>
-                </svg>
-            </div>
-            <div class="square" id="11">
-                <svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">
-                    <rect height="1" width="1" fill="#b8b5a2"></rect>
-                </svg>
-            </div>
+            <div class="square dark" id="11"></div>
+            <div class="square light" id="12"></div>
+            <div class="square dark" id="13"></div>
+            <div class="square light" id="14"></div>
+            <div class="square dark" id="15"></div>
+            <div class="square light" id="16"></div>
+            <div class="square dark" id="17"></div>
+            <div class="square light" id="18"></div>
         </div>
     </div>
 </div>

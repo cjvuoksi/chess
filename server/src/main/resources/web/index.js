@@ -81,6 +81,10 @@ function joinGame() {
     displayRequest('PUT', '/game', {playerColor: 'WHITE/BLACK/empty', gameID: 0});
 }
 
+function observeGame() {
+    //FIXME
+}
+
 let ws;
 
 function wsStart() {
@@ -112,7 +116,7 @@ function loadGame(game) {
     })
     game.game.board.chessBoard = board;
     chess = game.game;
-    console.log(chess);
+    clearBoard();
     displayBoard();
 }
 
@@ -176,16 +180,69 @@ const BOARD_SIZE = 8;
 function displayBoard() {
     output = document.getElementById("board");
     chess.board.chessBoard.forEach((value, key, map) => {
-        console.log("Key:", key, "Value:", value);
         str = String(key.row).concat(String(key.col));
-        console.log("String:", str);
-        console.log(`Attempting to add ${value} to location: ${str}`)
         square = document.getElementById(str)
         if (square !== null) {
-            square.innerText = value;
+            square.innerText = getPiece(value);
         }
     })
     //TODO make interactive
+}
+
+let init;
+let end;
+
+for (let element of document.getElementsByClassName("square")) {
+    element.addEventListener("click", (event) => {
+        if (init != null && end == null) {
+            end = target.id;
+            updateMove(init, end);
+            init = null;
+            end = null;
+        } else {
+            console.log(event);
+            end = null;
+            init = target.id;
+        }
+    })
+}
+
+function updateMove(start, end) {
+    displayUserCommand("MAKEMOVE", {
+        commandType: "MAKEMOVE",
+        gameID: 0,
+        move: {startPosition: start, endPosition: end},
+        authToken: document.getElementById('authToken').value
+    })
+}
+
+function parsePosition(pos) {
+    let row = parseInt(pos[0]);
+    let col = parseInt(pos[1]);
+}
+
+function clearBoard() {
+    let elements = document.getElementsByClassName("square");
+    for (let i of elements) {
+        i.innerText = "";
+    }
+}
+
+function getPiece(value) {
+    switch (value.type) {
+        case "PAWN":
+            return value.color === "BLACK" ? "♟︎" : "♙";
+        case "ROOK":
+            return value.color === "BLACK" ? "♜" : "♖";
+        case "KNIGHT":
+            return value.color === "BLACK" ? "♞" : "♘";
+        case "BISHOP":
+            return value.color === "BLACK" ? "♝" : "♗";
+        case "KING":
+            return value.color === "BLACK" ? "♚" : "♔";
+        case "QUEEN":
+            return value.color === "BLACK" ? "♛" : "♕";
+    }
 }
 
 function makeMove() {
@@ -199,3 +256,346 @@ function leave() {
         commandType: "LEAVE",
     })
 }
+
+let new_chess = {
+    "board": {
+        "chessBoard": new Map([
+            [
+                {
+                    "row": 2,
+                    "col": 1
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 7
+                },
+                {
+                    "type": "KNIGHT",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 2,
+                    "col": 2
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 8
+                },
+                {
+                    "type": "ROOK",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 4,
+                    "col": 4
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 2,
+                    "col": 3
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 2,
+                    "col": 5
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 2,
+                    "col": 6
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 2,
+                    "col": 7
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 2,
+                    "col": 8
+                },
+                {
+                    "type": "PAWN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 1
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 2
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 3
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 4
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 5
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 6
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 7
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 1
+                },
+                {
+                    "type": "ROOK",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 7,
+                    "col": 8
+                },
+                {
+                    "type": "PAWN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 2
+                },
+                {
+                    "type": "KNIGHT",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 3
+                },
+                {
+                    "type": "BISHOP",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 4
+                },
+                {
+                    "type": "QUEEN",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 5
+                },
+                {
+                    "type": "KING",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 6
+                },
+                {
+                    "type": "BISHOP",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 7
+                },
+                {
+                    "type": "KNIGHT",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 1,
+                    "col": 8
+                },
+                {
+                    "type": "ROOK",
+                    "color": "WHITE"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 1
+                },
+                {
+                    "type": "ROOK",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 2
+                },
+                {
+                    "type": "KNIGHT",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 3
+                },
+                {
+                    "type": "BISHOP",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 4
+                },
+                {
+                    "type": "QUEEN",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 5
+                },
+                {
+                    "type": "KING",
+                    "color": "BLACK"
+                }
+            ],
+            [
+                {
+                    "row": 8,
+                    "col": 6
+                },
+                {
+                    "type": "BISHOP",
+                    "color": "BLACK"
+                }
+            ]
+        ])
+    },
+    "enPassant": {
+        "row": 4,
+        "col": 4
+    },
+    "whiteKingMoved": false,
+    "whiteQueenRookMoved": false,
+    "whiteKingRookMoved": false,
+    "blackKingMoved": false,
+    "blackQueenRookMoved": false,
+    "blackKingRookMoved": false,
+    "currColor": "BLACK",
+    "gameOver": false
+}
+
+chess = new_chess;
+
+displayBoard();
