@@ -85,6 +85,7 @@ function observeGame() {
     //FIXME
 }
 
+//SETUP WS
 let ws;
 
 function wsStart() {
@@ -107,10 +108,12 @@ function wsError(event) {
     console.log(event);
 }
 
+//SETUP CHESS BOARD
 let chess;
 
 function loadGame(game) {
     const board = new Map()
+    document.getElementById("gameIDBox").value = game.gameID;
     game.game.board.chessBoard.map((item) => {
         board.set(item[0], item[1]);
     })
@@ -157,7 +160,6 @@ function sendUserCommand(command) {
 
 function displayUserCommand(type, request) {
     document.getElementById('typeBox').value = type;
-    document.getElementById('endBox').value = "/ws";
     const body = request ? JSON.stringify(request, null, 2) : '';
     document.getElementById('userCommandBox').value = body;
     window.scrollBy({
@@ -170,7 +172,7 @@ function connect() {
     displayUserCommand("CONNECT", {
         commandType: "CONNECT",
         teamColor: 'WHITE/BLACK',
-        gameID: 0,
+        gameID: parseInt(document.getElementById('gameIDBox').value),
         authToken: document.getElementById('authToken').value
     })
 }
@@ -189,29 +191,30 @@ function displayBoard() {
     //TODO make interactive
 }
 
+//SET UP MOVE MAKER
 let init;
 let end;
 
 for (let element of document.getElementsByClassName("square")) {
     element.addEventListener("click", (event) => {
         if (init != null && end == null) {
-            end = target.id;
+            end = event.target.id;
             updateMove(init, end);
             init = null;
             end = null;
         } else {
             console.log(event);
             end = null;
-            init = target.id;
+            init = event.target.id;
         }
     })
 }
 
 function updateMove(start, end) {
-    displayUserCommand("MAKEMOVE", {
-        commandType: "MAKEMOVE",
-        gameID: 0,
-        move: {startPosition: start, endPosition: end},
+    displayUserCommand("MAKE_MOVE", {
+        commandType: "MAKE_MOVE",
+        gameID: parseInt(document.getElementById('gameIDBox').value),
+        move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
         authToken: document.getElementById('authToken').value
     })
 }
@@ -219,6 +222,7 @@ function updateMove(start, end) {
 function parsePosition(pos) {
     let row = parseInt(pos[0]);
     let col = parseInt(pos[1]);
+    return {row: row, col: col};
 }
 
 function clearBoard() {
