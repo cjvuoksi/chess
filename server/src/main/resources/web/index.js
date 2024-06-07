@@ -81,10 +81,6 @@ function joinGame() {
     displayRequest('PUT', '/game', {playerColor: 'WHITE/BLACK/empty', gameID: 0});
 }
 
-function observeGame() {
-    //FIXME
-}
-
 //SETUP WS
 let ws;
 
@@ -93,12 +89,12 @@ function wsStart() {
 
     ws.onopen = () => {
         console.log("New WS connection");
-        document.getElementById('ws').style.display = "block";
+        displayWS();
     }
     ws.onmessage = onmessage;
     ws.onclose = () => {
         console.log("WS closed");
-        document.getElementById('ws').style.display = "none";
+        hideWS();
         window.alert("Websocket connection closed"); //FIXME
     }
     ws.onerror = wsError;
@@ -106,6 +102,14 @@ function wsStart() {
 
 function wsError(event) {
     console.log(event);
+}
+
+function displayWS() {
+    document.getElementById('ws').style.display = "block";
+}
+
+function hideWS() {
+    document.getElementById('ws').style.display = "none";
 }
 
 //SETUP CHESS BOARD
@@ -168,13 +172,34 @@ function displayUserCommand(type, request) {
     });
 }
 
-function connect() {
-    displayUserCommand("CONNECT", {
-        commandType: "CONNECT",
-        teamColor: 'WHITE/BLACK',
-        gameID: parseInt(document.getElementById('gameIDBox').value),
-        authToken: document.getElementById('authToken').value
-    })
+function connect(user) {
+    if (user) {
+        displayUserCommand("CONNECT", {
+            commandType: "CONNECT",
+            teamColor: 'WHITE/BLACK',
+            gameID: parseInt(document.getElementById('gameIDBox').value),
+            authToken: document.getElementById('authToken').value
+        })
+    } else {
+        wsStart();
+        displayUserCommand("CONNECT", {
+            commandType: "CONNECT",
+            gameID: parseInt(document.getElementById('gameIDBox').value),
+            authToken: document.getElementById('authToken').value
+        })
+    }
+}
+
+function displayObserve() {
+    for (element of document.getElementsByClassName("observe")) {
+        element.style.display = "block";
+    }
+}
+
+function hideObserve() {
+    for (element of document.getElementsByClassName("observe")) {
+        element.style.display = "none";
+    }
 }
 
 const BOARD_SIZE = 8;
@@ -249,9 +274,9 @@ function getPiece(value) {
     }
 }
 
-function makeMove() {
-    displayUserCommand("MAKEMOVE", {
-        commandType: "MAKEMOVE",
+function resign() {
+    displayUserCommand("RESIGN", {
+        commandType: "RESIGN",
     })
 }
 
@@ -600,6 +625,6 @@ let new_chess = {
     "gameOver": false
 }
 
-chess = new_chess;
+// chess = new_chess;
 
 displayBoard();

@@ -82,8 +82,18 @@
             <div class="path">/game</div>
         </td>
         <td>
-            <span class="description">Join a Chess Game</span> The request body must contain the game ID. If no color is
-            specified then the user is joined as an observer. An authToken is required to call this endpoint.
+            <span class="description">Join a Chess Game</span> The request body must contain the game ID. An authToken
+            is required to call this endpoint.
+        </td>
+    </tr>
+    <tr id="observe">
+        <td class="endpoint" onclick="connect(false)">
+            <div class="method">CONNECT</div>
+            <div class="path">/ws</div>
+        </td>
+        <td>
+            <span class="description">Observe a Chess Game</span> Opens the WS interface and observes a game with a
+            game ID. An authToken is required for this endpoint. On success, the page will display server messages.
         </td>
     </tr>
     <tr>
@@ -124,17 +134,17 @@
     <h2>Websocket</h2>
     <table>
         <tr>
-            <td class="endpoint" onclick="connect()">
+            <td class="endpoint" onclick="connect(true)">
                 <div class="method">CONNECT</div>
                 <div class="path">/ws</div>
             </td>
             <td>
                 <span class="description">Connect to the game</span> If successful, you should start receiving websocket
-                messages
+                messages from the game
             </td>
         </tr>
         <tr>
-            <td class="endpoint" onclick="makeMove()">
+            <td class="endpoint" onclick="resign()">
                 <div class="method">RESIGN</div>
                 <div class="path">/ws</div>
             </td>
