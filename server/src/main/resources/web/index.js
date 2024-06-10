@@ -40,8 +40,6 @@ function send(path, params, method, authToken) {
         });
 }
 
-
-
 function displayRequest(method, endpoint, request) {
     document.getElementById('method').value = method;
     document.getElementById('handleBox').value = endpoint;
@@ -92,14 +90,13 @@ function wsStart() {
         displayWS();
     }
     ws.onmessage = onmessage;
-    ws.onclose = () => {
-        console.log("WS closed");
+    ws.onclose = (event) => {
         hideWS();
         const alert = document.createElement("div");
         alert.className = "alert";
         alert.id = "alert"
         alert.onclick = (event) => ws_alert(event);
-        alert.innerText = "✕ Websocket connection closed";
+        alert.innerText = `✕ Websocket connection closed: ${event.reason}`;
         document.body.prepend(alert);
         setTimeout(ws_alert, 5000);
     }

@@ -15,6 +15,7 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 import websocket.commands.UserGameCommand;
+import websocket.messages.Error;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -110,16 +111,21 @@ public class Server {
     }
 
     @OnWebSocketError
-    public void onError(Throwable error) {
+    public void onError(Session session, Throwable error) {
         if (TimeoutException.class == error.getClass()) {
             log.logInfo("Session timed out");
             return;
         }
 
         log.logError(error.getMessage());
-//        log.logError(error.getCause());
-        log.logError(error.getStackTrace());
-        error.printStackTrace();
+        if (session.isOpen()) {
+            try {
+                session.getRemote().sendString(serializer.toJson(new Error(error.getMessage())));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            session.close();
+        }
     }
 
     @OnWebSocketClose
