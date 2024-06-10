@@ -139,6 +139,7 @@ function loadGame(game) {
     displayBoard();
 }
 
+//TODO make onmessages create alerts instead of modify so they fade after 5 seconds and remain if the connection is closed
 function onmessage(event) {
     const servermessage = event.data;
     var message = JSON.parse(servermessage);
