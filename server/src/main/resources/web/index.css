@@ -109,11 +109,11 @@ code {
 }
 
 .ws {
-    display: block;
+    display: none;
 }
 
 .board {
-    max-width: 50%;
+    width: 50%;
     display: grid;
     grid-template-columns: repeat(8, auto);
     gap: 0;
@@ -127,8 +127,16 @@ svg {
     background-color: #f7f0e0;
 }
 
+.light:hover {
+    background-color: #e1dacd;
+}
+
 .dark {
     background-color: #b8b5a2;
+}
+
+.dark:hover {
+    background-color: #838173;
 }
 
 .square {
@@ -136,6 +144,22 @@ svg {
     font-size: 5vw;
     justify-content: center;
     aspect-ratio: 1;
+    width: 100%;
+    cursor: pointer;
+}
+
+.alert {
+    display: flex;
+    position: sticky;
+    top: 10px;
+    background-color: rgba(74, 72, 68, 80%);
+    color: rgba(255, 255, 255, 80%);
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: .5em;
+    overflow: hidden;
+    transition: all 1s ease-in-out;
 }
 
 @media screen
@@ -152,7 +176,7 @@ and (max-width: 480px) {
 @media screen
 and (max-width: 960px) {
     .board {
-        max-width: 75%;
+        width: 75%;
     }
 
     .square {

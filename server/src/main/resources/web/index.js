@@ -95,9 +95,24 @@ function wsStart() {
     ws.onclose = () => {
         console.log("WS closed");
         hideWS();
-        window.alert("Websocket connection closed"); //FIXME
+        const alert = document.createElement("div");
+        alert.className = "alert";
+        alert.id = "alert"
+        alert.onclick = (event) => ws_alert(event);
+        alert.innerText = "✕ Websocket connection closed";
+        document.body.prepend(alert);
+        setTimeout(ws_alert, 5000);
     }
     ws.onerror = wsError;
+}
+
+function ws_alert(event) {
+    const alert = document.getElementById("alert");
+    alert.style.background = "rgba(255, 0, 0, 0.0)";
+    alert.style.color = "rgba(255, 0, 0, 0.0)";
+    setTimeout(() => {
+        alert.remove()
+    }, 1000);
 }
 
 function wsError(event) {
@@ -225,14 +240,32 @@ for (let element of document.getElementsByClassName("square")) {
         if (init != null && end == null) {
             end = event.target.id;
             updateMove(init, end);
+            unclickedSquare(document.getElementById(init));
             init = null;
             end = null;
         } else {
             console.log(event);
             end = null;
             init = event.target.id;
+            clickedSquare(document.getElementById(init));
         }
     })
+}
+
+function clickedSquare(square) {
+    if (square.classList.contains("light")) {
+        square.style.background = "#e1dacd";
+    } else {
+        square.style.background = "#838173";
+    }
+}
+
+function unclickedSquare(square) {
+    if (square.classList.contains("light")) {
+        square.style.background = "#f7f0e0";
+    } else {
+        square.style.background = "#b8b5a2";
+    }
 }
 
 function updateMove(start, end) {
