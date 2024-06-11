@@ -184,80 +184,95 @@
         </div>
     </div>
     <div class="box" data="#b8b5a2; #f7f0e0;">
-        <h3>Response</h3>
+        <h3>Response <span id="reverse" onclick="toggleBoard()">↺</span></h3>
         <pre id="serverMessage" readonly></pre>
-        <div id="game" class="board">
-            <div class="square light" id="81"></div>
-            <div class="square dark" id="82"></div>
-            <div class="square light" id="83"></div>
-            <div class="square dark" id="84"></div>
-            <div class="square light" id="85"></div>
-            <div class="square dark" id="86"></div>
-            <div class="square light" id="87"></div>
-            <div class="square dark" id="88"></div>
+        <div id="game">
+            <div class="row">
+                <div class="square light" id="81"></div>
+                <div class="square dark" id="82"></div>
+                <div class="square light" id="83"></div>
+                <div class="square dark" id="84"></div>
+                <div class="square light" id="85"></div>
+                <div class="square dark" id="86"></div>
+                <div class="square light" id="87"></div>
+                <div class="square dark" id="88"></div>
+            </div>
+            <div class="row">
+                <div class="square dark" id="71"></div>
+                <div class="square light" id="72"></div>
+                <div class="square dark" id="73"></div>
+                <div class="square light" id="74"></div>
+                <div class="square dark" id="75"></div>
+                <div class="square light" id="76"></div>
+                <div class="square dark" id="77"></div>
+                <div class="square light" id="78"></div>
+            </div>
 
-            <div class="square dark" id="71"></div>
-            <div class="square light" id="72"></div>
-            <div class="square dark" id="73"></div>
-            <div class="square light" id="74"></div>
-            <div class="square dark" id="75"></div>
-            <div class="square light" id="76"></div>
-            <div class="square dark" id="77"></div>
-            <div class="square light" id="78"></div>
+            <div class="row">
+                <div class="square light" id="61"></div>
+                <div class="square dark" id="62"></div>
+                <div class="square light" id="63"></div>
+                <div class="square dark" id="64"></div>
+                <div class="square light" id="65"></div>
+                <div class="square dark" id="66"></div>
+                <div class="square light" id="67"></div>
+                <div class="square dark" id="68"></div>
+            </div>
 
-            <div class="square light" id="61"></div>
-            <div class="square dark" id="62"></div>
-            <div class="square light" id="63"></div>
-            <div class="square dark" id="64"></div>
-            <div class="square light" id="65"></div>
-            <div class="square dark" id="66"></div>
-            <div class="square light" id="67"></div>
-            <div class="square dark" id="68"></div>
+            <div class="row">
+                <div class="square dark" id="51"></div>
+                <div class="square light" id="52"></div>
+                <div class="square dark" id="53"></div>
+                <div class="square light" id="54"></div>
+                <div class="square dark" id="55"></div>
+                <div class="square light" id="56"></div>
+                <div class="square dark" id="57"></div>
+                <div class="square light" id="58"></div>
+            </div>
 
-            <div class="square dark" id="51"></div>
-            <div class="square light" id="52"></div>
-            <div class="square dark" id="53"></div>
-            <div class="square light" id="54"></div>
-            <div class="square dark" id="55"></div>
-            <div class="square light" id="56"></div>
-            <div class="square dark" id="57"></div>
-            <div class="square light" id="58"></div>
+            <div class="row">
+                <div class="square light" id="41"></div>
+                <div class="square dark" id="42"></div>
+                <div class="square light" id="43"></div>
+                <div class="square dark" id="44"></div>
+                <div class="square light" id="45"></div>
+                <div class="square dark" id="46"></div>
+                <div class="square light" id="47"></div>
+                <div class="square dark" id="48"></div>
+            </div>
 
-            <div class="square light" id="41"></div>
-            <div class="square dark" id="42"></div>
-            <div class="square light" id="43"></div>
-            <div class="square dark" id="44"></div>
-            <div class="square light" id="45"></div>
-            <div class="square dark" id="46"></div>
-            <div class="square light" id="47"></div>
-            <div class="square dark" id="48"></div>
+            <div class="row">
+                <div class="square dark" id="31"></div>
+                <div class="square light" id="32"></div>
+                <div class="square dark" id="33"></div>
+                <div class="square light" id="34"></div>
+                <div class="square dark" id="35"></div>
+                <div class="square light" id="36"></div>
+                <div class="square dark" id="37"></div>
+                <div class="square light" id="38"></div>
+            </div>
 
-            <div class="square dark" id="31"></div>
-            <div class="square light" id="32"></div>
-            <div class="square dark" id="33"></div>
-            <div class="square light" id="34"></div>
-            <div class="square dark" id="35"></div>
-            <div class="square light" id="36"></div>
-            <div class="square dark" id="37"></div>
-            <div class="square light" id="38"></div>
+            <div class="row">
+                <div class="square light" id="21"></div>
+                <div class="square dark" id="22"></div>
+                <div class="square light" id="23"></div>
+                <div class="square dark" id="24"></div>
+                <div class="square light" id="25"></div>
+                <div class="square dark" id="26"></div>
+                <div class="square light" id="27"></div>
+                <div class="square dark" id="28"></div>
+            </div>
 
-            <div class="square light" id="21"></div>
-            <div class="square dark" id="22"></div>
-            <div class="square light" id="23"></div>
-            <div class="square dark" id="24"></div>
-            <div class="square light" id="25"></div>
-            <div class="square dark" id="26"></div>
-            <div class="square light" id="27"></div>
-            <div class="square dark" id="28"></div>
-
-            <div class="square dark" id="11"></div>
-            <div class="square light" id="12"></div>
-            <div class="square dark" id="13"></div>
-            <div class="square light" id="14"></div>
-            <div class="square dark" id="15"></div>
-            <div class="square light" id="16"></div>
-            <div class="square dark" id="17"></div>
-            <div class="square light" id="18"></div>
+            <div class="row">
+                <div class="square dark" id="11"></div>
+                <div class="square light" id="12"></div>
+                <div class="square dark" id="13"></div>
+                <div class="square light" id="14"></div>
+                <div class="square dark" id="15"></div>
+                <div class="square light" id="16"></div>
+                <div class="square dark" id="17"></div>
+                <div class="square light" id="18"></div>
+            </div>
         </div>
     </div>
 </div>

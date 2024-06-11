@@ -10,8 +10,8 @@ var game_ID_path = "gameID"
 /*
 Modify these values to true/false to make it so server messages fade after fade_time milliseconds
  */
-var fade_error = false;
-var fade_notify = false;
+var fade_error = true;
+var fade_notify = true;
 var fade_close = true;
 var fade_time = 5000;
 
@@ -252,7 +252,6 @@ function connect(user) {
 const BOARD_SIZE = 8;
 
 function displayBoard() {
-    output = document.getElementById("board");
     chessboard.forEach((value, key, map) => {
         str = String(key.row).concat(String(key.col));
         square = document.getElementById(str)
@@ -260,7 +259,6 @@ function displayBoard() {
             square.innerText = getPiece(value);
         }
     })
-    //TODO make interactive
 }
 
 //SET UP MOVE MAKER
@@ -349,4 +347,14 @@ function leave() {
     displayUserCommand("LEAVE", {
         commandType: "LEAVE",
     })
+}
+
+function toggleBoard() {
+    console.log("flipping board")
+    let dir = document.getElementById("game");
+    if (dir.style.flexDirection === "column") {
+        dir.style.flexDirection = "column-reverse";
+    } else {
+        dir.style.flexDirection = "column";
+    }
 }

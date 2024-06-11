@@ -112,15 +112,17 @@ code {
     display: none;
 }
 
-.board {
-    width: 50%;
+.row {
+    width: min-content;
     display: grid;
     grid-template-columns: repeat(8, auto);
     gap: 0;
 }
 
-svg {
-    z-index: -1;
+#game {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .light {
@@ -141,10 +143,10 @@ svg {
 
 .square {
     display: flex;
-    font-size: 5vw;
+    font-size: 4vw;
     justify-content: center;
     aspect-ratio: 1;
-    width: 100%;
+    width: 5vw;
     cursor: pointer;
 }
 
@@ -166,25 +168,34 @@ svg {
     top: 10px;
 }
 
-@media screen
-and (max-width: 480px) {
-    .board {
-        min-width: 100%;
-    }
+#reverse {
+    margin-left: 3em;
+    font-size: 2em;
+    cursor: pointer;
+}
 
+
+@media screen
+and (max-width: 1200px) {
     .square {
+        width: 6vw;
         font-size: 5vw;
     }
 }
 
 @media screen
 and (max-width: 960px) {
-    .board {
-        width: 75%;
-    }
-
     .square {
+        width: 7vw;
         font-size: 6.5vw;
+    }
+}
+
+@media screen
+and (max-width: 600px) {
+    .square {
+        width: 9vw;
+        font-size: 8vw;
     }
 }
 
