@@ -308,14 +308,14 @@ function updateMove(start, end) {
         sendUserCommand(JSON.stringify({
             commandType: "MAKE_MOVE",
             gameID: parseInt(document.getElementById('gameIDBox').value),
-            move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
+            move: {startPosition: parsePosition(start), endPosition: parsePosition(end), promotionPiece: "QUEEN"},
             authToken: document.getElementById('authToken').value
         }));
     } else {
         displayUserCommand("MAKE_MOVE", {
             commandType: "MAKE_MOVE",
             gameID: parseInt(document.getElementById('gameIDBox').value),
-            move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
+            move: {startPosition: parsePosition(start), endPosition: parsePosition(end), promotionPiece: "QUEEN"},
             authToken: document.getElementById('authToken').value
         })
     }
