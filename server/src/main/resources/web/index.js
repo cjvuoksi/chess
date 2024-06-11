@@ -23,7 +23,12 @@ var server_port = 8000;
 /*
 When you are ready to test websockets set this to true
  */
-var is_ws = false;
+var is_ws = true;
+
+
+if (!is_ws) {
+    document.getElementById("observe").remove();
+}
 
 
 function submit() {
@@ -118,6 +123,7 @@ let ws;
 
 function wsStart() {
     if (!is_ws) {
+        alert("Enable websockets to use this", true);
         return;
     }
 
@@ -231,6 +237,8 @@ function displayUserCommand(type, request) {
 function connect(user) {
     if (!user) {
         wsStart();
+    }
+    if (!is_ws) {
         return;
     }
     displayWS();

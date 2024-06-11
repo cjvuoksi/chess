@@ -87,16 +87,6 @@
             is required to call this endpoint.
         </td>
     </tr>
-    <tr id="observe">
-        <td class="endpoint" onclick="connect(false)">
-            <div class="method">CONNECT</div>
-            <div class="path">/ws</div>
-        </td>
-        <td>
-            <span class="description">Observe a Chess Game</span> Opens the WS interface and observes a game with a
-            game ID. An authToken is required for this endpoint. On success, the page will display server messages.
-        </td>
-    </tr>
     <tr>
         <td class="endpoint" onclick="clearAll()">
             <div class="method">[DELETE]</div>
@@ -105,6 +95,16 @@
         <td>
             <span class="description">Clear ALL data from the database</span> This includes users and all game data. No
             authorization authToken is required.
+        </td>
+    </tr>
+    <tr id="observe">
+        <td class="endpoint" onclick="connect(false)">
+            <div class="method">Websocket</div>
+            <div class="path">/ws</div>
+        </td>
+        <td>
+            <span class="description">Connects to a Chess Game</span> Opens the WS interface and establishes a websocket
+            connection. Connect must be called to attach to a game.
         </td>
     </tr>
 </table>
