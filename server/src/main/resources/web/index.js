@@ -1,3 +1,31 @@
+//Config
+/*LOAD_GAME
+Add paths from your load game class here (accessed from the game field)
+    var board_path = "path.to.chess.board.array"
+    var gameID = "path.to.game.id"
+ */
+var board_path = "game.board.chessBoard"
+var game_ID_path = "gameID"
+
+/*
+Modify these values to true/false to make it so server messages fade after fade_time milliseconds
+ */
+var fade_error = false;
+var fade_notify = false;
+var fade_close = true;
+var fade_time = 5000;
+
+/*
+Change this to the server port number
+ */
+var server_port = 8000;
+
+/*
+When you are ready to test websockets set this to true
+ */
+var is_ws = false;
+
+
 function submit() {
     document.getElementById('response').value = '';
     const method = document.getElementById('method').value;
@@ -79,32 +107,46 @@ function joinGame() {
     displayRequest('PUT', '/game', {playerColor: 'WHITE/BLACK/empty', gameID: 0});
 }
 
+//UTILS
+function get(obj, path) {
+    arrayPath = path.split('.');
+    return arrayPath.reduce((source, path) => source[path], obj);
+}
+
 //SETUP WS
 let ws;
 
 function wsStart() {
-    ws = new WebSocket(`ws://localhost:${location.port}/ws`);
+    if (!is_ws) {
+        return;
+    }
+
+    ws = new WebSocket(`ws://localhost:${server_port}/ws`);
 
     ws.onopen = () => {
-        console.log("New WS connection");
+        alert("New WS connection", true);
         displayWS();
     }
     ws.onmessage = onmessage;
     ws.onclose = (event) => {
         hideWS();
-        const alert = document.createElement("div");
-        alert.className = "alert";
-        alert.id = "alert"
-        alert.onclick = (event) => ws_alert(event);
-        alert.innerText = `✕ Websocket connection closed: ${event.reason}`;
-        document.body.prepend(alert);
-        setTimeout(ws_alert, 5000);
+        alert(`Websocket connection closed ${event.reason}`, fade_close);
     }
     ws.onerror = wsError;
 }
 
-function ws_alert(event) {
-    const alert = document.getElementById("alert");
+function alert(message, timeout) {
+    const alert = document.createElement("div");
+    alert.className = "alert";
+    alert.onclick = (event) => ws_alert(alert);
+    alert.innerText = `✕ ${message}`;
+    document.getElementById("alerts").prepend(alert);
+    if (timeout) {
+        setTimeout(() => ws_alert(alert), fade_time);
+    }
+}
+
+function ws_alert(alert) {
     alert.style.background = "rgba(255, 0, 0, 0.0)";
     alert.style.color = "rgba(255, 0, 0, 0.0)";
     setTimeout(() => {
@@ -125,21 +167,21 @@ function hideWS() {
 }
 
 //SETUP CHESS BOARD
-let chess;
+let chessboard;
 
+//TODO May need modify array/map?
 function loadGame(game) {
     const board = new Map()
-    document.getElementById("gameIDBox").value = game.gameID;
-    game.game.board.chessBoard.map((item) => {
+    const id = get(game, game_ID_path);
+    document.getElementById("gameIDBox").value = id ? id : document.getElementById("gameIDBox").value;
+    get(game, board_path).map((item) => {
         board.set(item[0], item[1]);
     })
-    game.game.board.chessBoard = board;
-    chess = game.game;
+    chessboard = board;
     clearBoard();
     displayBoard();
 }
 
-//TODO make onmessages create alerts instead of modify so they fade after 5 seconds and remain if the connection is closed
 function onmessage(event) {
     const servermessage = event.data;
     var message = JSON.parse(servermessage);
@@ -150,10 +192,11 @@ function onmessage(event) {
             loadGame(message.game);
             break;
         case 'ERROR':
-            displayServerMessage(message.errorMessage);
+            // displayServerMessage(message.errorMessage);
+            alert(message.errorMessage, fade_error);
             break;
         default:
-            displayServerMessage(message.message)
+            alert(message.message, fade_notify);
             break;
     }
 }
@@ -186,40 +229,23 @@ function displayUserCommand(type, request) {
 }
 
 function connect(user) {
-    if (user) {
-        displayUserCommand("CONNECT", {
-            commandType: "CONNECT",
-            teamColor: 'WHITE/BLACK',
-            gameID: parseInt(document.getElementById('gameIDBox').value),
-            authToken: document.getElementById('authToken').value
-        })
-    } else {
+    if (!user) {
         wsStart();
-        displayUserCommand("CONNECT", {
-            commandType: "CONNECT",
-            gameID: parseInt(document.getElementById('gameIDBox').value),
-            authToken: document.getElementById('authToken').value
-        })
+        return;
     }
-}
-
-function displayObserve() {
-    for (element of document.getElementsByClassName("observe")) {
-        element.style.display = "block";
-    }
-}
-
-function hideObserve() {
-    for (element of document.getElementsByClassName("observe")) {
-        element.style.display = "none";
-    }
+    displayWS();
+    displayUserCommand("CONNECT", {
+        commandType: "CONNECT",
+        gameID: parseInt(document.getElementById('gameIDBox').value),
+        authToken: document.getElementById('authToken').value
+    })
 }
 
 const BOARD_SIZE = 8;
 
 function displayBoard() {
     output = document.getElementById("board");
-    chess.board.chessBoard.forEach((value, key, map) => {
+    chessboard.forEach((value, key, map) => {
         str = String(key.row).concat(String(key.col));
         square = document.getElementById(str)
         if (square !== null) {
@@ -316,346 +342,3 @@ function leave() {
         commandType: "LEAVE",
     })
 }
-
-let new_chess = {
-    "board": {
-        "chessBoard": new Map([
-            [
-                {
-                    "row": 2,
-                    "col": 1
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 7
-                },
-                {
-                    "type": "KNIGHT",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 2,
-                    "col": 2
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 8
-                },
-                {
-                    "type": "ROOK",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 4,
-                    "col": 4
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 2,
-                    "col": 3
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 2,
-                    "col": 5
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 2,
-                    "col": 6
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 2,
-                    "col": 7
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 2,
-                    "col": 8
-                },
-                {
-                    "type": "PAWN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 1
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 2
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 3
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 4
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 5
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 6
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 7
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 1
-                },
-                {
-                    "type": "ROOK",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 7,
-                    "col": 8
-                },
-                {
-                    "type": "PAWN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 2
-                },
-                {
-                    "type": "KNIGHT",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 3
-                },
-                {
-                    "type": "BISHOP",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 4
-                },
-                {
-                    "type": "QUEEN",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 5
-                },
-                {
-                    "type": "KING",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 6
-                },
-                {
-                    "type": "BISHOP",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 7
-                },
-                {
-                    "type": "KNIGHT",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 1,
-                    "col": 8
-                },
-                {
-                    "type": "ROOK",
-                    "color": "WHITE"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 1
-                },
-                {
-                    "type": "ROOK",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 2
-                },
-                {
-                    "type": "KNIGHT",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 3
-                },
-                {
-                    "type": "BISHOP",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 4
-                },
-                {
-                    "type": "QUEEN",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 5
-                },
-                {
-                    "type": "KING",
-                    "color": "BLACK"
-                }
-            ],
-            [
-                {
-                    "row": 8,
-                    "col": 6
-                },
-                {
-                    "type": "BISHOP",
-                    "color": "BLACK"
-                }
-            ]
-        ])
-    },
-    "enPassant": {
-        "row": 4,
-        "col": 4
-    },
-    "whiteKingMoved": false,
-    "whiteQueenRookMoved": false,
-    "whiteKingRookMoved": false,
-    "blackKingMoved": false,
-    "blackQueenRookMoved": false,
-    "blackKingRookMoved": false,
-    "currColor": "BLACK",
-    "gameOver": false
-}
-
-// chess = new_chess;
-
-displayBoard();

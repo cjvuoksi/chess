@@ -150,16 +150,20 @@ svg {
 
 .alert {
     display: flex;
-    position: sticky;
-    top: 10px;
     background-color: rgba(74, 72, 68, 80%);
     color: rgba(255, 255, 255, 80%);
     cursor: pointer;
     width: 100%;
     height: 100%;
     padding: .5em;
+    margin: .05em 0 .05em 0;
     overflow: hidden;
     transition: all 1s ease-in-out;
+}
+
+#alerts {
+    position: sticky;
+    top: 10px;
 }
 
 @media screen
