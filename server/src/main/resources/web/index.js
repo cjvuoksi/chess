@@ -25,6 +25,10 @@ When you are ready to test websockets set this to true
  */
 var is_ws = true;
 
+/*
+Automatically sends moves
+ */
+var auto_send = true;
 
 if (!is_ws) {
     document.getElementById("observe").remove();
@@ -298,13 +302,23 @@ function unclickedSquare(square) {
     }
 }
 
+// FIXME ADD PROMOTION PIECE
 function updateMove(start, end) {
-    displayUserCommand("MAKE_MOVE", {
-        commandType: "MAKE_MOVE",
-        gameID: parseInt(document.getElementById('gameIDBox').value),
-        move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
-        authToken: document.getElementById('authToken').value
-    })
+    if (auto_send) {
+        sendUserCommand(JSON.stringify({
+            commandType: "MAKE_MOVE",
+            gameID: parseInt(document.getElementById('gameIDBox').value),
+            move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
+            authToken: document.getElementById('authToken').value
+        }));
+    } else {
+        displayUserCommand("MAKE_MOVE", {
+            commandType: "MAKE_MOVE",
+            gameID: parseInt(document.getElementById('gameIDBox').value),
+            move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
+            authToken: document.getElementById('authToken').value
+        })
+    }
 }
 
 function parsePosition(pos) {
