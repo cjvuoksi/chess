@@ -366,9 +366,9 @@ function leave() {
 function toggleBoard() {
     console.log("flipping board")
     let dir = document.getElementById("game");
-    if (dir.style.flexDirection === "column") {
-        dir.style.flexDirection = "column-reverse";
-    } else {
+    if (dir.style.flexDirection === "column-reverse") {
         dir.style.flexDirection = "column";
+    } else {
+        dir.style.flexDirection = "column-reverse";
     }
 }
