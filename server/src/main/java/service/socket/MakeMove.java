@@ -26,6 +26,15 @@ public class MakeMove extends SocketService {
             if (result == null) return;
             GameData gameData = result.game();
 
+            if (gameData.game().isGameOver()) {
+                if (gameData.game().getWinner() == null) {
+                    sendRoot(new Error("Game over stalemate"));
+                } else {
+                    sendRoot(new Error("Game over " + gameData.game().getWinner() + " won"));
+                }
+                return;
+            }
+
             if (result.color() != gameData.game().getTeamTurn()) {
                 sendRoot(new Error("Not your turn"));
             } else {
