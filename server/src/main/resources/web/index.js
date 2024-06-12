@@ -307,7 +307,6 @@ function unclickedSquare(square) {
     }
 }
 
-// FIXME ADD PROMOTION PIECE
 function updateMove(start, end, promo) {
     if (auto_send) {
         if (promo) {
@@ -377,12 +376,16 @@ function getPiece(value) {
 function resign() {
     displayUserCommand("RESIGN", {
         commandType: "RESIGN",
+        authToken: document.getElementById('authToken').value,
+        gameID: parseInt(document.getElementById('gameIDBox').value)
     })
 }
 
 function leave() {
     displayUserCommand("LEAVE", {
         commandType: "LEAVE",
+        authToken: document.getElementById('authToken').value,
+        gameID: parseInt(document.getElementById('gameIDBox').value)
     })
 }
 
