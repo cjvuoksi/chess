@@ -114,8 +114,8 @@ code {
 
 .row {
     width: min-content;
-    display: grid;
-    grid-template-columns: repeat(8, auto);
+    display: flex;
+    flex-direction: row;
     gap: 0;
 }
 

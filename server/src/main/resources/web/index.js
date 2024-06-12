@@ -436,4 +436,12 @@ function toggleBoard() {
     } else {
         dir.style.flexDirection = "column-reverse";
     }
+    for (row of document.getElementsByClassName("row")) {
+        if (row.style.flexDirection === "row-reverse") {
+            row.style.flexDirection = "row";
+        } else {
+            row.style.flexDirection = "row-reverse";
+        }
+    }
+
 }
