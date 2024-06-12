@@ -273,8 +273,13 @@ for (let element of document.getElementsByClassName("square")) {
     element.addEventListener("click", (event) => {
         if (init != null && end == null) {
             end = event.target.id;
-            updateMove(init, end);
-            unclickedSquare(document.getElementById(init));
+            let start = document.getElementById(init);
+            if ((start.innerText === "♟︎" && init[0] === '2') || (start.innerText === "♙" && init[0] === '7')) {
+                updateMove(init, end, true);
+            } else {
+                updateMove(init, end);
+            }
+            unclickedSquare(start);
             init = null;
             end = null;
         } else {
@@ -288,9 +293,9 @@ for (let element of document.getElementsByClassName("square")) {
 
 function clickedSquare(square) {
     if (square.classList.contains("light")) {
-        square.style.background = "#e1dacd";
+        square.style.background = "#96F97B";
     } else {
-        square.style.background = "#838173";
+        square.style.background = "#6aaf58";
     }
 }
 
@@ -303,21 +308,39 @@ function unclickedSquare(square) {
 }
 
 // FIXME ADD PROMOTION PIECE
-function updateMove(start, end) {
+function updateMove(start, end, promo) {
     if (auto_send) {
-        sendUserCommand(JSON.stringify({
-            commandType: "MAKE_MOVE",
-            gameID: parseInt(document.getElementById('gameIDBox').value),
-            move: {startPosition: parsePosition(start), endPosition: parsePosition(end), promotionPiece: "QUEEN"},
-            authToken: document.getElementById('authToken').value
-        }));
+        if (promo) {
+            sendUserCommand(JSON.stringify({
+                commandType: "MAKE_MOVE",
+                gameID: parseInt(document.getElementById('gameIDBox').value),
+                move: {startPosition: parsePosition(start), endPosition: parsePosition(end), promotionPiece: "QUEEN"},
+                authToken: document.getElementById('authToken').value
+            }));
+        } else {
+            sendUserCommand(JSON.stringify({
+                commandType: "MAKE_MOVE",
+                gameID: parseInt(document.getElementById('gameIDBox').value),
+                move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
+                authToken: document.getElementById('authToken').value
+            }));
+        }
     } else {
-        displayUserCommand("MAKE_MOVE", {
-            commandType: "MAKE_MOVE",
-            gameID: parseInt(document.getElementById('gameIDBox').value),
-            move: {startPosition: parsePosition(start), endPosition: parsePosition(end), promotionPiece: "QUEEN"},
-            authToken: document.getElementById('authToken').value
-        })
+        if (promo) {
+            displayUserCommand("MAKE_MOVE", {
+                commandType: "MAKE_MOVE",
+                gameID: parseInt(document.getElementById('gameIDBox').value),
+                move: {startPosition: parsePosition(start), endPosition: parsePosition(end), promotionPiece: "QUEEN"},
+                authToken: document.getElementById('authToken').value
+            });
+        } else {
+            displayUserCommand("MAKE_MOVE", {
+                commandType: "MAKE_MOVE",
+                gameID: parseInt(document.getElementById('gameIDBox').value),
+                move: {startPosition: parsePosition(start), endPosition: parsePosition(end)},
+                authToken: document.getElementById('authToken').value
+            })
+        }
     }
 }
 
