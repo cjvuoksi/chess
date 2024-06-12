@@ -206,8 +206,8 @@ function loadGame(game) {
     const id = get(game, game_ID_path);
     document.getElementById("gameIDBox").value = id ? id : document.getElementById("gameIDBox").value;
     let tmp = get(game, board_path);
-    if (tmp.length === 8) {
-        board = new Array();
+    if (tmp.length === BOARD_SIZE) {
+        board = tmp;
     } else {
         board = new Map()
         tmp.map((item) => {
@@ -284,12 +284,15 @@ const BOARD_SIZE = 8;
 
 function displayBoard() {
     if (Array.isArray(chessboard)) {
-        for (r in chessboard) {
-            for (c in chessboard[r]) {
-                str = String(r).concat(String(c));
+        console.log(chessboard);
+        for (r = 1; r <= BOARD_SIZE; r++) {
+            for (c = 1; c <= BOARD_SIZE; c++) {
+                str = String((r)).concat(String((c)));
                 square = document.getElementById(str);
                 if (square !== null) {
-                    square.innerText = getPiece(chessboard[r][c]);
+                    if (chessboard[r - 1][c - 1] !== null) {
+                        square.innerText = getPiece(chessboard[r - 1][c - 1]);
+                    }
                 }
             }
         }
@@ -443,5 +446,4 @@ function toggleBoard() {
             row.style.flexDirection = "row-reverse";
         }
     }
-
 }
