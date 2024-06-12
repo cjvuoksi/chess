@@ -1,4 +1,6 @@
-//Config
+/*
+START CONFIG
+ */
 /*LOAD_GAME
 Add paths from your load game class here (accessed from the game field)
     var board_path = "path.to.chess.board.array"
@@ -30,10 +32,16 @@ Automatically sends moves
  */
 var auto_send = true;
 
+/*
+END CONFIG
+ */
+
+
 if (!is_ws) {
     document.getElementById("observe").remove();
 }
 
+//HTTP
 
 function submit() {
     document.getElementById('response').value = '';
@@ -116,6 +124,8 @@ function joinGame() {
     displayRequest('PUT', '/game', {playerColor: 'WHITE/BLACK/empty', gameID: 0});
 }
 
+//WEBSOCKET
+
 //UTILS
 function get(obj, path) {
     arrayPath = path.split('.');
@@ -131,6 +141,14 @@ function wsStart() {
         return;
     }
 
+    if (ws !== null && ws !== undefined && ws.readyState === ws.OPEN) {
+        ws.close(1000, "Only one session allowed");
+    } else {
+        createWS();
+    }
+}
+
+function createWS() {
     ws = new WebSocket(`ws://localhost:${server_port}/ws`);
 
     ws.onopen = () => {
@@ -140,7 +158,10 @@ function wsStart() {
     ws.onmessage = onmessage;
     ws.onclose = (event) => {
         hideWS();
-        alert(`Websocket connection closed ${event.reason}`, fade_close);
+        alert(`Websocket connection closed: ${event.reason}`, fade_close);
+        if (event.reason === "Only one session allowed") {
+            createWS();
+        }
     }
     ws.onerror = wsError;
 }
@@ -181,12 +202,18 @@ let chessboard;
 
 //TODO May need modify array/map?
 function loadGame(game) {
-    const board = new Map()
+    var board;
     const id = get(game, game_ID_path);
     document.getElementById("gameIDBox").value = id ? id : document.getElementById("gameIDBox").value;
-    get(game, board_path).map((item) => {
-        board.set(item[0], item[1]);
-    })
+    let tmp = get(game, board_path);
+    if (tmp.length === 8) {
+        board = new Array();
+    } else {
+        board = new Map()
+        tmp.map((item) => {
+            board.set(item[0], item[1]);
+        })
+    }
     chessboard = board;
     clearBoard();
     displayBoard();
@@ -256,13 +283,25 @@ function connect(user) {
 const BOARD_SIZE = 8;
 
 function displayBoard() {
-    chessboard.forEach((value, key, map) => {
-        str = String(key.row).concat(String(key.col));
-        square = document.getElementById(str)
-        if (square !== null) {
-            square.innerText = getPiece(value);
+    if (Array.isArray(chessboard)) {
+        for (r in chessboard) {
+            for (c in chessboard[r]) {
+                str = String(r).concat(String(c));
+                square = document.getElementById(str);
+                if (square !== null) {
+                    square.innerText = getPiece(chessboard[r][c]);
+                }
+            }
         }
-    })
+    } else {
+        chessboard.forEach((value, key, map) => {
+            str = String(key.row).concat(String(key.col));
+            square = document.getElementById(str)
+            if (square !== null) {
+                square.innerText = getPiece(value);
+            }
+        })
+    }
 }
 
 //SET UP MOVE MAKER
