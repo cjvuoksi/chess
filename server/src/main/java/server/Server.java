@@ -34,7 +34,6 @@ public class Server {
 
         Spark.webSocket("/ws", server.Server.class);
 
-        Spark.webSocket("/echo", server.Echo.class);
 
         Spark.staticFiles.location("web");
 
