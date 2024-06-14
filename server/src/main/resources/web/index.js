@@ -287,8 +287,8 @@ function displayBoard() {
         console.log(chessboard);
         for (r = 1; r <= BOARD_SIZE; r++) {
             for (c = 1; c <= BOARD_SIZE; c++) {
-                str = String((r)).concat(String((c)));
-                square = document.getElementById(str);
+                let coordinates = String((r)).concat(String((c)));
+                let square = document.getElementById(coordinates);
                 if (square !== null) {
                     if (chessboard[r - 1][c - 1] !== null) {
                         square.innerText = getPiece(chessboard[r - 1][c - 1]);
@@ -298,8 +298,8 @@ function displayBoard() {
         }
     } else {
         chessboard.forEach((value, key, map) => {
-            str = String(key.row).concat(String(key.col));
-            square = document.getElementById(str)
+            let coordinates = String(key.row).concat(String(key.col));
+            let square = document.getElementById(coordinates)
             if (square !== null) {
                 square.innerText = getPiece(value);
             }
@@ -308,27 +308,25 @@ function displayBoard() {
 }
 
 //SET UP MOVE MAKER
-let init;
-let end;
+let startSquare;
 
 for (let element of document.getElementsByClassName("square")) {
     element.addEventListener("click", (event) => {
-        if (init != null && end == null) {
-            end = event.target.id;
-            let start = document.getElementById(init);
-            if ((start.innerText === "♟︎" && init[0] === '2') || (start.innerText === "♙" && init[0] === '7')) {
-                updateMove(init, end, true);
+        if (startSquare != null) {
+            let end = event.target.id;
+            let start = document.getElementById(startSquare);
+            if ((start.innerText === "♟︎" && startSquare[0] === '2') || (start.innerText === "♙" && startSquare[0] === '7')) {
+                updateMove(startSquare, end, true);
             } else {
-                updateMove(init, end);
+                updateMove(startSquare, end);
             }
             unclickedSquare(start);
-            init = null;
-            end = null;
+            startSquare = null;
         } else {
             console.log(event);
             end = null;
-            init = event.target.id;
-            clickedSquare(document.getElementById(init));
+            startSquare = event.target.id;
+            clickedSquare(document.getElementById(startSquare));
         }
     })
 }
@@ -431,19 +429,26 @@ function leave() {
     })
 }
 
-function toggleBoard() {
-    console.log("flipping board")
-    let dir = document.getElementById("game");
-    if (dir.style.flexDirection === "column-reverse") {
-        dir.style.flexDirection = "column";
+function reverseColumns() {
+    let gameDOM = document.getElementById("game");
+    if (gameDOM.style.flexDirection === "column-reverse") {
+        gameDOM.style.flexDirection = "column";
     } else {
-        dir.style.flexDirection = "column-reverse";
+        gameDOM.style.flexDirection = "column-reverse";
     }
-    for (row of document.getElementsByClassName("row")) {
+}
+
+function reverseRows() {
+    for (let row of document.getElementsByClassName("row")) {
         if (row.style.flexDirection === "row-reverse") {
             row.style.flexDirection = "row";
         } else {
             row.style.flexDirection = "row-reverse";
         }
     }
+}
+
+function rotateBoard() {
+    reverseColumns();
+    reverseRows();
 }
