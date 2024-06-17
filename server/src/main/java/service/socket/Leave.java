@@ -46,7 +46,7 @@ public class Leave extends SocketService {
                 sendOthers(new Notification(String.format("%s stopped watching", result.auth().username())));
             }
             if (root.isOpen()) {
-                root.close();
+                root.close(1000, "Connection closed after leaving game");
             }
         } catch (DataAccessException e) {
             sendRoot(new Error(e.getMessage()));

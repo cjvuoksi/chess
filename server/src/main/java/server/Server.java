@@ -118,12 +118,7 @@ public class Server {
 
         log.error(error.getMessage());
         if (session.isOpen()) {
-            try {
-                session.getRemote().sendString(serializer.toJson(new Error(error.getMessage())));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            session.close();
+            session.close(1011, error.getMessage());
         }
     }
 
