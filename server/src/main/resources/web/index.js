@@ -6,31 +6,31 @@ Add paths from your load game class here (accessed from the game field)
     var board_path = "path.to.chess.board.array"
     var gameID = "path.to.game.id"
  */
-var board_path = "game.board.chessBoard"
-var game_ID_path = "gameID"
+const board_path = "game.board.chessBoard";
+const game_ID_path = "gameID";
 
 /*
 Modify these values to true/false to make it so server messages fade after fade_time milliseconds
  */
-var fade_error = true;
-var fade_notify = true;
-var fade_close = true;
-var fade_time = 5000;
+const fade_error = true;
+const fade_notify = true;
+const fade_close = true;
+const fade_time = 5000;
 
 /*
 Change this to the server port number
  */
-var server_port = 8000;
+const server_port = 8000;
 
 /*
 When you are ready to test websockets set this to true
  */
-var is_ws = true;
+const is_ws = true;
 
 /*
 Automatically sends moves
  */
-var auto_send = true;
+const auto_send = true;
 
 /*
 END CONFIG
@@ -42,7 +42,6 @@ if (!is_ws) {
 }
 
 //HTTP
-
 function submit() {
     document.getElementById('response').value = '';
     const method = document.getElementById('method').value;
@@ -128,7 +127,7 @@ function joinGame() {
 
 //UTILS
 function get(obj, path) {
-    arrayPath = path.split('.');
+    let arrayPath = path.split('.');
     return arrayPath.reduce((source, path) => source[path], obj);
 }
 
@@ -169,7 +168,7 @@ function createWS() {
 function alert(message, timeout) {
     const alert = document.createElement("div");
     alert.className = "alert";
-    alert.onclick = (event) => ws_alert(alert);
+    alert.onclick = () => ws_alert(alert);
     alert.innerText = `✕ ${message}`;
     document.getElementById("alerts").prepend(alert);
     if (timeout) {
@@ -200,9 +199,8 @@ function hideWS() {
 //SETUP CHESS BOARD
 let chessboard;
 
-//TODO May need modify array/map?
 function loadGame(game) {
-    var board;
+    let board;
     const id = get(game, game_ID_path);
     document.getElementById("gameIDBox").value = id ? id : document.getElementById("gameIDBox").value;
     let tmp = get(game, board_path);
@@ -214,6 +212,7 @@ function loadGame(game) {
             board.set(item[0], item[1]);
         })
     }
+
     chessboard = board;
     clearBoard();
     displayBoard();
@@ -221,8 +220,7 @@ function loadGame(game) {
 
 function onmessage(event) {
     const servermessage = event.data;
-    var message = JSON.parse(servermessage);
-    console.log(message);
+    let message = JSON.parse(servermessage);
 
     switch (message.serverMessageType) {
         case 'LOAD_GAME':
@@ -236,10 +234,6 @@ function onmessage(event) {
             alert(message.message, fade_notify);
             break;
     }
-}
-
-function displayServerMessage(message) {
-    document.getElementById("serverMessage").innerText = message;
 }
 
 function submitUserCommand() {
@@ -285,8 +279,8 @@ const BOARD_SIZE = 8;
 function displayBoard() {
     if (Array.isArray(chessboard)) {
         console.log(chessboard);
-        for (r = 1; r <= BOARD_SIZE; r++) {
-            for (c = 1; c <= BOARD_SIZE; c++) {
+        for (let r = 1; r <= BOARD_SIZE; r++) {
+            for (let c = 1; c <= BOARD_SIZE; c++) {
                 let coordinates = String((r)).concat(String((c)));
                 let square = document.getElementById(coordinates);
                 if (square !== null) {
@@ -297,9 +291,9 @@ function displayBoard() {
             }
         }
     } else {
-        chessboard.forEach((value, key, map) => {
+        chessboard.forEach((value, key) => {
             let coordinates = String(key.row).concat(String(key.col));
-            let square = document.getElementById(coordinates)
+            let square = document.getElementById(coordinates);
             if (square !== null) {
                 square.innerText = getPiece(value);
             }
@@ -323,8 +317,6 @@ for (let element of document.getElementsByClassName("square")) {
             unclickedSquare(start);
             startSquare = null;
         } else {
-            console.log(event);
-            end = null;
             startSquare = event.target.id;
             clickedSquare(document.getElementById(startSquare));
         }
