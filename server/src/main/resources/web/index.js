@@ -219,15 +219,14 @@ function loadGame(game) {
 }
 
 function onmessage(event) {
-    const servermessage = event.data;
-    let message = JSON.parse(servermessage);
+    const serverMessage = event.data;
+    let message = JSON.parse(serverMessage);
 
     switch (message.serverMessageType) {
         case 'LOAD_GAME':
             loadGame(message.game);
             break;
         case 'ERROR':
-            // displayServerMessage(message.errorMessage);
             alert(message.errorMessage, fade_error);
             break;
         default:
@@ -314,7 +313,7 @@ for (let element of document.getElementsByClassName("square")) {
             } else {
                 updateMove(startSquare, end);
             }
-            unclickedSquare(start);
+            unClickedSquare(start);
             startSquare = null;
         } else {
             startSquare = event.target.id;
@@ -331,7 +330,7 @@ function clickedSquare(square) {
     }
 }
 
-function unclickedSquare(square) {
+function unClickedSquare(square) {
     if (square.classList.contains("light")) {
         square.style.background = "#f7f0e0";
     } else {

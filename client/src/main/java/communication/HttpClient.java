@@ -21,7 +21,9 @@ public class HttpClient {
     }
 
     public Response getServerResponse(String path, String body, String method, Class<? extends Response> resultType, String... authorization) throws IOException {
-        URL url = new URL(this.url + path);
+        URL url = new URL(this.url + path); // FIXME remove the deprecation
+
+        /*new URL("http", host, port, file);*/
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);

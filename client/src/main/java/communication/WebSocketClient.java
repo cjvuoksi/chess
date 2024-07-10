@@ -23,11 +23,7 @@ public class WebSocketClient extends Endpoint {
         this.observer = observer;
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
-        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-            public void onMessage(String message) {
-                observer.notify(gson.fromJson(message, ServerMessage.class));
-            }
-        });
+        this.session.addMessageHandler((MessageHandler.Whole<String>) message -> observer.notify(gson.fromJson(message, ServerMessage.class)));
     }
 
     private void send(String message) throws Exception {

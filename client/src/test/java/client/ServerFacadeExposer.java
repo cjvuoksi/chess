@@ -9,9 +9,6 @@ public class ServerFacadeExposer extends ServerFacade {
         super(port);
     }
 
-    public ServerFacadeExposer() {
-    }
-
     public HttpCommunicator getHTTPCommunicator() {
         return this.http;
     }

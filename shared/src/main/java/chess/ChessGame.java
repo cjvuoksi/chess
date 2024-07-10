@@ -320,7 +320,7 @@ public class ChessGame {
     }
 
     private boolean isMoveInCheck(ChessMove move, TeamColor color) {
-        ChessBoard copy = new ChessBoard((ChessBoard) board);
+        ChessBoard copy = new ChessBoard(board);
         movePiece(move);
         boolean check = isInCheck(color);
         reset(copy);

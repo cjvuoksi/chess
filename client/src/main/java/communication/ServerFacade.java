@@ -57,7 +57,7 @@ public class ServerFacade {
     }
 
     public void close() {
-        websocket.deinit();
+        websocket.deInit();
     }
 
     //WebSocket

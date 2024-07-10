@@ -50,7 +50,7 @@ public class HttpCommunicator {
         }
     }
 
-    //Prelogin
+    //PreLogin
     public LoginResponse register(RegisterRequest request) {
         return (LoginResponse) executeService(request, LoginResponse.class, "user", "POST");
     }
@@ -59,7 +59,7 @@ public class HttpCommunicator {
         return (LoginResponse) executeService(request, LoginResponse.class, "session", "POST");
     }
 
-    //Postlogin
+    //PostLogin
     public Response logout(AuthRequest request) {
         return executeService(request, Response.class, "session", "DELETE");
     }

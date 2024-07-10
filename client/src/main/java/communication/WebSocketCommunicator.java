@@ -26,7 +26,7 @@ public class WebSocketCommunicator {
         }
     }
 
-    public void deinit() {
+    public void deInit() {
         connected = false;
         if (client != null) {
             client.close();
