@@ -83,7 +83,7 @@ public abstract class DAO<V extends Record, K> {
     protected String findStatement;
     protected String updateStatement;
     protected String deleteStatement;
-    protected String findallStatement;
+    protected String findAllStatement;
     protected String clearStatement;
 
     public int create(V toAdd) throws DataAccessException {
@@ -103,7 +103,7 @@ public abstract class DAO<V extends Record, K> {
     }
 
     public Collection<V> findAll() throws DataAccessException {
-        return access(findallStatement);
+        return access(findAllStatement);
     }
 
     public void update(V newValue) throws DataAccessException {

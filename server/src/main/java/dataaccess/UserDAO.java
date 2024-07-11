@@ -12,7 +12,7 @@ public class UserDAO extends DAO<UserData, String> {
         findStatement = "SELECT * FROM users WHERE username = ?";
         updateStatement = "UPDATE users SET pwd = ?, email = ? WHERE username = ?";
         deleteStatement = "DELETE FROM users WHERE username = ?";
-        findallStatement = "SELECT * FROM users";
+        findAllStatement = "SELECT * FROM users";
         clearStatement = "DELETE FROM users";
     }
 

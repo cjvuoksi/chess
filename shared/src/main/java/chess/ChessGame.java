@@ -347,7 +347,8 @@ public class ChessGame {
 
     private ChessPosition findKing(TeamColor teamColor) {
         for (var entry : board.getBoard().entrySet()) {
-            if (entry.getValue().getPieceType() == ChessPiece.PieceType.KING && entry.getValue().getTeamColor() == teamColor) {
+            if (entry.getValue().getPieceType() == ChessPiece.PieceType.KING &&
+                    entry.getValue().getTeamColor() == teamColor) {
                 return entry.getKey();
             }
         }
@@ -430,11 +431,29 @@ public class ChessGame {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessGame chessGame = (ChessGame) o;
-        return whiteKingMoved == chessGame.whiteKingMoved && whiteQueenRookMoved == chessGame.whiteQueenRookMoved && whiteKingRookMoved == chessGame.whiteKingRookMoved && blackKingMoved == chessGame.blackKingMoved && blackQueenRookMoved == chessGame.blackQueenRookMoved && blackKingRookMoved == chessGame.blackKingRookMoved && gameOver == chessGame.gameOver && Objects.equals(board, chessGame.board) && Objects.equals(enPassant, chessGame.enPassant) && currColor == chessGame.currColor && winner == chessGame.winner;
+        return whiteKingMoved == chessGame.whiteKingMoved &&
+                whiteQueenRookMoved == chessGame.whiteQueenRookMoved &&
+                whiteKingRookMoved == chessGame.whiteKingRookMoved &&
+                blackKingMoved == chessGame.blackKingMoved &&
+                blackQueenRookMoved == chessGame.blackQueenRookMoved &&
+                blackKingRookMoved == chessGame.blackKingRookMoved &&
+                gameOver == chessGame.gameOver && Objects.equals(board, chessGame.board) &&
+                Objects.equals(enPassant, chessGame.enPassant) && currColor == chessGame.currColor &&
+                winner == chessGame.winner;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(board, enPassant, whiteKingMoved, whiteQueenRookMoved, whiteKingRookMoved, blackKingMoved, blackQueenRookMoved, blackKingRookMoved, currColor, winner, gameOver);
+        return Objects.hash(board,
+                enPassant,
+                whiteKingMoved,
+                whiteQueenRookMoved,
+                whiteKingRookMoved,
+                blackKingMoved,
+                blackQueenRookMoved,
+                blackKingRookMoved,
+                currColor,
+                winner,
+                gameOver);
     }
 }

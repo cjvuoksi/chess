@@ -68,20 +68,7 @@ public class ChessPiece {
         int curFile = myPosition.getColumn();
         switch (type) {
             case KING:
-                for (curRank = myPosition.getRow() + 1; curRank >= myPosition.getRow() - 1; curRank--) {
-                    for (curFile = myPosition.getColumn() + 1; curFile >= myPosition.getColumn() - 1; curFile--) {
-                        if (!(curFile == myPosition.getColumn() && curRank == myPosition.getRow())) {
-                            ChessPosition square = new ChessPosition(curRank, curFile);
-                            if (square.isValid()) { //If the square is on the board
-                                if (board.getPiece(square) == null) {
-                                    moves.add(new ChessMove(myPosition, square, null));
-                                } else if (board.getPiece(square).getTeamColor() != currColor) {
-                                    moves.add(new ChessMove(myPosition, square, null));
-                                }
-                            }
-                        }
-                    }
-                }
+                kingMoves(board, myPosition, moves, currColor);
                 break;
             case QUEEN:
                 moves.addAll(axialMoves(board, myPosition));
@@ -119,7 +106,29 @@ public class ChessPiece {
         return moves;
     }
 
-    private void setAttackMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> pawnMoves, int curRank, ChessGame.TeamColor curColor, int increment, int promo, ChessPosition attack) {
+    private static void kingMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> moves, TeamColor currColor) {
+        int curRank;
+        int curFile;
+        for (curRank = myPosition.getRow() + 1; curRank >= myPosition.getRow() - 1; curRank--) {
+            for (curFile = myPosition.getColumn() + 1; curFile >= myPosition.getColumn() - 1; curFile--) {
+                if ((curFile == myPosition.getColumn() && curRank == myPosition.getRow())) {
+                    continue;
+                }
+
+                ChessPosition square = new ChessPosition(curRank, curFile);
+                if (!square.isValid()) {
+                    continue;
+                }
+
+                if (board.getPiece(square) == null || board.getPiece(square).getTeamColor() != currColor) {
+                    moves.add(new ChessMove(myPosition, square, null));
+                }
+            }
+        }
+    }
+
+    private void setAttackMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> pawnMoves, int curRank,
+                                ChessGame.TeamColor curColor, int increment, int promo, ChessPosition attack) {
         if (attack.isValid()) {
             if (board.getPiece(attack) != null && board.getPiece(attack).getTeamColor() != curColor) {
                 if ((curRank + increment) == promo) {
@@ -206,21 +215,26 @@ public class ChessPiece {
 
     @java.lang.Override
     public java.lang.String toString() {
-         switch (type) {
-            case KING:
+        switch (type) {
+            case KING -> {
                 return color == WHITE ? WHITE_KING : BLACK_KING;
-            case PAWN:
+            }
+            case PAWN -> {
                 return color == WHITE ? WHITE_PAWN : BLACK_PAWN;
-            case ROOK:
+            }
+            case ROOK -> {
                 return color == WHITE ? WHITE_ROOK : BLACK_ROOK;
-            case QUEEN:
+            }
+            case QUEEN -> {
                 return color == WHITE ? WHITE_QUEEN : BLACK_QUEEN;
-            case BISHOP:
+            }
+            case BISHOP -> {
                 return color == WHITE ? WHITE_BISHOP : BLACK_BISHOP;
-            case KNIGHT:
+            }
+            case KNIGHT -> {
                 return color == WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
-            default:
-                throw new RuntimeException();
+            }
+            default -> throw new RuntimeException();
         }
     }
 

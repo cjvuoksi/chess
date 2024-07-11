@@ -22,7 +22,7 @@ public class GameDao extends DAO<GameData, Integer> {
         findStatement = "SELECT * FROM game WHERE id = ?";
         updateStatement = "UPDATE game SET white_user = ?, black_user = ?, game_name = ?, game = ? WHERE id = ?";
         deleteStatement = "DELETE FROM game WHERE id = ?";
-        findallStatement = "SELECT * FROM game";
+        findAllStatement = "SELECT * FROM game";
         clearStatement = "DELETE FROM game";
     }
 

@@ -46,13 +46,20 @@ public abstract class UI {
     public void run() throws SwitchException {
         clearScreen();
         menu();
+        SwitchException curr;
         while (true) {
-            String input = getCommandLineInput();
-            if (evaluateCommonCommand(input)) {
-                continue;
+            try {
+                String input = getCommandLineInput();
+                if (evaluateCommonCommand(input)) {
+                    continue;
+                }
+                evaluate(input);
+            } catch (SwitchException e) {
+                curr = e;
+                break;
             }
-            evaluate(input);
         }
+        throw curr;
     }
 
     protected abstract void evaluate(String s) throws SwitchException;

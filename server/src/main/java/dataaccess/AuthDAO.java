@@ -11,7 +11,7 @@ public class AuthDAO extends DAO<AuthData, String> {
         findStatement = "SELECT * FROM auth WHERE token = ?";
         updateStatement = "UPDATE auth SET username = ? WHERE token = ?";
         deleteStatement = "DELETE FROM auth WHERE token = ?";
-        findallStatement = "SELECT * FROM auth";
+        findAllStatement = "SELECT * FROM auth";
         clearStatement = "DELETE FROM auth";
     }
 

@@ -5,8 +5,6 @@ import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.websocket.api.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import websocket.messages.Error;
-import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -32,8 +30,8 @@ public class SocketSender {
     private void debug(ServerMessage message) {
         if (logger.isDebugEnabled()) {
             switch (message.getServerMessageType()) {
-                case NOTIFICATION -> logger.debug(((Notification) message).getMessage());
-                case ERROR -> logger.debug(((Error) message).getErrorMessage());
+                case NOTIFICATION -> logger.debug(message.getMessage());
+                case ERROR -> logger.debug(message.getErrorMessage());
                 case LOAD_GAME -> logger.debug(String.valueOf(message));
             }
         }
