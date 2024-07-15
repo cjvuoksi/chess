@@ -24,7 +24,8 @@ public abstract class UI {
     }
 
     public void printError(String message) {
-        print(EscapeSequences.SET_TEXT_COLOR_RED + EscapeSequences.SET_TEXT_ITALIC + message + EscapeSequences.RESET_TEXT_ITALIC + EscapeSequences.RESET_TEXT_COLOR);
+        print(EscapeSequences.SET_TEXT_COLOR_RED + EscapeSequences.SET_TEXT_ITALIC + message + EscapeSequences.RESET_TEXT_ITALIC +
+                EscapeSequences.RESET_TEXT_COLOR);
     }
 
     public void clearScreen() {

@@ -164,7 +164,8 @@ public class Drawer {
             }
         }
 
-        chessBoard[getRow(position)][getCol(position)] = EscapeSequences.SET_TEXT_BLINKING + chessBoard[getRow(position)][getCol(position)] + EscapeSequences.RESET_TEXT_BLINKING;
+        chessBoard[getRow(position)][getCol(position)] = EscapeSequences.SET_TEXT_BLINKING + chessBoard[getRow(position)][getCol(position)] +
+                EscapeSequences.RESET_TEXT_BLINKING;
 
         ui.print(EscapeSequences.ERASE_SCREEN);
         printBoard(playerColor, chessBoard);

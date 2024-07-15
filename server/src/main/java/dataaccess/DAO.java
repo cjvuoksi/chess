@@ -17,20 +17,22 @@ public abstract class DAO<V extends Record, K> {
         }
 
         try (var conn = DatabaseManager.getConnection()) { //Test with USE chess;
-            var init = """
-                    CREATE TABLE IF NOT EXISTS users (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, pwd VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL)
-                    """;
+            var init =
+                    "CREATE TABLE IF NOT EXISTS users (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, " +
+                            "pwd VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL)";
 
             try (var preparedStatement = conn.prepareStatement(init)) {
                 preparedStatement.executeUpdate();
             }
-            init = "CREATE TABLE IF NOT EXISTS auth (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, token VARCHAR(255) NOT NULL, username VARCHAR(255) NOT NULL)";
+            init = "CREATE TABLE IF NOT EXISTS auth (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, token VARCHAR(255) NOT NULL, " +
+                    "username VARCHAR(255) NOT NULL)";
 
             try (var preparedStatement = conn.prepareStatement(init)) {
                 preparedStatement.executeUpdate();
             }
 
-            init = "CREATE TABLE IF NOT EXISTS game (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, game JSON NOT NULL, game_name VARCHAR(255) NOT NULL, white_user VARCHAR(255), black_user VARCHAR(255));";
+            init = "CREATE TABLE IF NOT EXISTS game (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, game JSON NOT NULL, " +
+                    "game_name VARCHAR(255) NOT NULL, white_user VARCHAR(255), black_user VARCHAR(255));";
             try (var preparedStatement = conn.prepareStatement(init)) {
                 preparedStatement.executeUpdate();
             }

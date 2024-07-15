@@ -28,7 +28,8 @@ public class Leave extends SocketService {
                     return;
                 }
 
-                GameData updated = new GameData(result.game().gameID(), null, result.game().blackUsername(), result.game().gameName(), result.game().game());
+                GameData updated = new GameData(result.game().gameID(), null, result.game().blackUsername(), result.game().gameName(),
+                        result.game().game());
                 gameDAO.update(updated);
 
                 sendOthers(new Notification(String.format("%s stopped playing white", result.auth().username())));
@@ -38,7 +39,8 @@ public class Leave extends SocketService {
                     return;
                 }
 
-                GameData updated = new GameData(result.game().gameID(), result.game().whiteUsername(), null, result.game().gameName(), result.game().game());
+                GameData updated = new GameData(result.game().gameID(), result.game().whiteUsername(), null, result.game().gameName(),
+                        result.game().game());
                 gameDAO.update(updated);
 
                 sendOthers(new Notification(String.format("%s stopped playing black", result.auth().username())));

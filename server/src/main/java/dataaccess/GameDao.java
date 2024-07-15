@@ -42,6 +42,7 @@ public class GameDao extends DAO<GameData, Integer> {
             return new String[]{data.whiteUsername(), data.blackUsername(), data.gameName(), serializer.toJson(data.game())};
         }
 
-        return new String[]{data.whiteUsername(), data.blackUsername(), data.gameName(), serializer.toJson(data.game()), String.valueOf(data.gameID())};
+        return new String[]{data.whiteUsername(), data.blackUsername(), data.gameName(),
+                serializer.toJson(data.game()), String.valueOf(data.gameID())};
     }
 }
