@@ -357,6 +357,7 @@ function wsError(event) {
 
 function hideWS() {
     document.getElementById('gameplay').style.display = "none";
+    signIn();
 }
 
 function onmessage(event) {
@@ -371,6 +372,7 @@ function onmessage(event) {
             alert(message.errorMessage, fade_error);
             break;
         case 'MOVES':
+            console.log(message);
             highlight(message.moves);
             break;
         default:
@@ -439,7 +441,7 @@ for (let element of document.getElementsByClassName("square")) {
             let end = event.target.id;
             let start = document.getElementById(startSquare);
             if ((start.innerText === "♟︎" && startSquare[0] === '2') || (start.innerText === "♙" && startSquare[0] === '7')) {
-                updateMove(startSquare, end, true);
+                setPromo(startSquare, end);
             } else {
                 updateMove(startSquare, end);
             }
@@ -478,7 +480,7 @@ function unHighlight() {
     for (square of currHighlights) {
         unClickedSquare(square);
     }
-    currHighlights = null;
+    currHighlights = new Array();
 }
 
 function clickedSquare(square) {
@@ -499,21 +501,49 @@ function unClickedSquare(square) {
 
 let promoPiece = "QUEEN"
 
-function setPromo(e) {
+function setPromo(start, end) {
+    console.log("Set Promo");
     const ctxMenu = document.createElement('div');
     ctxMenu.style.position = 'absolute';
+    ctxMenu.classList.add("dialog");
+    ctxMenu.style.zIndex = 100;
     ctxMenu.style.top = `${pos_y}px`;
     ctxMenu.style.left = `${pos_x}px`;
 
     const menuItems = [
-        {text: 'Queen', action: () => promoPiece = "QUEEN"},
-        {text: 'Rook', action: () => promoPiece = "ROOK"},
-        {text: 'Bishop', action: () => promoPiece = "BISHOP"},
-        {text: 'Knight', action: () => promoPiece = "KNIGHT"},
+        {
+            text: 'Queen', action: () => {
+                promoPiece = "QUEEN";
+                ctxMenu.remove();
+                updateMove(start, end, true);
+            }
+        },
+        {
+            text: 'Rook', action: () => {
+                promoPiece = "ROOK";
+                ctxMenu.remove();
+                updateMove(start, end, true);
+            }
+        },
+        {
+            text: 'Bishop', action: () => {
+                promoPiece = "BISHOP";
+                ctxMenu.remove();
+                updateMove(start, end, true);
+            }
+        },
+        {
+            text: 'Knight', action: () => {
+                promoPiece = "KNIGHT";
+                ctxMenu.remove();
+                updateMove(start, end, true);
+            }
+        }
     ];
 
     menuItems.forEach((item) => {
-        const menuItem = document.createElement('li');
+        const menuItem = document.createElement('p');
+        menuItem.classList.add("promo");
         menuItem.textContent = item.text;
         menuItem.addEventListener('click', item.action);
         ctxMenu.appendChild(menuItem);
@@ -522,12 +552,7 @@ function setPromo(e) {
     document.body.appendChild(ctxMenu);
     ctxMenu.style.display = 'block';
 
-    document.addEventListener('click', (e) => {
-        if (!ctxMenu.contains(e.target)) {
-            ctxMenu.remove();
-        }
-    });
-    return promoPiece;
+    console.log("CTX MENU", ctxMenu);
 }
 
 let pos_x;
@@ -540,7 +565,6 @@ document.addEventListener("mousemove", (e) => {
 
 function updateMove(start, end, promo) {
     if (promo) {
-        promoPiece = setPromo();
         sendUserCommand(JSON.stringify({
             commandType: "MAKE_MOVE",
             gameID: gID,
@@ -588,7 +612,11 @@ function getPiece(value) {
 }
 
 function resign() {
-    ws.send(`{'commandType': "RESIGN", 'authToken': ${auth}, gameID: ${gameID}}`);
+    sendUserCommand(JSON.stringify({
+        commandType: "RESIGN",
+        authToken: auth,
+        gameID: gID
+    }))
 }
 
 function leave() {

@@ -199,3 +199,22 @@ and (max-width: 600px) {
     }
 }
 
+.promo {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 80%);
+}
+
+.promo:hover {
+    color: #b8b5a2;
+    cursor: pointer;
+}
+
+.promo:active {
+    color: #7076bf;
+}
+
+.dialog {
+    background-color: rgba(74, 72, 68, 80%);
+    border-radius: .5em;
+    padding: .2em;
+}
