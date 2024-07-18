@@ -1,7 +1,9 @@
 package websocket.messages;
 
+import chess.ChessMove;
 import model.GameData;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -16,7 +18,8 @@ public class ServerMessage {
     public enum ServerMessageType {
         LOAD_GAME,
         ERROR,
-        NOTIFICATION
+        NOTIFICATION,
+        MOVES
     }
 
     public ServerMessage(ServerMessageType type) {
@@ -47,6 +50,8 @@ public class ServerMessage {
 
     protected GameData game;
 
+    protected Collection<ChessMove> moves;
+
     public String getMessage() {
         return message;
     }
@@ -57,5 +62,9 @@ public class ServerMessage {
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    public Collection<ChessMove> getMoves() {
+        return moves;
     }
 }

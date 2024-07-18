@@ -8,10 +8,7 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.HTTP.*;
-import service.socket.Connect;
-import service.socket.Leave;
-import service.socket.MakeMove;
-import service.socket.Resign;
+import service.socket.*;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -138,6 +135,7 @@ public class Server {
             case MAKE_MOVE -> new MakeMove(command, root, sessionManager.get(command.getGameID()), info).run();
             case LEAVE -> new Leave(command, root, sessionManager.get(command.getGameID()), info).run();
             case RESIGN -> new Resign(command, root, sessionManager.get(command.getGameID()), info).run();
+            case HIGHLIGHT -> new Highlight(command, root, null, info).run();
             default -> {
                 try {
                     root.getRemote().sendString(serializer.toJson(new Error("Unexpected value: " + command.getCommandType())));

@@ -88,13 +88,7 @@ function createGame() {
 }
 
 function listGames() {
-    sendHTTP("/game", "", "GET", auth, (response) => {
-        if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n');
-            handleError(response);
-        }
-        return response.json();
-    }, setGames);
+    sendHTTP("/game", "", "GET", auth, handleResponse, setGames);
 }
 
 function joinWhite(event) {
@@ -104,6 +98,7 @@ function joinWhite(event) {
 
 function joinBlack(event) {
     let id = event.currentTarget.dataset.id;
+    rotateBoard();
     join("BLACK", id);
 }
 
@@ -114,7 +109,7 @@ function join(color, gameID) {
 
 function handleResponse(response) {
     if (!response.ok) {
-        alert(response.status + ': ' + response.statusText + '\n');
+        alert(response.status + ': ' + response.statusText + '\n', true);
         handleError(response);
         return;
     }
@@ -277,6 +272,7 @@ function setRegister() {
 
 function setLogin() {
     state = "SO";
+    document.getElementById("title").innerHTML = '<span class="chess-icon">♔</span> CS 240 Chess Server';
     document.getElementById("form_title").innerText = "Login";
     document.getElementById("email").type = "hidden";
     document.getElementById("form").style.display = "block";
@@ -316,6 +312,7 @@ function get(obj, path) {
 let ws;
 
 function displayWS() {
+    document.getElementById("SI").style.display = "none";
     document.getElementById("gameplay").style.display = "block";
 }
 
@@ -372,6 +369,9 @@ function onmessage(event) {
             break;
         case 'ERROR':
             alert(message.errorMessage, fade_error);
+            break;
+        case 'MOVES':
+            highlight(message.moves);
             break;
         default:
             alert(message.message, fade_notify);
@@ -444,12 +444,41 @@ for (let element of document.getElementsByClassName("square")) {
                 updateMove(startSquare, end);
             }
             unClickedSquare(start);
+            unHighlight();
             startSquare = null;
         } else {
             startSquare = event.target.id;
+            getValidMoves();
             clickedSquare(document.getElementById(startSquare));
         }
     })
+}
+
+function getValidMoves() {
+    sendUserCommand(JSON.stringify({
+        commandType: "HIGHLIGHT",
+        gameID: gID,
+        move: {startPosition: parsePosition(startSquare), endPosition: null},
+        authToken: auth
+    }));
+}
+
+let currHighlights = new Array();
+
+function highlight(moves) {
+    for (move of moves) {
+        let coordinates = String(move.endPosition.row).concat(String(move.endPosition.col));
+        let square = document.getElementById(coordinates);
+        clickedSquare(square);
+        currHighlights.push(square);
+    }
+}
+
+function unHighlight() {
+    for (square of currHighlights) {
+        unClickedSquare(square);
+    }
+    currHighlights = null;
 }
 
 function clickedSquare(square) {
@@ -568,6 +597,7 @@ function leave() {
         authToken: auth,
         gameID: gID
     }));
+    signIn();
 }
 
 function reverseColumns() {
