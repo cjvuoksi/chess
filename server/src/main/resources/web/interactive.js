@@ -116,8 +116,9 @@ function handleResponse(response) {
     return response.json();
 }
 
-function watch() {
-    alert("Watch game", true);
+function watch(event) {
+    gID = event.currentTarget.dataset.id;
+    initWS(true);
 }
 
 function setGames(data) {
