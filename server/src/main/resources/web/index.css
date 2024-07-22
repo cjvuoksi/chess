@@ -218,3 +218,7 @@ and (max-width: 600px) {
     border-radius: .5em;
     padding: .2em;
 }
+
+.currPlayer {
+    background-color: darkolivegreen;
+}

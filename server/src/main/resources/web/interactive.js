@@ -10,6 +10,7 @@ const board_path = "game.board.chessBoard";
 const game_ID_path = "gameID";
 const black_path = "blackUsername"
 const white_path = "whiteUsername"
+const curr_path = "game.currColor"
 
 /*
 Modify these values to true/false to make it so server messages fade after fade_time milliseconds
@@ -42,6 +43,7 @@ let auth;
 let usr; //Attach this to a side of the chess board
 let state = "SO";
 let gID;
+let color;
 
 function alert(message, timeout) {
     const alert = document.createElement("div");
@@ -95,11 +97,13 @@ function listGames() {
 
 function joinWhite(event) {
     let id = event.currentTarget.dataset.id;
+    color = "WHITE";
     join("WHITE", id);
 }
 
 function joinBlack(event) {
     let id = event.currentTarget.dataset.id;
+    color = "BLACK";
     rotateBoard();
 
     join("BLACK", id);
@@ -441,6 +445,14 @@ function loadGame(game) {
     // Move this to load game I think
     let black = get(game, black_path);
     let white = get(game, white_path);
+    let curr = get(game, curr_path);
+    if (curr === board_state) {
+        document.getElementById("top_player").classList.remove("currPlayer");
+        document.getElementById("bottom_player").classList.add("currPlayer");
+    } else {
+        document.getElementById("top_player").classList.add("currPlayer");
+        document.getElementById("bottom_player").classList.remove("currPlayer");
+    }
 
     if (board_state === "WHITE") {
         document.getElementById("top_player").innerText = black;
@@ -613,6 +625,10 @@ document.addEventListener("mousemove", (e) => {
 })
 
 function updateMove(start, end, promo) {
+    if (move_start !== null && move_start !== undefined) {
+        unClickedSquare(move_start);
+        unClickedSquare(move_end);
+    }
     if (promo) {
         sendUserCommand(JSON.stringify({
             commandType: "MAKE_MOVE",
