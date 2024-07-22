@@ -37,7 +37,7 @@ END CONFIG
  */
 
 let auth;
-let usr;
+let usr; //Attach this to a side of the chess board
 let state = "SO";
 let gID;
 
@@ -99,11 +99,13 @@ function joinWhite(event) {
 function joinBlack(event) {
     let id = event.currentTarget.dataset.id;
     rotateBoard();
+
     join("BLACK", id);
 }
 
 function join(color, gameID) {
     gID = gameID;
+    document.getElementById("bottom_player").innerText = usr;
     sendHTTP("/game", `{'playerColor': ${color}, 'gameID': ${gID}}`, "PUT", auth, handleResponse, initWS);
 }
 
@@ -377,10 +379,54 @@ function onmessage(event) {
             highlight(message.moves);
             break;
         default:
+            parseMessage(message.message);
             alert(message.message, fade_notify);
             break;
     }
 }
+
+function parseMessage(message) {
+    if (message.includes("joined as black")) { // Move this to load game I think
+        if (board_state === "WHITE") {
+            document.getElementById("top_player").innerText = message.split(' ')[0];
+        } else {
+            document.getElementById("bottom_player").innerText = message.split(' ')[0];
+        }
+    } else if (message.includes("joined as white")) {
+        if (board_state === "WHITE") {
+            document.getElementById("top_player").innerText = message.split(' ')[0];
+        } else {
+            document.getElementById("bottom_player").innerText = message.split(' ')[0];
+        }
+    }
+
+    if (message.includes("->")) {
+        if (move_start !== null && move_start !== undefined) {
+            unClickedSquare(move_start);
+            unClickedSquare(move_end);
+        }
+        let start_pos = message.charAt(1).concat(String(message.charCodeAt(0) - 96));
+        let end_pos = message.slice(4);
+        console.log(end_pos);
+        end_pos = end_pos.charAt(1).concat(String(end_pos.charCodeAt(0) - 96));
+        console.log("Start", start_pos, "End", end_pos);
+        move_start = document.getElementById(start_pos);
+        move_end = document.getElementById(end_pos);
+        moveHighlight(move_start);
+        moveHighlight(move_end);
+    }
+}
+
+function moveHighlight(square) {
+    if (square.classList.contains("light")) {
+        square.style.background = "#f9f37b";
+    } else {
+        square.style.background = "#af9658";
+    }
+}
+
+let move_start;
+let move_end;
 
 function connect() {
     ws.send(`{"commandType": "CONNECT", "gameID": ${gID}, "authToken": ${auth}}`);
@@ -629,10 +675,12 @@ function leave() {
     signIn();
 }
 
+let board_state = "WHITE";
+
 function reverseColumns() {
     let gameDOM = document.getElementById("game");
     if (gameDOM.style.flexDirection === "column-reverse") {
-        gameDOM.style.flexDirection = "column";
+        gameDOM.style.flexDirection = "column"; //White bottom
     } else {
         gameDOM.style.flexDirection = "column-reverse";
     }
@@ -641,7 +689,7 @@ function reverseColumns() {
 function reverseRows() {
     for (let row of document.getElementsByClassName("row")) {
         if (row.style.flexDirection === "row-reverse") {
-            row.style.flexDirection = "row";
+            row.style.flexDirection = "row"; //White Bottom
         } else {
             row.style.flexDirection = "row-reverse";
         }
@@ -649,6 +697,12 @@ function reverseRows() {
 }
 
 function rotateBoard() {
+    board_state = board_state === "WHITE" ? "BLACK" : "WHITE";
+    let top = document.getElementById("top_player");
+    let bottom = document.getElementById("bottom_player");
+    let tmp = top.innerText;
+    top.innerText = bottom.innerText;
+    bottom.innerText = tmp;
     reverseColumns();
     reverseRows();
 }
