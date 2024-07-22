@@ -8,6 +8,8 @@ Add paths from your load game class here (accessed from the game field)
  */
 const board_path = "game.board.chessBoard";
 const game_ID_path = "gameID";
+const black_path = "blackUsername"
+const white_path = "whiteUsername"
 
 /*
 Modify these values to true/false to make it so server messages fade after fade_time milliseconds
@@ -386,19 +388,6 @@ function onmessage(event) {
 }
 
 function parseMessage(message) {
-    if (message.includes("joined as black")) { // Move this to load game I think
-        if (board_state === "WHITE") {
-            document.getElementById("top_player").innerText = message.split(' ')[0];
-        } else {
-            document.getElementById("bottom_player").innerText = message.split(' ')[0];
-        }
-    } else if (message.includes("joined as white")) {
-        if (board_state === "WHITE") {
-            document.getElementById("top_player").innerText = message.split(' ')[0];
-        } else {
-            document.getElementById("bottom_player").innerText = message.split(' ')[0];
-        }
-    }
 
     if (message.includes("->")) {
         if (move_start !== null && move_start !== undefined) {
@@ -447,6 +436,19 @@ function loadGame(game) {
         tmp.map((item) => {
             board.set(item[0], item[1]);
         })
+    }
+
+    // Move this to load game I think
+    let black = get(game, black_path);
+    let white = get(game, white_path);
+
+    if (board_state === "WHITE") {
+        document.getElementById("top_player").innerText = black;
+        document.getElementById("bottom_player").innerText = white;
+
+    } else {
+        document.getElementById("top_player").innerText = white;
+        document.getElementById("bottom_player").innerText = black;
     }
 
     chessboard = board;
