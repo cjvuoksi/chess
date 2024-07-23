@@ -221,4 +221,10 @@ and (max-width: 600px) {
 
 .currPlayer {
     background-color: darkolivegreen;
+    padding: .1em;
+    margin: .1em;
+    border-radius: 3px;
+    width: min-content;
+    min-width: 10em;
+    color: #e1dacd;
 }

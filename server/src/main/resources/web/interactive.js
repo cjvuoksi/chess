@@ -44,6 +44,7 @@ let usr; //Attach this to a side of the chess board
 let state = "SO";
 let gID;
 let color;
+let currPlayer;
 
 function alert(message, timeout) {
     const alert = document.createElement("div");
@@ -391,23 +392,37 @@ function onmessage(event) {
     }
 }
 
+let last_move;
+
 function parseMessage(message) {
 
-    if (message.includes("->")) {
-        if (move_start !== null && move_start !== undefined) {
-            unClickedSquare(move_start);
-            unClickedSquare(move_end);
-        }
-        let start_pos = message.charAt(1).concat(String(message.charCodeAt(0) - 96));
-        let end_pos = message.slice(4);
-        console.log(end_pos);
-        end_pos = end_pos.charAt(1).concat(String(end_pos.charCodeAt(0) - 96));
-        console.log("Start", start_pos, "End", end_pos);
-        move_start = document.getElementById(start_pos);
-        move_end = document.getElementById(end_pos);
-        moveHighlight(move_start);
-        moveHighlight(move_end);
+    if (message.includes("joined as black")) {
+        loadNames(message.split(' ')[0], null);
     }
+    if (message.includes("joined as white")) {
+        loadNames(null, message.split(' ')[0]);
+    }
+
+    if (message.includes("->")) {
+        last_move = message;
+        loadMove();
+    }
+}
+
+function loadMove() {
+    if (move_start !== null && move_start !== undefined) {
+        unClickedSquare(move_start);
+        unClickedSquare(move_end);
+    }
+    let start_pos = last_move.charAt(1).concat(String(last_move.charCodeAt(0) - 96));
+    let end_pos = last_move.slice(4);
+    console.log(end_pos);
+    end_pos = end_pos.charAt(1).concat(String(end_pos.charCodeAt(0) - 96));
+    console.log("Start", start_pos, "End", end_pos);
+    move_start = document.getElementById(start_pos);
+    move_end = document.getElementById(end_pos);
+    moveHighlight(move_start);
+    moveHighlight(move_end);
 }
 
 function moveHighlight(square) {
@@ -446,6 +461,17 @@ function loadGame(game) {
     let black = get(game, black_path);
     let white = get(game, white_path);
     let curr = get(game, curr_path);
+    loadCurr(curr);
+    currPlayer = curr;
+
+    loadNames(black, white);
+
+    chessboard = board;
+    clearBoard();
+    displayBoard();
+}
+
+function loadCurr(curr) {
     if (curr === board_state) {
         document.getElementById("top_player").classList.remove("currPlayer");
         document.getElementById("bottom_player").classList.add("currPlayer");
@@ -453,19 +479,19 @@ function loadGame(game) {
         document.getElementById("top_player").classList.add("currPlayer");
         document.getElementById("bottom_player").classList.remove("currPlayer");
     }
+}
 
+function loadNames(black, white) {
+    let top = document.getElementById("top_player");
+    let bottom = document.getElementById("bottom_player");
     if (board_state === "WHITE") {
-        document.getElementById("top_player").innerText = black;
-        document.getElementById("bottom_player").innerText = white;
+        top.innerText = black === null ? top.innerText : black;
+        bottom.innerText = white === null ? bottom.innerText : white;
 
     } else {
-        document.getElementById("top_player").innerText = white;
-        document.getElementById("bottom_player").innerText = black;
+        top.innerText = white === null ? top.innerText : white;
+        bottom.innerText = black === null ? bottom.innerText : black;
     }
-
-    chessboard = board;
-    clearBoard();
-    displayBoard();
 }
 
 function displayBoard() {
@@ -721,6 +747,10 @@ function rotateBoard() {
     let tmp = top.innerText;
     top.innerText = bottom.innerText;
     bottom.innerText = tmp;
+    loadCurr(currPlayer);
     reverseColumns();
     reverseRows();
 }
+
+
+//Base it off of board_state
