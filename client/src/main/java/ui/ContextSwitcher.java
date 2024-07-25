@@ -77,4 +77,9 @@ public class ContextSwitcher implements Observer {
     public void notifyClosed() {
         game.notifyClosed();
     }
+
+    @SuppressWarnings("unused")
+    public void unused() {
+
+    }
 }
