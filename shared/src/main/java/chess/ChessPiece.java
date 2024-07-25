@@ -213,8 +213,8 @@ public class ChessPiece {
         return linear;
     }
 
-    @java.lang.Override
-    public java.lang.String toString() {
+    @Override
+    public String toString() {
         switch (type) {
             case KING -> {
                 return color == WHITE ? WHITE_KING : BLACK_KING;
