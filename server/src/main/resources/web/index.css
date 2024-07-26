@@ -228,3 +228,14 @@ and (max-width: 600px) {
     min-width: 10em;
     color: #e1dacd;
 }
+
+a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.buttons {
+    width: max-content;
+    padding: .2em .4em;
+    margin: .1em;
+}

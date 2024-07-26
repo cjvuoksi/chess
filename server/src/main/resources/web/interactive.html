@@ -18,14 +18,15 @@
         <label for="username"></label><input id="username" placeholder="Username"/>
         <label for="pwd"></label><input id="pwd" type="password" placeholder="Password" autocomplete="current-password"/>
         <input id="email" type="hidden" placeholder="Email"/>
-        <button id="submit" onclick="submitform()">Submit</button>
+        <button id="submit" onclick="submitform()" class="buttons">Submit</button>
     </form>
+    <a onclick="switchSignIn(event)" id="switchButton">Register</a>
 </div>
 <div id="SI" style="display: none">
     <h2>Chess</h2>
-    <button id="refresh" onclick="listGames()">Refresh</button>
-    <button id="SO" onclick="signOut()">Log Out</button>
-    <button id="create" onclick="createGame()">New Game</button>
+    <button id="refresh" onclick="listGames()" class="buttons">Refresh</button>
+    <button id="SO" onclick="signOut()" class="buttons">Log Out</button>
+    <button id="create" onclick="createGame()" class="buttons">New Game</button>
     <table id="games">
         <thead>
         <tr>
@@ -48,8 +49,8 @@
 <div id="gameplay" style="display: none">
     <div class="box" data-colors="#b8b5a2; #f7f0e0;">
         <h3>Response <span id="reverse" onclick="rotateBoard()">↺</span></h3>
-        <button onclick="leave()">Leave Game</button>
-        <button onclick="resign()">Resign</button>
+        <button onclick="leave()" class="buttons">Leave Game</button>
+        <button onclick="resign()" class="buttons">Resign</button>
         <div id="top_player"></div>
         <div id="game">
             <div class="row">

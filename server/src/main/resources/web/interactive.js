@@ -278,6 +278,7 @@ function setRegister() {
     form.onsubmit = register;
     formTitle.innerText = "Create a new account";
     email.type = "text";
+    document.getElementById("switchButton").innerText = "Login";
 }
 
 function setLogin() {
@@ -288,6 +289,15 @@ function setLogin() {
     document.getElementById("form").style.display = "block";
     document.getElementById("login_form").onsubmit = login;
     document.getElementById("SI").style.display = "none";
+    document.getElementById("switchButton").innerText = "Register";
+}
+
+function switchSignIn(event) {
+    if (state === "SO") {
+        setRegister();
+    } else {
+        setLogin()
+    }
 }
 
 function handleError(response) {
