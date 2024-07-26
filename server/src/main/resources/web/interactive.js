@@ -11,6 +11,8 @@ const game_ID_path = "gameID";
 const black_path = "blackUsername"
 const white_path = "whiteUsername"
 const curr_path = "game.currColor"
+const game_state = "game.gameOver"
+const game_winner = "game.winner"
 
 /*
 Modify these values to true/false to make it so server messages fade after fade_time milliseconds
@@ -130,6 +132,22 @@ function watch(event) {
     initWS(true);
 }
 
+function getGameStatus(datum) {
+    console.log("Datum", datum);
+    console.log("State", get(datum, game_state))
+    console.log("Winner", get(datum, game_winner))
+    if (get(datum, game_state)) {
+        let winner = get(datum, game_winner);
+        if (winner === undefined) {
+            return "<i>Stalemate</i>";
+        }
+        winner = winner === "WHITE" ? "White" : "Black";
+        return `<i>${winner} won</i>`;
+    }
+
+    return "<i>In progress</i>";
+}
+
 function setGames(data) {
     let table = document.getElementById("games");
     table.innerHTML = `
@@ -147,6 +165,9 @@ function setGames(data) {
                 <th scope="col">
                     Observe
                 </th>
+                <th scope="col">
+                    Game Status
+                </th>
             </tr>
         </thead>
     `
@@ -156,9 +177,11 @@ function setGames(data) {
         let white = document.createElement("td");
         let black = document.createElement("td");
         let observe = document.createElement("td");
+        let gameStatus = document.createElement("td");
         white.innerHTML = datum.whiteUsername === undefined ? "<i>Empty</i>" : datum.whiteUsername;
         black.innerHTML = datum.blackUsername === undefined ? "<i>Empty</i>" : datum.blackUsername;
         observe.innerHTML = "<i>Observe</i>";
+        gameStatus.innerHTML = getGameStatus(datum);
 
         white.dataset.id = datum.gameID;
         white.onclick = joinWhite;
@@ -178,6 +201,7 @@ function setGames(data) {
         newRow.appendChild(white);
         newRow.appendChild(black);
         newRow.appendChild(observe);
+        newRow.appendChild(gameStatus);
         table.appendChild(newRow);
     }
 }
