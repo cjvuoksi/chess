@@ -391,6 +391,7 @@ function createWS() {
     }
     ws.onmessage = onmessage;
     ws.onclose = (event) => {
+        unHighlight();
         hideWS();
         alert(`Websocket connection closed: ${event.reason}`, fade_close);
         if (event.reason === "Only one session allowed") {
