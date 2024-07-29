@@ -209,7 +209,7 @@ function setGames(data) {
 function signOut() {
     sendHTTP("/session", "", "DELETE", auth, (response) => {
         if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n');
+            alert(response.status + ': ' + response.statusText + '\n', true);
             handleError(response);
         }
         return response.json();
@@ -227,7 +227,7 @@ function login(event) {
     console.log(username, pwd);
     sendHTTP("/session", `{'username': ${username}, 'password': ${pwd}}`, "POST", null, (response) => {
         if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n');
+            alert(response.status + ': ' + response.statusText + '\n', true);
             handleError(response);
             return;
         }
@@ -250,7 +250,7 @@ function register(event) {
     let email = document.getElementById("email").value;
     sendHTTP("/user", `{'username': ${username}, 'password': ${pwd}, 'email': ${email}}`, "POST", null, (response) => {
         if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n');
+            alert(response.status + ': ' + response.statusText + '\n', true);
             handleError(response);
             return;
         }

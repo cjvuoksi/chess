@@ -161,11 +161,12 @@ code {
     margin: .05em 0 .05em 0;
     overflow: hidden;
     transition: all 1s ease-in-out;
+    position: sticky;
 }
 
 #alerts {
-    position: sticky;
-    top: 10px;
+    position: absolute;
+    top: 20px;
 }
 
 #reverse {
