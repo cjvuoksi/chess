@@ -150,6 +150,20 @@ code {
     cursor: pointer;
 }
 
+.file {
+    font-size: revert;
+    justify-content: center;
+    width: 5vw;
+    display: flex;
+}
+
+.rank {
+    height: 5vw;
+    align-content: center;
+    padding: .1em;
+    margin: 0 1em;
+}
+
 .alert {
     display: flex;
     background-color: rgba(74, 72, 68, 80%);
@@ -182,6 +196,14 @@ and (max-width: 1200px) {
         width: 6vw;
         font-size: 5vw;
     }
+
+    .file {
+        width: 6vw;
+    }
+
+    .rank {
+        height: 6vw;
+    }
 }
 
 @media screen
@@ -190,6 +212,14 @@ and (max-width: 960px) {
         width: 7vw;
         font-size: 6.5vw;
     }
+
+    .file {
+        width: 7vw;
+    }
+
+    .rank {
+        height: 7vw;
+    }
 }
 
 @media screen
@@ -197,6 +227,14 @@ and (max-width: 600px) {
     .square {
         width: 9vw;
         font-size: 8vw;
+    }
+
+    .file {
+        width: 9vw;
+    }
+
+    .rank {
+        height: 9vw;
     }
 }
 

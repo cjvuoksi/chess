@@ -202,6 +202,11 @@ function setGames(data) {
         newRow.appendChild(black);
         newRow.appendChild(observe);
         newRow.appendChild(gameStatus);
+        if (gameStatus.innerText !== "In progress") {
+            white.style.pointerEvents = "none";
+            black.style.pointerEvents = "none";
+        }
+
         table.appendChild(newRow);
     }
 }

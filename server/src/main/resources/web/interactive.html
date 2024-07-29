@@ -51,9 +51,25 @@
         <h3>Response <span id="reverse" onclick="rotateBoard()">↺</span></h3>
         <button onclick="leave()" class="buttons">Leave Game</button>
         <button onclick="resign()" class="buttons">Resign</button>
-        <div id="top_player"></div>
+        <div class="player">
+            <div id="top_player"></div>
+        </div>
         <div id="game">
             <div class="row">
+                <div></div>
+                <div class="file">A</div>
+                <div class="file">B</div>
+                <div class="file">C</div>
+                <div class="file">D</div>
+                <div class="file">E</div>
+                <div class="file">F</div>
+                <div class="file">G</div>
+                <div class="file">H</div>
+                <div></div>
+            </div>
+
+            <div class="row">
+                <div class="rank">8</div>
                 <div class="square light" id="81"></div>
                 <div class="square dark" id="82"></div>
                 <div class="square light" id="83"></div>
@@ -62,8 +78,10 @@
                 <div class="square dark" id="86"></div>
                 <div class="square light" id="87"></div>
                 <div class="square dark" id="88"></div>
+                <div class="rank">8</div>
             </div>
             <div class="row">
+                <div class="rank">7</div>
                 <div class="square dark" id="71"></div>
                 <div class="square light" id="72"></div>
                 <div class="square dark" id="73"></div>
@@ -72,9 +90,11 @@
                 <div class="square light" id="76"></div>
                 <div class="square dark" id="77"></div>
                 <div class="square light" id="78"></div>
+                <div class="rank">7</div>
             </div>
 
             <div class="row">
+                <div class="rank">6</div>
                 <div class="square light" id="61"></div>
                 <div class="square dark" id="62"></div>
                 <div class="square light" id="63"></div>
@@ -83,9 +103,11 @@
                 <div class="square dark" id="66"></div>
                 <div class="square light" id="67"></div>
                 <div class="square dark" id="68"></div>
+                <div class="rank">6</div>
             </div>
 
             <div class="row">
+                <div class="rank">5</div>
                 <div class="square dark" id="51"></div>
                 <div class="square light" id="52"></div>
                 <div class="square dark" id="53"></div>
@@ -94,9 +116,11 @@
                 <div class="square light" id="56"></div>
                 <div class="square dark" id="57"></div>
                 <div class="square light" id="58"></div>
+                <div class="rank">5</div>
             </div>
 
             <div class="row">
+                <div class="rank">4</div>
                 <div class="square light" id="41"></div>
                 <div class="square dark" id="42"></div>
                 <div class="square light" id="43"></div>
@@ -105,9 +129,11 @@
                 <div class="square dark" id="46"></div>
                 <div class="square light" id="47"></div>
                 <div class="square dark" id="48"></div>
+                <div class="rank">4</div>
             </div>
 
             <div class="row">
+                <div class="rank">3</div>
                 <div class="square dark" id="31"></div>
                 <div class="square light" id="32"></div>
                 <div class="square dark" id="33"></div>
@@ -116,9 +142,11 @@
                 <div class="square light" id="36"></div>
                 <div class="square dark" id="37"></div>
                 <div class="square light" id="38"></div>
+                <div class="rank">3</div>
             </div>
 
             <div class="row">
+                <div class="rank">2</div>
                 <div class="square light" id="21"></div>
                 <div class="square dark" id="22"></div>
                 <div class="square light" id="23"></div>
@@ -127,9 +155,11 @@
                 <div class="square dark" id="26"></div>
                 <div class="square light" id="27"></div>
                 <div class="square dark" id="28"></div>
+                <div class="rank">2</div>
             </div>
 
             <div class="row">
+                <div class="rank">1</div>
                 <div class="square dark" id="11"></div>
                 <div class="square light" id="12"></div>
                 <div class="square dark" id="13"></div>
@@ -138,9 +168,25 @@
                 <div class="square light" id="16"></div>
                 <div class="square dark" id="17"></div>
                 <div class="square light" id="18"></div>
+                <div class="rank">1</div>
+            </div>
+
+            <div class="row">
+                <div></div>
+                <div class="file">A</div>
+                <div class="file">B</div>
+                <div class="file">C</div>
+                <div class="file">D</div>
+                <div class="file">E</div>
+                <div class="file">F</div>
+                <div class="file">G</div>
+                <div class="file">H</div>
+                <div></div>
             </div>
         </div>
-        <div id="bottom_player"></div>
+        <div>
+            <div id="bottom_player"></div>
+        </div>
     </div>
 </div>
 </body>
