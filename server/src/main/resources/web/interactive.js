@@ -454,6 +454,9 @@ function loadMove() {
         unClickedSquare(move_start);
         unClickedSquare(move_end);
     }
+    if (currPlayer !== color) {
+        return;
+    }
     let start_pos = last_move.charAt(1).concat(String(last_move.charCodeAt(0) - 96));
     let end_pos = last_move.slice(4);
     console.log(end_pos);
@@ -509,6 +512,7 @@ function loadGame(game) {
     chessboard = board;
     clearBoard();
     displayBoard();
+    loadMove();
 }
 
 function loadCurr(curr) {
@@ -567,14 +571,17 @@ for (let element of document.getElementsByClassName("square")) {
         if (startSquare != null) {
             let end = event.target.id;
             let start = document.getElementById(startSquare);
-            if ((start.innerText === "♟︎" && startSquare[0] === '2') || (start.innerText === "♙" && startSquare[0] === '7')) {
-                setPromo(startSquare, end);
-            } else {
-                updateMove(startSquare, end);
+            if (currHighlights.includes(event.target)) {
+                if ((start.innerText === "♟︎" && startSquare[0] === '2') || (start.innerText === "♙" && startSquare[0] === '7')) {
+                    setPromo(startSquare, end);
+                } else {
+                    updateMove(startSquare, end);
+                }
             }
             unClickedSquare(start);
             unHighlight();
             startSquare = null;
+            loadMove();
         } else {
             startSquare = event.target.id;
             getValidMoves();
