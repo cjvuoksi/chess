@@ -164,6 +164,12 @@ code {
     margin: 0 1em;
 }
 
+.corner {
+    width: 1em;
+    padding: .1em;
+    margin: 0 1em;
+}
+
 .alert {
     display: flex;
     background-color: rgba(74, 72, 68, 80%);
@@ -266,6 +272,18 @@ and (max-width: 600px) {
     width: min-content;
     min-width: 10em;
     color: #e1dacd;
+    text-align: center;
+}
+
+.player {
+    background-color: #e1dacd;
+    border-radius: .2em;
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    height: 2em;
+    justify-content: space-around;
+    align-content: center;
 }
 
 a:hover {
