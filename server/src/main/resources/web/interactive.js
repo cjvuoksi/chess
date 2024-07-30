@@ -107,7 +107,6 @@ function joinWhite(event) {
 function joinBlack(event) {
     let id = event.currentTarget.dataset.id;
     color = "BLACK";
-    rotateBoard();
 
     join("BLACK", id);
 }
@@ -289,15 +288,6 @@ function sendHTTP(path, params, method, authToken, response, data) {
         });
 }
 
-function submitForm() {
-    if (state === "SO") {
-        login();
-    }
-    if (state === "RE") {
-        register();
-    }
-}
-
 function setRegister() {
     state = "RE";
     let formTitle = document.getElementById("form_title");
@@ -363,6 +353,8 @@ let ws;
 function displayWS() {
     document.getElementById("SI").style.display = "none";
     document.getElementById("gameplay").style.display = "block";
+    board_state = color;
+    setBoardRotation();
 }
 
 function initWS(data) {
@@ -397,8 +389,41 @@ function createWS() {
         if (event.reason === "Only one session allowed") {
             createWS();
         }
+        if (event.code === 1006) {
+            console.log("Closed event", event);
+            alert("Server shut down waiting for restart before reloading");
+            count = 0;
+            setInterval(ping, 5000);
+        }
     }
     ws.onerror = wsError;
+}
+
+const timeout = 30;
+let count = 0;
+
+async function ping() {
+    if (testServer()) {
+        signOut();
+        window.location.reload();
+    } else {
+        console.log("Ping failed", count);
+        if (count >= timeout) {
+            clearInterval(ping);
+        }
+        count++;
+    }
+}
+
+async function testServer() {
+    try {
+        const resp = await fetch("http://localhost:" + server_port);
+        return await resp.ok;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
 }
 
 function wsError(event) {
@@ -500,7 +525,6 @@ function loadGame(game) {
         })
     }
 
-    // Move this to load game I think
     let black = get(game, black_path);
     let white = get(game, white_path);
     let curr = get(game, curr_path);
@@ -766,11 +790,11 @@ function leave() {
     signIn();
 }
 
-let board_state = "WHITE";
+let board_state;
 
 function reverseColumns() {
     let gameDOM = document.getElementById("game");
-    if (gameDOM.style.flexDirection === "column-reverse") {
+    if (board_state === "WHITE") {
         gameDOM.style.flexDirection = "column"; //White bottom
     } else {
         gameDOM.style.flexDirection = "column-reverse";
@@ -779,12 +803,17 @@ function reverseColumns() {
 
 function reverseRows() {
     for (let row of document.getElementsByClassName("row")) {
-        if (row.style.flexDirection === "row-reverse") {
+        if (board_state === "WHITE") {
             row.style.flexDirection = "row"; //White Bottom
         } else {
             row.style.flexDirection = "row-reverse";
         }
     }
+}
+
+function setBoardRotation() {
+    reverseColumns();
+    reverseRows();
 }
 
 function rotateBoard() {
@@ -795,8 +824,7 @@ function rotateBoard() {
     top.innerText = bottom.innerText;
     bottom.innerText = tmp;
     loadCurr(currPlayer);
-    reverseColumns();
-    reverseRows();
+    setBoardRotation();
 }
 
 

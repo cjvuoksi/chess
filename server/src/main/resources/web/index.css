@@ -279,11 +279,11 @@ and (max-width: 600px) {
     background-color: #e1dacd;
     border-radius: .2em;
     display: flex;
-    flex-direction: row;
     width: 50%;
     height: 2em;
-    justify-content: space-around;
-    align-content: center;
+    justify-content: center;
+    align-items: center;
+    margin: .5em 1em;
 }
 
 a:hover {
