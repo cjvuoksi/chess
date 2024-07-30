@@ -28,12 +28,10 @@ public class SocketSender {
     }
 
     private void debug(ServerMessage message) {
-        if (logger.isDebugEnabled()) {
-            switch (message.getServerMessageType()) {
-                case NOTIFICATION -> logger.debug(message.getMessage());
-                case ERROR -> logger.debug(message.getErrorMessage());
-                case LOAD_GAME -> logger.debug(String.valueOf(message));
-            }
+        switch (message.getServerMessageType()) {
+            case NOTIFICATION -> logger.info(message.getMessage());
+            case ERROR -> logger.info(message.getErrorMessage());
+            case LOAD_GAME -> logger.info(String.valueOf(message));
         }
     }
 

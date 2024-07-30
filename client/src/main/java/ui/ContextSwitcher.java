@@ -1,9 +1,8 @@
 package ui;
 
 import request.JoinRequest;
-import websocket.messages.ServerMessage;
 
-public class ContextSwitcher implements Observer {
+public class ContextSwitcher {
     private UI current = new PreLogin();
     private final PreLogin pre = (PreLogin) current;
     private PostLogin post;
@@ -18,20 +17,20 @@ public class ContextSwitcher implements Observer {
             if (game != null) {
                 try {
                     game.exit();
-                } catch (SwitchException e) {
+                } catch (SwitchException _) {
 
                 }
             }
             if (post != null) {
                 try {
                     post.exit();
-                } catch (SwitchException e) {
+                } catch (SwitchException _) {
 
                 }
             }
             try {
                 pre.exit();
-            } catch (SwitchException e) {
+            } catch (SwitchException _) {
 
             }
         }));
@@ -57,7 +56,7 @@ public class ContextSwitcher implements Observer {
             } else if (e.getType() == SwitchException.exceptionType.PLAY || e.getType() == SwitchException.exceptionType.WATCH) {
                 JoinRequest req = (JoinRequest) e.getPayload()[0];
                 game = new GameUI(req.getPlayerColor());
-                game.server.upgradeConnection(this, req);
+                game.server.upgradeConnection(game, req);
                 game.gameID = req.getGameID();
                 game.authToken = req.getAuthorization();
                 current = game;
@@ -66,20 +65,5 @@ public class ContextSwitcher implements Observer {
                 current = post;
             }
         }
-    }
-
-    @Override
-    public void notify(ServerMessage message) {
-        game.notify(message);
-    }
-
-    @Override
-    public void notifyClosed() {
-        game.notifyClosed();
-    }
-
-    @SuppressWarnings("unused")
-    public void unused() {
-
     }
 }

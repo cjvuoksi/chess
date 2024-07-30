@@ -23,7 +23,22 @@ public class WebSocketClient extends Endpoint {
         this.observer = observer;
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
-        this.session.addMessageHandler((MessageHandler.Whole<String>) message -> observer.notify(gson.fromJson(message, ServerMessage.class)));
+        //Must be anonymous class; Lambda fails
+        this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(String message) {
+                observer.notify(gson.fromJson(message, ServerMessage.class));
+            }
+        });
+    }
+
+    public void restart() throws Exception {
+        URI uri = URI.create("ws://localhost:" + port + "/ws");
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        this.session = container.connectToServer(this, uri);
+        this.session.addMessageHandler((MessageHandler.Whole<String>) (message) -> {
+            observer.notify(gson.fromJson(message, ServerMessage.class));
+        });
     }
 
     private void send(String message) throws Exception {

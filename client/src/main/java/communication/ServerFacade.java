@@ -76,4 +76,8 @@ public class ServerFacade {
     public void resign(Resign resign) throws Exception {
         websocket.send(resign);
     }
+
+    public void restart() throws Exception {
+        websocket.client.restart();
+    }
 }
