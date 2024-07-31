@@ -278,9 +278,14 @@ function sendHTTP(path, params, method, authToken, response, data) {
     })
         .then(response)
         .then(data)
-        .catch((error) => {
-            alert(error)
-        });
+        .catch(catchError);
+}
+
+function catchError(error) {
+    console.log("Entering error catch");
+    if (!error.data?.message) {
+        setTimeout(ping, 5000);
+    }
 }
 
 function setRegister() {
@@ -384,12 +389,6 @@ function createWS() {
         if (event.reason === "Only one session allowed") {
             createWS();
         }
-        if (event.code === 1006) {
-            console.log("Closed event", event);
-            alert("Server shut down waiting for restart before reloading");
-            count = 0;
-            setInterval(ping, 5000);
-        }
     }
     ws.onerror = wsError;
 }
@@ -401,12 +400,6 @@ async function ping() {
     if (await testServer()) {
         signOutBeacon();
         window.location.reload();
-    } else {
-        console.log("Ping failed", count);
-        if (count >= timeout) {
-            clearInterval(ping);
-        }
-        count++;
     }
 }
 
@@ -428,8 +421,7 @@ async function testServer() {
         const resp = await fetch("http://localhost:" + server_port);
         return await resp.ok;
     } catch (e) {
-        console.log(e);
-        return false;
+        catchError(e)
     }
 
 }
@@ -838,6 +830,5 @@ function rotateBoard() {
     loadCurr(currPlayer);
     setBoardRotation();
 }
-
 
 //Base it off of board_state
