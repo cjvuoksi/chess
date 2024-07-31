@@ -555,7 +555,6 @@ function loadNames(black, white) {
     if (board_state === "WHITE") {
         top.innerText = black === null ? top.innerText : black;
         bottom.innerText = white === null ? bottom.innerText : white;
-
     } else {
         top.innerText = white === null ? top.innerText : white;
         bottom.innerText = black === null ? bottom.innerText : black;
@@ -651,9 +650,9 @@ function clickedSquare(square) {
 
 function unClickedSquare(square) {
     if (square.classList.contains("light")) {
-        square.style.background = "#f7f0e0";
+        square.style.background = null;
     } else {
-        square.style.background = "#b8b5a2";
+        square.style.background = null;
     }
 }
 
