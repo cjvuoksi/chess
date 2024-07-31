@@ -484,9 +484,7 @@ function loadMove() {
     }
     let start_pos = last_move.charAt(1).concat(String(last_move.charCodeAt(0) - 96));
     let end_pos = last_move.slice(4);
-    console.log(end_pos);
     end_pos = end_pos.charAt(1).concat(String(end_pos.charCodeAt(0) - 96));
-    console.log("Start", start_pos, "End", end_pos);
     move_start = document.getElementById(start_pos);
     move_end = document.getElementById(end_pos);
     moveHighlight(move_start);
@@ -536,7 +534,9 @@ function loadGame(game) {
     chessboard = board;
     clearBoard();
     displayBoard();
-    loadMove();
+    if (last_move) {
+        loadMove();
+    }
 }
 
 function loadCurr(curr) {
@@ -604,7 +604,9 @@ for (let element of document.getElementsByClassName("square")) {
             unClickedSquare(start);
             unHighlight();
             startSquare = null;
-            loadMove();
+            if (last_move) {
+                loadMove();
+            }
         } else {
             startSquare = event.target.id;
             getValidMoves();
