@@ -572,7 +572,6 @@ function loadNames(black, white) {
 
 function displayBoard() {
     if (Array.isArray(chessboard)) {
-        console.log(chessboard);
         for (let r = 1; r <= BOARD_SIZE; r++) {
             for (let c = 1; c <= BOARD_SIZE; c++) {
                 let coordinates = String((r)).concat(String((c)));
@@ -585,7 +584,6 @@ function displayBoard() {
             }
         }
     } else {
-        console.log(chessboard);
         chessboard.forEach((value, key) => {
             let coordinates = String(key.row).concat(String(key.col));
             let square = document.getElementById(coordinates);
