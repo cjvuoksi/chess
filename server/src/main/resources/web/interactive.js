@@ -68,7 +68,6 @@ function ws_alert(alert) {
 }
 
 function signIn() {
-    console.log("Username", usr, "Token", auth);
     setLogin();
     document.getElementById("form").style.display = "none";
     document.getElementById("title").innerText = "Welcome " + usr + "!";
@@ -132,9 +131,6 @@ function watch(event) {
 }
 
 function getGameStatus(datum) {
-    console.log("Datum", datum);
-    console.log("State", get(datum, game_state))
-    console.log("Winner", get(datum, game_winner))
     if (get(datum, game_state)) {
         let winner = get(datum, game_winner);
         if (winner === undefined) {
@@ -228,7 +224,6 @@ function login(event) {
     event.preventDefault();
     let username = document.getElementById("username").value;
     let pwd = document.getElementById("pwd").value;
-    console.log(username, pwd);
     sendHTTP("/session", `{'username': ${username}, 'password': ${pwd}}`, "POST", null, (response) => {
         if (!response.ok) {
             alert(response.status + ': ' + response.statusText + '\n', true);
@@ -311,7 +306,7 @@ function setLogin() {
     document.getElementById("switchButton").innerText = "Register";
 }
 
-function switchSignIn(event) {
+function switchSignIn() {
     if (state === "SO") {
         setRegister();
     } else {
@@ -403,8 +398,8 @@ const timeout = 30;
 let count = 0;
 
 async function ping() {
-    if (testServer()) {
-        signOut();
+    if (await testServer()) {
+        signOutBeacon();
         window.location.reload();
     } else {
         console.log("Ping failed", count);
@@ -413,6 +408,19 @@ async function ping() {
         }
         count++;
     }
+}
+
+function signOutBeacon() {
+    fetch("http://localhost:" + server_port + "/session", {
+        method: "DELETE",
+        body: "",
+        headers: {
+            Authorization: auth,
+            'Content-Type': 'application/json',
+        },
+        keepalive: true,
+        priority: "low"
+    })
 }
 
 async function testServer() {
@@ -627,6 +635,9 @@ function getValidMoves() {
 let currHighlights = new Array();
 
 function highlight(moves) {
+    if (moves === undefined) {
+        return;
+    }
     for (move of moves) {
         let coordinates = String(move.endPosition.row).concat(String(move.endPosition.col));
         let square = document.getElementById(coordinates);
