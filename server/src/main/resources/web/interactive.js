@@ -36,6 +36,7 @@ const is_ws = true;
 Automatically sends moves
  */
 const auto_send = true;
+const is_map = true;
 
 /*
 END CONFIG
@@ -87,7 +88,7 @@ function createGame() {
         return response.json();
     }, (data) => {
         if (data !== undefined) {
-            alert("Created new game!");
+            alert("Created new game!", 5000);
             listGames();
         }
     })
@@ -522,7 +523,7 @@ function loadGame(game) {
     let board;
     gID = get(game, game_ID_path);
     let tmp = get(game, board_path);
-    if (tmp.length === BOARD_SIZE) {
+    if (tmp.length === BOARD_SIZE && !is_map) {
         board = tmp;
     } else {
         board = new Map()
@@ -584,6 +585,7 @@ function displayBoard() {
             }
         }
     } else {
+        console.log(chessboard);
         chessboard.forEach((value, key) => {
             let coordinates = String(key.row).concat(String(key.col));
             let square = document.getElementById(coordinates);
@@ -782,6 +784,9 @@ function getPiece(value) {
             return value.color === "BLACK" ? "♚" : "♔";
         case "QUEEN":
             return value.color === "BLACK" ? "♛" : "♕";
+        default:
+            console.log("Error: ", value);
+            return "⚠";
     }
 }
 
