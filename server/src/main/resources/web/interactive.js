@@ -202,6 +202,13 @@ function setGames(data) {
             black.style.pointerEvents = "none";
         }
 
+        if (white.innerText !== usr && datum.whiteUsername !== undefined) {
+            white.style.pointerEvents = "none";
+        }
+        if (black.innerText !== usr && datum.blackUsername !== undefined) {
+            black.style.pointerEvents = "none";
+        }
+
         table.appendChild(newRow);
     }
 }
@@ -360,6 +367,7 @@ function displayWS() {
 function initWS(data) {
     if (data === undefined) {
         alert("Join failed");
+        listGames();
         return;
     }
     wsStart();
