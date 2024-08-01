@@ -234,10 +234,10 @@ function setGames(data) {
             black.style.pointerEvents = "none";
         }
 
-        if (white.innerText !== usr && datum.whiteUsername !== undefined) {
+        if ((white.innerText !== usr && usr !== undefined) && datum.whiteUsername !== undefined) {
             white.style.pointerEvents = "none";
         }
-        if (black.innerText !== usr && datum.blackUsername !== undefined) {
+        if ((black.innerText !== usr && usr !== undefined) && datum.blackUsername !== undefined) {
             black.style.pointerEvents = "none";
         }
 
@@ -599,6 +599,9 @@ function loadCurr(curr) {
 }
 
 function loadNames(black, white) {
+    if (usr === undefined) {
+        usr = color === "WHITE" ? white : black;
+    }
     let top = document.getElementById("top_player");
     let bottom = document.getElementById("bottom_player");
     if (DOMBoard.board_state === "WHITE") {
