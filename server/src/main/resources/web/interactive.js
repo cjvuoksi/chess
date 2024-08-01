@@ -11,15 +11,13 @@ const game_ID_path = "gameID";
 const black_path = "blackUsername"
 const white_path = "whiteUsername"
 const curr_path = "game.currColor"
+//Optional depending on implementation
 const game_state = "game.gameOver"
 const game_winner = "game.winner"
 
 /*
-Modify these values to true/false to make it so server messages fade after fade_time milliseconds
+Server messages fade after fade_time milliseconds
  */
-const fade_error = true;
-const fade_notify = true;
-const fade_close = true;
 const fade_time = 5000;
 
 /*
@@ -28,14 +26,8 @@ Change this to the server port number
 const server_port = 8000;
 
 /*
-When you are ready to test websockets set this to true
+Set to true if your chessBoard uses a map false for array
  */
-const is_ws = true;
-
-/*
-Automatically sends moves
- */
-const auto_send = true;
 const is_map = true;
 
 /*
@@ -43,7 +35,41 @@ END CONFIG
  */
 
 let auth;
-let usr; //Attach this to a side of the chess board
+
+function getAuth() {
+    let name = "auth=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+
+    if (decodedCookie.indexOf(name) >= 0) {
+        return decodedCookie.substring(name.length);
+    }
+    return null;
+}
+
+function setAuth(auth) {
+    document.cookie = `auth=${auth}`;
+}
+
+function authenticate() {
+    auth = getAuth();
+    if (auth == null) {
+        return;
+    }
+    sendHTTP("/game", "", "GET", auth, (response) => {
+        if (response.ok) {
+            setSignIn();
+            return response.json();
+        }
+        return null;
+    }, (data) => {
+        setGames(data);
+    });
+
+}
+
+authenticate();
+
+let usr;
 let state = "SO";
 let gID;
 let color;
@@ -68,12 +94,16 @@ function ws_alert(alert) {
     }, 1000);
 }
 
-function signIn() {
+function setSignIn() {
     setLogin();
     document.getElementById("form").style.display = "none";
-    document.getElementById("title").innerText = "Welcome " + usr + "!";
+    document.getElementById("title").innerText = usr === undefined ? "Welcome!" : "Welcome " + usr + "!";
     state = "SI";
     document.getElementById("SI").style.display = "block";
+}
+
+function signIn() {
+    setSignIn();
     listGames();
 }
 
@@ -81,14 +111,13 @@ function createGame() {
     let name = window.prompt("Enter game name", "Name");
     sendHTTP("/game", `{'gameName': ${name}}`, "POST", auth, (response) => {
         if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n');
             handleError(response);
             return;
         }
         return response.json();
     }, (data) => {
         if (data !== undefined) {
-            alert("Created new game!", 5000);
+            alert("Created new game!", true);
             listGames();
         }
     })
@@ -119,7 +148,6 @@ function join(color, gameID) {
 
 function handleResponse(response) {
     if (!response.ok) {
-        alert(response.status + ': ' + response.statusText + '\n', true);
         handleError(response);
         return;
     }
@@ -141,10 +169,13 @@ function getGameStatus(datum) {
         return `<i>${winner} won</i>`;
     }
 
-    return "<i>In progress</i>";
+    return "<i>In progress</i>"; // Default
 }
 
 function setGames(data) {
+    if (data === null) {
+        return;
+    }
     let table = document.getElementById("games");
     table.innerHTML = `
         <thead>
@@ -217,7 +248,6 @@ function setGames(data) {
 function signOut() {
     sendHTTP("/session", "", "DELETE", auth, (response) => {
         if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n', true);
             handleError(response);
         }
         return response.json();
@@ -234,7 +264,6 @@ function login(event) {
     let pwd = document.getElementById("pwd").value;
     sendHTTP("/session", `{'username': ${username}, 'password': ${pwd}}`, "POST", null, (response) => {
         if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n', true);
             handleError(response);
             return;
         }
@@ -244,6 +273,7 @@ function login(event) {
             return;
         }
         auth = data.authToken;
+        setAuth(auth);
         usr = data.username;
         signIn();
     });
@@ -257,7 +287,6 @@ function register(event) {
     let email = document.getElementById("email").value;
     sendHTTP("/user", `{'username': ${username}, 'password': ${pwd}, 'email': ${email}}`, "POST", null, (response) => {
         if (!response.ok) {
-            alert(response.status + ': ' + response.statusText + '\n', true);
             handleError(response);
             return;
         }
@@ -275,7 +304,6 @@ function register(event) {
 
 function sendHTTP(path, params, method, authToken, response, data) {
     params = !!params ? params : undefined;
-    let errStr = '';
     fetch("http://localhost:" + server_port + path, {
         method: method,
         body: params,
@@ -329,18 +357,33 @@ function switchSignIn() {
 
 function handleError(response) {
     switch (response.status) {
+        case 400:
+            if (state === "SI") {
+                alert("User data corrupted (bad request)", true);
+                signOut();
+            }
         case 401:
             if (state === "SO") {
                 setRegister();
             }
             if (state === "SI") {
-
+                alert("Session expired", true);
+                setLogin();
             }
             break;
         case 403:
             if (state === "RE") {
-                alert("Username already taken");
+                alert("Username already taken", true);
                 setRegister();
+            }
+            if (state === "SI") {
+                alert("Spot already taken", true);
+            }
+            break;
+        case 500:
+            alert("Unexpected Error: " + response.message, true);
+            if (state === "SO") {
+                setLogin();
             }
     }
 }
@@ -361,8 +404,8 @@ let ws;
 function displayWS() {
     document.getElementById("SI").style.display = "none";
     document.getElementById("gameplay").style.display = "block";
-    board_state = color;
-    setBoardRotation();
+    DOMBoard.board_state = color;
+    DOMBoard.setBoardRotation();
 }
 
 function initWS(data) {
@@ -394,16 +437,13 @@ function createWS() {
     ws.onclose = (event) => {
         unHighlight();
         hideWS();
-        alert(`Websocket connection closed: ${event.reason}`, fade_close);
+        alert(`Websocket connection closed: ${event.reason}`, true);
         if (event.reason === "Only one session allowed") {
             createWS();
         }
     }
     ws.onerror = wsError;
 }
-
-const timeout = 30;
-let count = 0;
 
 async function ping() {
     if (await testServer()) {
@@ -453,7 +493,7 @@ function onmessage(event) {
             loadGame(message.game);
             break;
         case 'ERROR':
-            alert(message.errorMessage, fade_error);
+            alert(message.errorMessage, true);
             break;
         case 'MOVES':
             console.log(message);
@@ -461,7 +501,7 @@ function onmessage(event) {
             break;
         default:
             parseMessage(message.message);
-            alert(message.message, fade_notify);
+            alert(message.message, true);
             break;
     }
 }
@@ -549,7 +589,7 @@ function loadGame(game) {
 }
 
 function loadCurr(curr) {
-    if (curr === board_state) {
+    if (curr === DOMBoard.board_state) {
         document.getElementById("top_player").classList.remove("currPlayer");
         document.getElementById("bottom_player").classList.add("currPlayer");
     } else {
@@ -561,7 +601,7 @@ function loadCurr(curr) {
 function loadNames(black, white) {
     let top = document.getElementById("top_player");
     let bottom = document.getElementById("bottom_player");
-    if (board_state === "WHITE") {
+    if (DOMBoard.board_state === "WHITE") {
         top.innerText = black === null ? top.innerText : black;
         bottom.innerText = white === null ? bottom.innerText : white;
     } else {
@@ -632,6 +672,8 @@ function getValidMoves() {
     }));
 }
 
+// > MOVE HIGHLIGHT
+
 let currHighlights = new Array();
 
 function highlight(moves) {
@@ -668,6 +710,8 @@ function unClickedSquare(square) {
         square.style.background = null;
     }
 }
+
+// > Piece promotion
 
 let promoPiece = "QUEEN"
 
@@ -721,8 +765,6 @@ function setPromo(start, end) {
 
     document.body.appendChild(ctxMenu);
     ctxMenu.style.display = 'block';
-
-    console.log("CTX MENU", ctxMenu);
 }
 
 let pos_x;
@@ -805,41 +847,42 @@ function leave() {
     signIn();
 }
 
-let board_state;
+class DOMBoard {
 
-function reverseColumns() {
-    let gameDOM = document.getElementById("game");
-    if (board_state === "WHITE") {
-        gameDOM.style.flexDirection = "column"; //White bottom
-    } else {
-        gameDOM.style.flexDirection = "column-reverse";
-    }
-}
+    static board_state = "WHITE";
 
-function reverseRows() {
-    for (let row of document.getElementsByClassName("row")) {
-        if (board_state === "WHITE") {
-            row.style.flexDirection = "row"; //White Bottom
+    static reverseColumns() {
+        let gameDOM = document.getElementById("game");
+        if (this.board_state === "WHITE") {
+            gameDOM.style.flexDirection = "column"; //White bottom
         } else {
-            row.style.flexDirection = "row-reverse";
+            gameDOM.style.flexDirection = "column-reverse";
         }
     }
-}
 
-function setBoardRotation() {
-    reverseColumns();
-    reverseRows();
-}
+    static reverseRows() {
+        for (let row of document.getElementsByClassName("row")) {
+            if (this.board_state === "WHITE") {
+                row.style.flexDirection = "row"; //White Bottom
+            } else {
+                row.style.flexDirection = "row-reverse";
+            }
+        }
+    }
 
-function rotateBoard() {
-    board_state = board_state === "WHITE" ? "BLACK" : "WHITE";
-    let top = document.getElementById("top_player");
-    let bottom = document.getElementById("bottom_player");
-    let tmp = top.innerText;
-    top.innerText = bottom.innerText;
-    bottom.innerText = tmp;
-    loadCurr(currPlayer);
-    setBoardRotation();
-}
+    static setBoardRotation() {
+        this.reverseColumns();
+        this.reverseRows();
+    }
 
-//Base it off of board_state
+    static rotateBoard() {
+        this.board_state = this.board_state === "WHITE" ? "BLACK" : "WHITE";
+        let top = document.getElementById("top_player");
+        let bottom = document.getElementById("bottom_player");
+        let tmp = top.innerText;
+        top.innerText = bottom.innerText;
+        bottom.innerText = tmp;
+        loadCurr(currPlayer);
+        this.setBoardRotation();
+    }
+}
