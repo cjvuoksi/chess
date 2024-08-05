@@ -34,24 +34,36 @@ const is_map = true;
 END CONFIG
  */
 
+//COOKIES
 let auth;
+let usr;
 
-function getAuth() {
-    let name = "auth=";
-    let decodedCookie = decodeURIComponent(document.cookie);
+function getCookie(name) {
+    let cookie = decodeURIComponent(document.cookie);
+    let index = cookie.indexOf(name);
 
-    if (decodedCookie.indexOf(name) >= 0) {
-        return decodedCookie.substring(name.length);
+    if (index < 0) {
+        return null;
     }
-    return null;
+    cookie = cookie.substring(index + name.length + 1);
+    let cookieEnd = cookie.indexOf(";");
+    if (cookieEnd > 0) {
+        return cookie.substring(0, cookieEnd);
+    } else {
+        return cookie;
+    }
+}
+function setAuth(auth) {
+    document.cookie = `auth=${auth};`;
 }
 
-function setAuth(auth) {
-    document.cookie = `auth=${auth}`;
+function setUsr(usr) {
+    document.cookie = `usr=${usr};`;
 }
 
 function authenticate() {
-    auth = getAuth();
+    auth = getCookie("auth");
+    usr = getCookie("usr");
     if (auth == null) {
         return;
     }
@@ -64,12 +76,11 @@ function authenticate() {
     }, (data) => {
         setGames(data);
     });
-
 }
 
 authenticate();
 
-let usr;
+
 let state = "SO";
 let gID;
 let color;
@@ -275,6 +286,7 @@ function login(event) {
         auth = data.authToken;
         setAuth(auth);
         usr = data.username;
+        setUsr(usr);
         signIn();
     });
     document.getElementById("login_form").reset();
@@ -302,7 +314,7 @@ function register(event) {
     document.getElementById("login_form").reset();
 }
 
-function sendHTTP(path, params, method, authToken, response, data) {
+function sendHTTP(path, params, method, authToken, response, data, error = catchError) {
     params = !!params ? params : undefined;
     fetch("http://localhost:" + server_port + path, {
         method: method,
@@ -314,12 +326,12 @@ function sendHTTP(path, params, method, authToken, response, data) {
     })
         .then(response)
         .then(data)
-        .catch(catchError);
+        .catch(error);
 }
 
 function catchError(error) {
     console.log("Entering error catch");
-    if (!error.data?.message) {
+    if (!error.data?.message) { // If the server is down
         setTimeout(ping, 5000);
     }
 }
