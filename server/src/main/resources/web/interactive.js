@@ -53,12 +53,21 @@ function getCookie(name) {
         return cookie;
     }
 }
+
+function setCookie(name, value) {
+    document.cookie = name + "=" + encodeURIComponent(value);
+}
+
+function deleteCookie(name) {
+    document.cookie = name + "=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"
+}
+
 function setAuth(auth) {
-    document.cookie = "auth=" + encodeURIComponent(auth);
+    setCookie("auth", auth);
 }
 
 function setUsr(usr) {
-    document.cookie = "usr=" + encodeURIComponent(usr);
+    setCookie("usr", usr);
 }
 
 function authenticate() {
@@ -267,6 +276,8 @@ function signOut() {
     }, (data) => {
         auth = null;
         usr = null;
+        deleteCookie("auth");
+        deleteCookie("usr");
         setLogin();
     })
 }
