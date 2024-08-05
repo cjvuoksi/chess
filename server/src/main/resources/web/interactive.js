@@ -40,13 +40,13 @@ let usr;
 
 function getCookie(name) {
     let cookie = decodeURIComponent(document.cookie);
-    let index = cookie.indexOf(name);
+    let index = cookie.indexOf(name + "=");
 
     if (index < 0) {
         return null;
     }
     cookie = cookie.substring(index + name.length + 1);
-    let cookieEnd = cookie.indexOf(";");
+    let cookieEnd = cookie.indexOf("; ");
     if (cookieEnd > 0) {
         return cookie.substring(0, cookieEnd);
     } else {
@@ -54,11 +54,11 @@ function getCookie(name) {
     }
 }
 function setAuth(auth) {
-    document.cookie = `auth=${auth};`;
+    document.cookie = "auth=" + encodeURIComponent(auth);
 }
 
 function setUsr(usr) {
-    document.cookie = `usr=${usr};`;
+    document.cookie = "usr=" + encodeURIComponent(usr);
 }
 
 function authenticate() {
@@ -67,7 +67,7 @@ function authenticate() {
     if (auth == null) {
         return;
     }
-    sendHTTP("/game", "", "GET", auth, (response) => {
+    sendHTTP("/game", {}, "GET", auth, (response) => {
         if (response.ok) {
             setSignIn();
             return response.json();
@@ -75,6 +75,8 @@ function authenticate() {
         return null;
     }, (data) => {
         setGames(data);
+    }, (error) => {
+        // do nothing
     });
 }
 
@@ -120,7 +122,7 @@ function signIn() {
 
 function createGame() {
     let name = window.prompt("Enter game name", "Name");
-    sendHTTP("/game", `{'gameName': ${name}}`, "POST", auth, (response) => {
+    sendHTTP("/game", {gameName: name}, "POST", auth, (response) => {
         if (!response.ok) {
             handleError(response);
             return;
@@ -135,7 +137,7 @@ function createGame() {
 }
 
 function listGames() {
-    sendHTTP("/game", "", "GET", auth, handleResponse, setGames);
+    sendHTTP("/game", {}, "GET", auth, handleResponse, setGames);
 }
 
 function joinWhite(event) {
@@ -154,7 +156,7 @@ function joinBlack(event) {
 function join(color, gameID) {
     gID = gameID;
     document.getElementById("bottom_player").innerText = usr;
-    sendHTTP("/game", `{'playerColor': ${color}, 'gameID': ${gID}}`, "PUT", auth, handleResponse, initWS);
+    sendHTTP("/game", {playerColor: color, gameID: gID}, "PUT", auth, handleResponse, initWS);
 }
 
 function handleResponse(response) {
@@ -257,7 +259,7 @@ function setGames(data) {
 }
 
 function signOut() {
-    sendHTTP("/session", "", "DELETE", auth, (response) => {
+    sendHTTP("/session", {}, "DELETE", auth, (response) => {
         if (!response.ok) {
             handleError(response);
         }
@@ -273,7 +275,7 @@ function login(event) {
     event.preventDefault();
     let username = document.getElementById("username").value;
     let pwd = document.getElementById("pwd").value;
-    sendHTTP("/session", `{'username': ${username}, 'password': ${pwd}}`, "POST", null, (response) => {
+    sendHTTP("/session", {username: username, password: pwd}, "POST", null, (response) => {
         if (!response.ok) {
             handleError(response);
             return;
@@ -297,7 +299,7 @@ function register(event) {
     let username = document.getElementById("username").value;
     let pwd = document.getElementById("pwd").value;
     let email = document.getElementById("email").value;
-    sendHTTP("/user", `{'username': ${username}, 'password': ${pwd}, 'email': ${email}}`, "POST", null, (response) => {
+    sendHTTP("/user", {username: username, password: pwd, email: email}, "POST", null, (response) => {
         if (!response.ok) {
             handleError(response);
             return;
@@ -315,10 +317,11 @@ function register(event) {
 }
 
 function sendHTTP(path, params, method, authToken, response, data, error = catchError) {
-    params = !!params ? params : undefined;
+    let body = JSON.stringify(params);
+    body = body === "{}" ? undefined : body;
     fetch("http://localhost:" + server_port + path, {
         method: method,
-        body: params,
+        body: body,
         headers: {
             Authorization: authToken,
             'Content-Type': 'application/json',
@@ -330,7 +333,7 @@ function sendHTTP(path, params, method, authToken, response, data, error = catch
 }
 
 function catchError(error) {
-    console.log("Entering error catch");
+    console.log("Entering error catch", error);
     if (!error.data?.message) { // If the server is down
         setTimeout(ping, 5000);
     }
@@ -376,7 +379,8 @@ function handleError(response) {
             }
         case 401:
             if (state === "SO") {
-                setRegister();
+                alert("Invalid credentials", true);
+                setLogin();
             }
             if (state === "SI") {
                 alert("Session expired", true);
