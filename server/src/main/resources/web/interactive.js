@@ -874,23 +874,25 @@ function createMenu(question, onConfirm, onCancel, isInput, onInput) {
     }
 
     //Menu Window
-    menu.style.position = "absolute";
-    menu.style.top = "10em";
+    menu.classList.add("menu");
 
     //Menu Text
     text.innerText = question;
+    text.classList.add("menu-text");
 
     //Menu Buttons
-    cancel.onclick = () => {
+    cancel.onclick = onCancel === undefined ? closeWindow : () => {
         onCancel();
         closeWindow();
     }
     cancel.innerText = "Cancel"
+    cancel.classList.add("menu-button");
     confirm.onclick = () => {
         onConfirm();
         closeWindow();
     }
-    confirm.innerText = "Confirm"
+    confirm.innerText = "Confirm";
+    confirm.classList.add("menu-button");
 
     menu.appendChild(text);
 
@@ -899,7 +901,9 @@ function createMenu(question, onConfirm, onCancel, isInput, onInput) {
         let form = document.createElement("form");
         let input = document.createElement("input");
         input.id = "menuInput";
+        input.classList.add("menu-input");
         form.appendChild(input);
+        form.classList.add("menu-form");
 
         form.onsubmit = onInput === undefined ? (event) => {
             event.preventDefault();
