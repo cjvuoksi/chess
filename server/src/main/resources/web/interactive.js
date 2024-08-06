@@ -860,7 +860,20 @@ function getPiece(value) {
     }
 }
 
+function createMenu(oncancel, onconfirm) {
+    let menu = document.createElement("div");
+    let cancel = document.createElement("button");
+    let confirm = document.createElement("button");
+
+    menu.style.position = "absolute";
+    menu.style.top = "10em";
+    //TODO make this fully fleshed out and add callbacks
+}
+
+
 function resign() {
+
+
     sendUserCommand(JSON.stringify({
         commandType: "RESIGN",
         authToken: auth,
