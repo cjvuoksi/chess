@@ -130,19 +130,22 @@ function signIn() {
 }
 
 function createGame() {
-    let name = window.prompt("Enter game name", "Name");
-    sendHTTP("/game", {gameName: name}, "POST", auth, (response) => {
-        if (!response.ok) {
-            handleError(response);
-            return;
-        }
-        return response.json();
-    }, (data) => {
-        if (data !== undefined) {
-            alert("Created new game!", true);
-            listGames();
-        }
-    })
+    createMenu("Enter game name", () => {
+        let name = document.getElementById("menuInput").value;
+        sendHTTP("/game", {gameName: name}, "POST", auth, (response) => {
+            if (!response.ok) {
+                handleError(response);
+                return;
+            }
+            return response.json();
+        }, (data) => {
+            if (data !== undefined) {
+                alert("Created new game!", true);
+                listGames();
+            }
+        })
+    }, () => {
+    }, true);
 }
 
 function listGames() {
@@ -860,25 +863,70 @@ function getPiece(value) {
     }
 }
 
-function createMenu(oncancel, onconfirm) {
+function createMenu(question, onConfirm, onCancel, isInput, onInput) {
     let menu = document.createElement("div");
+    let text = document.createElement("div");
     let cancel = document.createElement("button");
     let confirm = document.createElement("button");
 
+    function closeWindow() {
+        menu.remove();
+    }
+
+    //Menu Window
     menu.style.position = "absolute";
     menu.style.top = "10em";
-    //TODO make this fully fleshed out and add callbacks
+
+    //Menu Text
+    text.innerText = question;
+
+    //Menu Buttons
+    cancel.onclick = () => {
+        onCancel();
+        closeWindow();
+    }
+    cancel.innerText = "Cancel"
+    confirm.onclick = () => {
+        onConfirm();
+        closeWindow();
+    }
+    confirm.innerText = "Confirm"
+
+    menu.appendChild(text);
+
+    //Menu Input (optional)
+    if (isInput) {
+        let form = document.createElement("form");
+        let input = document.createElement("input");
+        input.id = "menuInput";
+        form.appendChild(input);
+
+        form.onsubmit = onInput === undefined ? (event) => {
+            event.preventDefault();
+            onConfirm();
+            closeWindow();
+        } : (event) => {
+            event.preventDefault();
+            onInput();
+            closeWindow()
+        };
+
+        menu.appendChild(form);
+    }
+
+    menu.appendChild(cancel);
+    menu.appendChild(confirm);
+
+    document.body.appendChild(menu);
 }
 
 
 function resign() {
-
-
-    sendUserCommand(JSON.stringify({
+    createMenu("Are you sure you want to resign", () => sendUserCommand(JSON.stringify({
         commandType: "RESIGN",
         authToken: auth,
         gameID: gID
-    }))
+    })));
 }
 
 function leave() {

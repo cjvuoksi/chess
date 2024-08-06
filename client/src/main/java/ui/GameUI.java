@@ -202,6 +202,12 @@ public class GameUI extends UI implements Observer {
             exit();
         }
 
+        String res = promptInput("Are you sure? Enter (y)es to continue");
+        if (!"y".equals(res) && !"yes".equalsIgnoreCase(res)) {
+            return;
+        }
+
+
         try {
             server.resign(new Resign(gameID, authToken, teamColor));
         } catch (Exception e) {
