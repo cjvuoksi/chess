@@ -300,9 +300,9 @@ a:hover {
 
 .menu {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*transform: translate(-50%, -50%);*/
     background-color: rgba(244, 228, 129, 0.8);
     border-radius: .3em;
     padding: 1em;
@@ -311,6 +311,7 @@ a:hover {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 1em;
+    cursor: grab;
 }
 
 .menu-text {
@@ -321,6 +322,7 @@ a:hover {
     width: 40%;
     min-width: max-content;
     display: block;
+    cursor: pointer;
 }
 
 .menu-input {

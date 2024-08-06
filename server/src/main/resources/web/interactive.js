@@ -873,8 +873,26 @@ function createMenu(question, onConfirm, onCancel, isInput, onInput) {
         menu.remove();
     }
 
+    function moveMenu(event) {
+        let x = parseInt(menu.style.left);
+        let y = parseInt(menu.style.top);
+        menu.style.left = x + event.movementX + "px";
+        menu.style.top = y + event.movementY + "px";
+    }
+
+    menu.onmousedown = () => {
+        document.addEventListener("mousemove", moveMenu);
+
+    }
+
+    menu.onmouseup = () => {
+        document.removeEventListener("mousemove", moveMenu);
+    }
+
     //Menu Window
     menu.classList.add("menu");
+    menu.style.top = `${pos_y + 10}px`;
+    menu.style.left = `${pos_x + 10}px`;
 
     //Menu Text
     text.innerText = question;
