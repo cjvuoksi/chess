@@ -335,3 +335,15 @@ a:hover {
 .menu-form {
     width: 100%;
 }
+
+.delete {
+    opacity: 0;
+    height: 2em;
+    width: 2em;
+    text-align: center;
+    transition: ease-in .2s opacity;
+}
+
+.delete:hover {
+    opacity: 1;
+}

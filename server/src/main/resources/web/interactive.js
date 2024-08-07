@@ -254,6 +254,35 @@ function setGames(data) {
         newRow.appendChild(black);
         newRow.appendChild(observe);
         newRow.appendChild(gameStatus);
+
+        let deleteMark = document.createElement("div");
+        deleteMark.innerText = "✕";
+        deleteMark.style.cursor = "pointer";
+        deleteMark.classList.add("delete");
+        deleteMark.onclick = () => {
+            sendHTTP("/game", {gameID: datum.gameID}, "DELETE", auth, (response) => {
+                if (!response.ok) {
+                    if (!response.ok && response.status !== 403) {
+                        handleError(response);
+                        return;
+                    }
+                }
+                return response.json();
+            }, (data) => {
+                if (data !== undefined && data.message === undefined) {
+                    listGames();
+                } else {
+                    if (data.message.includes("permission")) {
+                        alert(data.message, true);
+                    } else {
+                        alert("You don't have the requisite permissions to delete this game");
+                    }
+                }
+            });
+        }
+        newRow.appendChild(deleteMark);
+
+
         if (gameStatus.innerText !== "In progress") {
             white.style.pointerEvents = "none";
             black.style.pointerEvents = "none";

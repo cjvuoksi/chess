@@ -25,6 +25,8 @@ public class DeleteGame extends HTTPService {
 
         if (admin.privileges().games()) {
             gameDAO.delete(request.getGameID());
+        } else {
+            throw new ServiceException("Your administrative account doesn't have permission to modify games", 403);
         }
         return new Response();
     }
