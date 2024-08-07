@@ -482,7 +482,7 @@ async function ping() {
     }
 }
 
-function signOutBeacon() {
+function signOutBeacon() { //TODO delete cookie
     fetch("http://localhost:" + server_port + "/session", {
         method: "DELETE",
         body: "",
@@ -492,7 +492,11 @@ function signOutBeacon() {
         },
         keepalive: true,
         priority: "low"
-    })
+    });
+    auth = null;
+    usr = null;
+    deleteCookie("auth");
+    deleteCookie("usr");
 }
 
 async function testServer() {
