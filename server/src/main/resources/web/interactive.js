@@ -482,7 +482,7 @@ async function ping() {
     }
 }
 
-function signOutBeacon() { //TODO delete cookie
+function signOutBeacon() {
     fetch("http://localhost:" + server_port + "/session", {
         method: "DELETE",
         body: "",

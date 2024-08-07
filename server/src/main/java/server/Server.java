@@ -45,6 +45,8 @@ public class Server {
         Spark.get("/game", this::listGames);
         // Create Game
         Spark.post("/game", this::createGame);
+        // Delete Game
+        Spark.delete("/game", this::deleteGame);
         // Join Game
         Spark.put("/game", this::joinGame);
 
@@ -52,6 +54,10 @@ public class Server {
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private Object deleteGame(Request request, Response response) {
+        return new DeleteGameH(request, response, new DeleteGame()).run();
     }
 
     private Object joinGame(Request request, Response response) {

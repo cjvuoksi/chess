@@ -37,6 +37,12 @@ public abstract class DAO<V extends Record, K> {
                 preparedStatement.executeUpdate();
             }
 
+            init = "CREATE TABLE IF NOT EXISTS su (id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT, " +
+                    "su_username VARCHAR(255) NOT NULL, permissions JSON);";
+            try (var preparedStatement = conn.prepareStatement(init)) {
+                preparedStatement.executeUpdate();
+            }
+
         } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
