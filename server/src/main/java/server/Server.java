@@ -37,6 +37,10 @@ public class Server {
         Spark.delete("/db", this::clearApp);
         // Register
         Spark.post("/user", this::register);
+        // Get User
+        Spark.get("/user", this::getUser);
+        //Update User
+        Spark.put("/user", this::updateUser);
         // Login
         Spark.post("/session", this::login);
         // Logout
@@ -54,6 +58,14 @@ public class Server {
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+
+    private Object updateUser(Request request, Response response) {
+        return new updateUserH(request, response, new updateUser()).run();
+    }
+
+    private Object getUser(Request request, Response response) {
+        return new getUserH(request, response, new getUser()).run();
     }
 
     private Object deleteGame(Request request, Response response) {

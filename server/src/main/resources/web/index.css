@@ -5,7 +5,10 @@ html {
 }
 
 body {
-    max-width: 80em;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 table {
@@ -290,10 +293,17 @@ a:hover {
     cursor: pointer;
 }
 
+a {
+    text-decoration: none;
+    color: #4e3e15;
+}
+
 .buttons {
+    display: block;
     width: max-content;
-    padding: .2em .4em;
+    padding: .4em .8em;
     margin: .1em;
+    border-radius: 1em;
 }
 
 /*MENU*/
@@ -332,6 +342,10 @@ a:hover {
     margin: .5em 0;
 }
 
+.menu-input:focus {
+    outline-color: #4e3e15;
+}
+
 .menu-form {
     width: 100%;
 }
@@ -346,4 +360,40 @@ a:hover {
 
 .delete:hover {
     opacity: 1;
+}
+
+/*HEADER and FOOTER*/
+
+.main {
+    flex: 1;
+    margin: 1em;
+    max-width: 80em;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+.header {
+    background-color: #b8b5a2;
+    margin: 0;
+    position: sticky;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    min-width: 100vw;
+}
+
+.footer {
+    min-height: 5em;
+    text-align: center;
+    padding: .4em;
+}
+
+nav {
+    border-radius: 0 0 1em 1em;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    color: #e1dacd;
+    gap: .5em;
 }
