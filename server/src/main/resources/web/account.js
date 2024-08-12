@@ -44,6 +44,8 @@ function authenticate() {
 
     sendHTTP("/session", {}, "GET", auth, (data) => {
         if (data === null) {
+            deleteCookie("auth");
+            deleteCookie("usr");
             window.location = "http://localhost:" + server_port + "/interactive.html";
             return;
         }
@@ -156,9 +158,127 @@ function saveChanges() {
 }
 
 function resetPassword() {
-    createMenu("Enter old password", () => {
+    let oldPassword;
+    createPassMenu();
+}
 
-    })
+function createPassMenu() {
+    let menu = document.createElement("div");
+    let text = document.createElement("div");
+    let cancel = document.createElement("button");
+    let confirm = document.createElement("button");
+    let form = document.createElement("form");
+    let oldPass = document.createElement("input");
+    let newPass = document.createElement("input");
+    let confirmPass = document.createElement("input");
+
+    oldPass.classList.add("menu-input");
+    oldPass.type = "password";
+    oldPass.required = true;
+    oldPass.id = "oldPass";
+
+    newPass.classList.add("menu-input");
+    newPass.type = "password";
+    newPass.required = true;
+    newPass.id = "newPass";
+
+    confirmPass.id = "confirmPass";
+    confirmPass.classList.add("menu-input");
+    confirmPass.type = "password";
+    confirmPass.required = true;
+
+    form.appendChild(oldPass);
+    form.appendChild(newPass);
+    form.appendChild(confirmPass);
+    form.classList.add("menu-form");
+    form.onsubmit = submitPass;
+    form.id = "pass_form"
+
+    function submitPass(event) {
+        event.preventDefault();
+        let op = document.getElementById("oldPass");
+        let np = document.getElementById("newPass");
+        let cp = document.getElementById("confirmPass");
+        let submit = true;
+        if (op.value === "") {
+            submit = false;
+            op.style.outline = "red 2px solid";
+        } else {
+            op.style.outline = null;
+        }
+        if (np.value === "") {
+            submit = false;
+            np.style.outline = "red 2px solid";
+        } else {
+            np.style.outline = null;
+        }
+        if (cp.value === "") {
+            submit = false;
+            cp.style.outline = "red 2px solid";
+        } else {
+            cp.style.outline = null;
+        }
+        if (cp.value !== np.value) {
+            submit = false;
+            // alert values not equal
+        }
+
+        if (submit) {
+            sendHTTP("/user", {password: np.value, email: null, oldPassword: op.value}, "PUT", auth, (data) => {
+                if (data === null) {
+                    // alert failed
+                    console.log("Failed to update pwd: " + data.errorMessage);
+                    return;
+                }
+                // alert updated
+            });
+        } else {
+            // alert
+            console.log("bad submit");
+        }
+    }
+
+    function closeWindow() {
+        menu.remove();
+    }
+
+    function moveMenu(event) {
+        let x = parseInt(menu.style.left);
+        let y = parseInt(menu.style.top);
+        menu.style.left = x + event.movementX + "px";
+        menu.style.top = y + event.movementY + "px";
+    }
+
+    menu.onmousedown = () => {
+        document.addEventListener("mousemove", moveMenu);
+    }
+
+    menu.onmouseup = () => {
+        document.removeEventListener("mousemove", moveMenu);
+    }
+
+    //Menu Window
+    menu.classList.add("menu");
+    menu.style.top = `${pos_y + 10}px`;
+    menu.style.left = `${pos_x + 10}px`;
+
+    //Menu Text
+    text.innerText = "Enter New Password";
+    text.classList.add("menu-text");
+
+    //Menu Buttons
+    cancel.onclick = closeWindow;
+    cancel.innerText = "Cancel"
+    cancel.classList.add("menu-button");
+    confirm.onclick = submitPass;
+    confirm.innerText = "Confirm";
+    confirm.classList.add("menu-button");
+
+    menu.appendChild(text);
+    menu.appendChild(form);
+    menu.appendChild(cancel);
+    menu.appendChild(confirm);
+    document.body.appendChild(menu);
 }
 
 

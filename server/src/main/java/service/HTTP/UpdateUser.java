@@ -9,8 +9,6 @@ import request.Request;
 import request.UpdateRequest;
 import response.Response;
 
-import java.util.Objects;
-
 public class UpdateUser extends HTTPService {
     @Override
     public Response run(Request req) throws DataAccessException, ServiceException {
@@ -22,16 +20,10 @@ public class UpdateUser extends HTTPService {
         }
 
         if (update.getPassword() != null && update.getOldPassword() != null) {
-            if (!Objects.equals(auth.username(), update.getUsername())) {
-                throw new ServiceException("Prohibited", 403);
-            }
 
-            UserData user = userDAO.find(update.getUsername());
-            if (user == null) {
-                throw new ServiceException("Prohibited", 403);
-            }
-            if (!BCrypt.checkpw(update.getOldPassword(), user.password())) {
-                throw new ServiceException("Unauthorized", 401);
+            UserData user = userDAO.find(auth.username());
+            if (user == null || !BCrypt.checkpw(update.getOldPassword(), user.password())) {
+                throw new ServiceException("Error: unauthorized", 401);
             }
 
             String hash = BCrypt.hashpw(update.getPassword(), BCrypt.gensalt());
