@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class AuthDAO extends DAO<AuthData, String> {
     {
-        createStatement = "INSERT INTO auth (token, username) VALUES (?, ?)";
+        createStatement = "INSERT INTO auth (username, token) VALUES (?, ?)";
         findStatement = "SELECT * FROM auth WHERE token = ?";
         updateStatement = "UPDATE auth SET username = ? WHERE token = ?";
         deleteStatement = "DELETE FROM auth WHERE token = ?";
@@ -24,6 +24,6 @@ public class AuthDAO extends DAO<AuthData, String> {
 
     @Override
     protected String[] getArgs(AuthData data) {
-        return new String[]{data.authToken(), data.username()};
+        return new String[]{data.username(), data.authToken()};
     }
 }

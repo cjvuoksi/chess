@@ -1,6 +1,7 @@
 package service.HTTP;
 
 import dataaccess.DataAccessException;
+import model.AdminData;
 import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
@@ -35,7 +36,7 @@ public class UpdateUser extends HTTPService {
 
             String hash = BCrypt.hashpw(update.getPassword(), BCrypt.gensalt());
 
-            userDAO.delete(user.username());
+            userDAO.delete(user.username()); //TODO update userDAO update
 
             userDAO.create(new UserData(user.username(), hash, user.email()));
             return new Response();
@@ -49,6 +50,12 @@ public class UpdateUser extends HTTPService {
             if (newUser == null) {
                 userDAO.delete(auth.username());
                 userDAO.create(new UserData(update.getUsername(), user.password(), update.getEmail()));
+                AdminData admin = adminDAO.find(auth.username());
+                if (admin != null) {
+                    adminDAO.delete(auth.username());
+                    adminDAO.create(new AdminData(update.getUsername(), admin.privileges()));
+                    authDAO.update(new AuthData(auth.authToken(), update.getUsername()));
+                }
                 return new Response();
             } else if (newUser.username().equals(user.username())) {
                 userDAO.delete(user.username());

@@ -42,21 +42,19 @@ function authenticate() {
         window.location = "http://localhost:" + server_port + "/interactive.html";
     }
 
-    sendHTTP("/session", {}, "GET", auth, (response) => {
-        if (response.ok) {
-            setSignIn();
-            return response.json();
-        }
-        return null;
-
-    }, (data) => {
+    sendHTTP("/session", {}, "GET", auth, (data) => {
         if (data === null) {
             window.location = "http://localhost:" + server_port + "/interactive.html";
             return;
         }
 
         usr = data.username;
-        console.assert(auth === data.authToken, "Cookie auth not equal to auth: %s %s", auth, data.authToken);
+        console.assert(auth === data.authToken, "Cookie auth (%s) not equal to auth: %s", auth, data.authToken);
+    }, (response) => {
+        if (response.ok) {
+            return response.json();
+        }
+        return null;
     });
 }
 
@@ -146,7 +144,14 @@ function saveChanges() {
     let email = document.getElementById("email").value;
 
     sendHTTP("/user", {username: username, password: null, email: email, oldPassword: null}, "PUT", auth, (data) => {
-
+        if (data === undefined) {
+            getAccount();
+            return;
+        }
+        createMenu("Changes saved", () => {
+        }, () => {
+        }, false, () => {
+        }, false);
     })
 }
 
@@ -166,7 +171,7 @@ document.addEventListener("mousemove", (e) => {
     pos_x = e.clientX
 })
 
-function createMenu(question, onConfirm, onCancel, isInput, onInput) {
+function createMenu(question, onConfirm, onCancel, isInput, onInput, isCancel = true) {
     let menu = document.createElement("div");
     let text = document.createElement("div");
     let cancel = document.createElement("button");
@@ -238,7 +243,7 @@ function createMenu(question, onConfirm, onCancel, isInput, onInput) {
         menu.appendChild(form);
     }
 
-    menu.appendChild(cancel);
+    if (isCancel) menu.appendChild(cancel);
     menu.appendChild(confirm);
 
     document.body.appendChild(menu);
