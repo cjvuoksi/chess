@@ -45,6 +45,8 @@ public class Server {
         Spark.post("/session", this::login);
         // Logout
         Spark.delete("/session", this::logout);
+        // Authenticate
+        Spark.get("/session", this::authenticate);
         // List Games
         Spark.get("/game", this::listGames);
         // Create Game
@@ -60,12 +62,16 @@ public class Server {
         return Spark.port();
     }
 
+    private Object authenticate(Request request, Response response) {
+        return new AuthenticateH(request, response, new Authenticate()).run();
+    }
+
     private Object updateUser(Request request, Response response) {
-        return new updateUserH(request, response, new updateUser()).run();
+        return new updateUserH(request, response, new UpdateUser()).run();
     }
 
     private Object getUser(Request request, Response response) {
-        return new getUserH(request, response, new getUser()).run();
+        return new getUserH(request, response, new GetUser()).run();
     }
 
     private Object deleteGame(Request request, Response response) {

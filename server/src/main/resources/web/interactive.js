@@ -72,18 +72,22 @@ function setUsr(usr) {
 
 function authenticate() {
     auth = getCookie("auth");
-    usr = getCookie("usr");
     if (auth == null) {
         return;
     }
-    sendHTTP("/game", {}, "GET", auth, (response) => {
+    sendHTTP("/session", {}, "GET", auth, (response) => {
         if (response.ok) {
             setSignIn();
             return response.json();
         }
         return null;
     }, (data) => {
-        setGames(data);
+        if (data === null) {
+            return;
+        }
+        usr = data.username;
+        console.assert(auth === data.authToken, "Cookie auth not equal to auth: %s %s", auth, data.authToken);
+        listGames();
     }, (error) => {
         // do nothing
     });

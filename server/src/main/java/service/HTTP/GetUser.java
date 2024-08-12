@@ -8,7 +8,7 @@ import request.Request;
 import response.Response;
 import response.UserResponse;
 
-public class getUser extends HTTPService {
+public class GetUser extends HTTPService {
     @Override
     public Response run(Request req) throws DataAccessException, ServiceException {
         AuthRequest request = (AuthRequest) req;

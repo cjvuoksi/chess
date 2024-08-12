@@ -10,7 +10,7 @@ import response.Response;
 
 import java.util.Objects;
 
-public class updateUser extends HTTPService {
+public class UpdateUser extends HTTPService {
     @Override
     public Response run(Request req) throws DataAccessException, ServiceException {
         UpdateRequest update = (UpdateRequest) req;
