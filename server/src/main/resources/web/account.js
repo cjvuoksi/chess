@@ -147,13 +147,11 @@ function saveChanges() {
 
     sendHTTP("/user", {username: username, password: null, email: email, oldPassword: null}, "PUT", auth, (data) => {
         if (data === undefined) {
+            alert("Changes not saved", 2000);
             getAccount();
             return;
         }
-        createMenu("Changes saved", () => {
-        }, () => {
-        }, false, () => {
-        }, false);
+        alert("Changes saved", 2000);
     })
 }
 
@@ -176,16 +174,19 @@ function createPassMenu() {
     oldPass.type = "password";
     oldPass.required = true;
     oldPass.id = "oldPass";
+    oldPass.placeholder = "Current Password";
 
     newPass.classList.add("menu-input");
     newPass.type = "password";
     newPass.required = true;
     newPass.id = "newPass";
+    newPass.placeholder = "New Password";
 
     confirmPass.id = "confirmPass";
     confirmPass.classList.add("menu-input");
     confirmPass.type = "password";
     confirmPass.required = true;
+    confirmPass.placeholder = "Confirm New Password";
 
     form.appendChild(oldPass);
     form.appendChild(newPass);
@@ -193,50 +194,6 @@ function createPassMenu() {
     form.classList.add("menu-form");
     form.onsubmit = submitPass;
     form.id = "pass_form"
-
-    function submitPass(event) {
-        event.preventDefault();
-        let op = document.getElementById("oldPass");
-        let np = document.getElementById("newPass");
-        let cp = document.getElementById("confirmPass");
-        let submit = true;
-        if (op.value === "") {
-            submit = false;
-            op.style.outline = "red 2px solid";
-        } else {
-            op.style.outline = null;
-        }
-        if (np.value === "") {
-            submit = false;
-            np.style.outline = "red 2px solid";
-        } else {
-            np.style.outline = null;
-        }
-        if (cp.value === "") {
-            submit = false;
-            cp.style.outline = "red 2px solid";
-        } else {
-            cp.style.outline = null;
-        }
-        if (cp.value !== np.value) {
-            submit = false;
-            // alert values not equal
-        }
-
-        if (submit) {
-            sendHTTP("/user", {password: np.value, email: null, oldPassword: op.value}, "PUT", auth, (data) => {
-                if (data === null) {
-                    // alert failed
-                    console.log("Failed to update pwd: " + data.errorMessage);
-                    return;
-                }
-                // alert updated
-            });
-        } else {
-            // alert
-            console.log("bad submit");
-        }
-    }
 
     function closeWindow() {
         menu.remove();
@@ -261,6 +218,7 @@ function createPassMenu() {
     menu.classList.add("menu");
     menu.style.top = `${pos_y + 10}px`;
     menu.style.left = `${pos_x + 10}px`;
+    menu.id = "password_menu";
 
     //Menu Text
     text.innerText = "Enter New Password";
@@ -281,6 +239,49 @@ function createPassMenu() {
     document.body.appendChild(menu);
 }
 
+function submitPass(event) {
+    event.preventDefault();
+    let op = document.getElementById("oldPass");
+    let np = document.getElementById("newPass");
+    let cp = document.getElementById("confirmPass");
+
+    let submit = true;
+    if (op.value === "") {
+        submit = false;
+        op.style.outline = "red 2px solid";
+    } else {
+        op.style.outline = null;
+    }
+    if (np.value === "") {
+        submit = false;
+        np.style.outline = "red 2px solid";
+    } else {
+        np.style.outline = null;
+    }
+    if (cp.value === "") {
+        submit = false;
+        cp.style.outline = "red 2px solid";
+    } else {
+        cp.style.outline = null;
+    }
+    if (cp.value !== np.value) {
+        submit = false;
+        alert("Passwords don't match", 2000);
+    }
+
+    if (submit) {
+        sendHTTP("/user", {password: np.value, email: null, oldPassword: op.value}, "PUT", auth, (data) => {
+            if (data === null) {
+                // alert failed
+                alert("Failed to update password", 2000);
+                return;
+            }
+            alert("Password updated", 2000);
+            document.getElementById("password_menu").remove();
+        });
+    }
+}
+
 
 // Menus
 let pos_x;
@@ -291,80 +292,21 @@ document.addEventListener("mousemove", (e) => {
     pos_x = e.clientX
 })
 
-function createMenu(question, onConfirm, onCancel, isInput, onInput, isCancel = true) {
-    let menu = document.createElement("div");
-    let text = document.createElement("div");
-    let cancel = document.createElement("button");
-    let confirm = document.createElement("button");
-
-    function closeWindow() {
-        menu.remove();
+function alert(message, timeout) {
+    const alert = document.createElement("div");
+    alert.className = "alert";
+    alert.onclick = () => ws_alert(alert);
+    alert.innerText = `✕ ${message}`;
+    document.getElementById("alerts").prepend(alert);
+    if (timeout) {
+        setTimeout(() => ws_alert(alert), true);
     }
+}
 
-    function moveMenu(event) {
-        let x = parseInt(menu.style.left);
-        let y = parseInt(menu.style.top);
-        menu.style.left = x + event.movementX + "px";
-        menu.style.top = y + event.movementY + "px";
-    }
-
-    menu.onmousedown = () => {
-        document.addEventListener("mousemove", moveMenu);
-    }
-
-    menu.onmouseup = () => {
-        document.removeEventListener("mousemove", moveMenu);
-    }
-
-    //Menu Window
-    menu.classList.add("menu");
-    menu.style.top = `${pos_y + 10}px`;
-    menu.style.left = `${pos_x + 10}px`;
-
-    //Menu Text
-    text.innerText = question;
-    text.classList.add("menu-text");
-
-    //Menu Buttons
-    cancel.onclick = onCancel === undefined ? closeWindow : () => {
-        onCancel();
-        closeWindow();
-    }
-    cancel.innerText = "Cancel"
-    cancel.classList.add("menu-button");
-    confirm.onclick = () => {
-        onConfirm();
-        closeWindow();
-    }
-    confirm.innerText = "Confirm";
-    confirm.classList.add("menu-button");
-
-    menu.appendChild(text);
-
-    //Menu Input (optional)
-    if (isInput) {
-        let form = document.createElement("form");
-        let input = document.createElement("input");
-        input.id = "menuInput";
-        input.classList.add("menu-input");
-        form.appendChild(input);
-        form.classList.add("menu-form");
-
-        form.onsubmit = onInput === undefined ? (event) => {
-            event.preventDefault();
-            onConfirm();
-            closeWindow();
-        } : (event) => {
-            event.preventDefault();
-            onInput();
-            closeWindow()
-        };
-
-        menu.appendChild(form);
-    }
-
-    if (isCancel) menu.appendChild(cancel);
-    menu.appendChild(confirm);
-
-    document.body.appendChild(menu);
+function ws_alert(alert) {
+    alert.style.background = "rgba(255, 0, 0, 0.0)";
+    alert.style.color = "rgba(255, 0, 0, 0.0)";
+    setTimeout(() => {
+        alert.remove()
+    }, 1000);
 }

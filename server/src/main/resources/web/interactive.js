@@ -86,6 +86,7 @@ function authenticate() {
             return;
         }
         usr = data.username;
+        document.getElementById("title").innerText = usr === undefined ? "Welcome!" : "Welcome " + usr + "!";
         console.assert(auth === data.authToken, "Cookie auth not equal to auth: %s %s", auth, data.authToken);
         listGames();
     }, (error) => {
